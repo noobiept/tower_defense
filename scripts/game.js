@@ -33,7 +33,55 @@ for (var a = 0 ; a < objects.length ; a++)
     }
 
 createjs.Ticker.on( 'tick', Game.tick );
+
+    // disable the context menu (when right-clicking)
+window.oncontextmenu = function( event ) { return false; };
+G.CANVAS.addEventListener( 'mouseup', Game.mouseEvents );
 };
+
+
+Game.mouseEvents = function( event )
+{
+var button = event.button;
+var x = event.clientX;
+var y = event.clientY;
+
+    // left click
+if ( button == 0 )
+    {
+        // check if its available that position
+    var position = Map.calculatePosition( x, y );
+
+    var column = position[ 1 ];
+    var line = position[ 0 ];
+
+    if ( Map.isAvailable( column, line ) )
+        {
+        new Tower({
+                column: column,
+                line: line
+            });
+        }
+    }
+
+    // right click
+else if ( button == 2 )
+    {
+        // check if there's a tower in that position
+    var position = Map.calculatePosition( x, y );
+
+    var column = position[ 1 ];
+    var line = position[ 0 ];
+
+    var tower = Map.getTower( column, line );
+
+    if ( tower )
+        {
+        tower.remove();
+        }
+    }
+};
+
 
 
 Game.tick = function( event )

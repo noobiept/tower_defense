@@ -31,7 +31,7 @@ for (var column = 0 ; column < numberOfColumns ; column++)
 
     for (var line = 0 ; line < numberOfLines ; line++)
         {
-        MAP[ column ][ line ] = 0;
+        MAP[ column ][ line ] = null;
         }
     }
 
@@ -47,30 +47,23 @@ MAP_HEIGHT = height;
 };
 
 
-/*
-    Makes a rectangle passable/impassable terrain for the units
 
-    rectangle = {
-            left: Number,
-            right: Number,
-            top: Number,
-            bottom: Number
-        }
-
-    impassable:
-        0 for passable
-        1 for impassable
- */
-
-Map.setImpassableRectangle = function( rectangle, impassable )
+Map.addTower = function( tower )
 {
-for (var column = rectangle.left ; column < rectangle.right ; column++)
-    {
-    for (var line = rectangle.top ; line < rectangle.bottom ; line++)
-        {
-        MAP[ column ][ line ] = impassable;
-        }
-    }
+MAP[ tower.column ][ tower.line ] = tower;
+};
+
+
+Map.removeTower = function( tower )
+{
+MAP[ tower.column ][ tower.line ] = null;
+};
+
+
+
+Map.getTower = function( column, line )
+{
+return MAP[ column ][ line ];
 };
 
 
@@ -139,6 +132,18 @@ for (var y = SQUARE_SIZE ; y < MAP_HEIGHT ; y += SQUARE_SIZE)
 
 return [ line, column ];
 };
+
+
+Map.isAvailable = function( column, line )
+{
+if ( MAP[ column ][ line ] )
+    {
+    return false;
+    }
+
+return true;
+};
+
 
 
 window.Map = Map;

@@ -17,14 +17,9 @@ this.height = squareSize;
 
 this.setupShape();
 
-Map.setImpassableRectangle({
-        left: this.column,
-        right: this.column + 1,
-        top: this.line,
-        bottom: this.line + 1
-    }, 1 );
-
 Tower.ALL.push( this );
+
+Map.addTower( this );
 }
 
 Tower.ALL = [];
@@ -72,12 +67,7 @@ Tower.prototype.remove = function()
 {
 G.STAGE.removeChild( this.shape );
 
-Map.setImpassableRectangle({
-        left: this.column,
-        right: this.column + 1,
-        top: this.line,
-        bottom: this.line + 1
-    }, 0 );
+Map.removeTower( this );
 
 var index = Tower.ALL.indexOf( this );
 
