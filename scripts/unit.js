@@ -70,11 +70,10 @@ this.shape = shape;
 
 Unit.prototype.setMoveDestination = function( column, line )
 {
-var map = Map.getMap();
 var startPosition = Map.calculatePosition( this.getX(), this.getY() );
 var endPosition = [ line, column ];
 
-this.path = AStar( map, startPosition, endPosition );
+this.path = Map.getPath( startPosition, endPosition );
 
 if ( this.path.length <= 1 )
     {

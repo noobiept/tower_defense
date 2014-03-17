@@ -8,6 +8,17 @@ function Game()
 var UNIT_COUNT = 0;
 var UNIT_LIMIT = 150;
 
+    // where the units start/spawn and to where they move
+var UNIT_START = {
+        column: 0,
+        line: 0
+    };
+var UNIT_END = {
+        column: 0,
+        line: 0
+    };
+
+
 
 Game.start = function()
 {
@@ -37,6 +48,14 @@ for (var a = 0 ; a < objects.length ; a++)
     }
 
 
+    // the width/height from the mapInfo is the number of columns/lines
+var halfLine = parseInt( mapInfo.height / 2, 10 );
+
+UNIT_START.column = 0;
+UNIT_START.line = halfLine;
+UNIT_END.column = mapInfo.width - 1;
+UNIT_END.line = halfLine;
+
 
 createjs.Ticker.on( 'tick', Game.tick );
 
@@ -64,12 +83,30 @@ if ( button == 0 )
 
     if ( Map.isAvailable( column, line ) )
         {
-        new Tower({
-                column: column,
-                line: line
-            });
+            // check if by filling this position, we're not blocking the units (they need to be always be able to reach the destination)
+        Map.addDummy( column, line );
 
-        Unit.redoMoveDestination();
+            // check if there is a possible path
+        var path = Map.getPath( [ UNIT_START.line, UNIT_START.column ], [ UNIT_END.line, UNIT_END.column ] );
+
+            // reset the position
+        Map.clearPosition( column, line );
+
+        if ( path.length > 0 )
+            {
+            new Tower({
+                    column: column,
+                    line: line
+                });
+
+            Unit.redoMoveDestination();
+            }
+
+        else
+            {
+            console.log( "Can't block the unit's path." );
+            }
+
         }
     }
 
@@ -110,13 +147,11 @@ if ( UNIT_COUNT >= UNIT_LIMIT )
     {
     UNIT_COUNT = 0;
 
-    var halfLine = parseInt( Map.getNumberOfLines() / 2, 10 );
-
     new Unit({
-            column: 0,
-            line: halfLine,
-            destination_column: Map.getNumberOfColumns() - 1,
-            destination_line: halfLine
+            column: UNIT_START.column,
+            line: UNIT_START.line,
+            destination_column: UNIT_END.column,
+            destination_line: UNIT_END.line
         });
     }
 

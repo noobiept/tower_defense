@@ -82,6 +82,16 @@ MAP[ tower.column ][ tower.line ] = null;
 };
 
 
+Map.addDummy = function( column, line )
+{
+MAP[ column ][ line ] = 1;
+};
+
+Map.clearPosition = function( column, line )
+{
+MAP[ column ][ line ] = null;
+};
+
 
 Map.getTower = function( column, line )
 {
@@ -192,10 +202,17 @@ return {
 };
 
 
-Map.getMap = function()
+/*
+    startPosition/endPosition is an array with the line/column
+
+    startPosition = [ line, column ]
+ */
+
+Map.getPath = function( startPosition, endPosition )
 {
-return MAP;
+return AStar( MAP, startPosition, endPosition );
 };
+
 
 Map.getNumberOfLines = function()
 {
