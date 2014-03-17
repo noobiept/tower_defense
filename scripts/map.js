@@ -145,6 +145,11 @@ return true;
 };
 
 
+Map.getMap = function()
+{
+return MAP;
+};
+
 
 window.Map = Map;
 

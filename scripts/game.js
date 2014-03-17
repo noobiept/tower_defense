@@ -32,6 +32,16 @@ for (var a = 0 ; a < objects.length ; a++)
     new theClass( args );
     }
 
+
+new Unit({
+        column: 0,
+        line: 0,
+        destination_column: 10,
+        destination_line: 10
+    });
+
+
+
 createjs.Ticker.on( 'tick', Game.tick );
 
     // disable the context menu (when right-clicking)
@@ -61,6 +71,8 @@ if ( button == 0 )
                 column: column,
                 line: line
             });
+
+        Unit.redoMoveDestination();
         }
     }
 
@@ -78,6 +90,8 @@ else if ( button == 2 )
     if ( tower )
         {
         tower.remove();
+
+        Unit.redoMoveDestination();
         }
     }
 };
@@ -90,6 +104,14 @@ if ( event.paused )
     {
     return;
     }
+
+var a;
+
+for (a = 0 ; a < Unit.ALL.length ; a++)
+    {
+    Unit.ALL[ a ].tick();
+    }
+
 
 G.STAGE.update();
 };
