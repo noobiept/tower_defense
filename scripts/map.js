@@ -18,6 +18,8 @@ var MAP_HEIGHT = 0;
 var MAP = [];
 var SQUARE_SIZE = 20;   // in pixels
 
+var GRID_HIGHLIGHT = null;
+
 
 Map.init = function( width, height )
 {
@@ -41,6 +43,16 @@ Map.addWall( 0, 0, WALL_THICKNESS, height );        // left
 Map.addWall( width, 0, WALL_THICKNESS, height );    // right
 Map.addWall( 0, 0, width, WALL_THICKNESS );         // top
 Map.addWall( 0, height, width, WALL_THICKNESS );    // bottom
+
+GRID_HIGHLIGHT = new createjs.Shape();
+
+var g = GRID_HIGHLIGHT.graphics;
+
+g.beginFill( 'rgba(0,255,0,0.3)' );
+g.drawRect( 0, 0, SQUARE_SIZE, SQUARE_SIZE );
+g.endFill();
+
+G.STAGE.addChild( GRID_HIGHLIGHT );
 
 MAP_WIDTH = width;
 MAP_HEIGHT = height;
@@ -132,6 +144,16 @@ for (var y = SQUARE_SIZE ; y < MAP_HEIGHT ; y += SQUARE_SIZE)
 
 return [ line, column ];
 };
+
+
+Map.mouseMoveEvents = function( event )
+{
+var position = Map.calculatePosition( event.clientX, event.clientY );
+
+GRID_HIGHLIGHT.x = position[ 1 ] * SQUARE_SIZE;
+GRID_HIGHLIGHT.y = position[ 0 ] * SQUARE_SIZE;
+};
+
 
 
 Map.isAvailable = function( column, line )

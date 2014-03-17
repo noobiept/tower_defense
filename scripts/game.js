@@ -47,6 +47,7 @@ createjs.Ticker.on( 'tick', Game.tick );
     // disable the context menu (when right-clicking)
 window.oncontextmenu = function( event ) { return false; };
 G.CANVAS.addEventListener( 'mouseup', Game.mouseEvents );
+G.CANVAS.addEventListener( 'mousemove', Map.mouseMoveEvents );
 };
 
 
@@ -95,6 +96,7 @@ else if ( button == 2 )
         }
     }
 };
+
 
 
 
