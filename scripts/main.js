@@ -35,7 +35,7 @@ G.CANVAS.height = availableHeight - G.GAME_MENU_HEIGHT;
 
 $( gameMenu ).css( 'width', availableWidth + 'px' );
 $( gameMenu ).css( 'height', G.GAME_MENU_HEIGHT + 'px' );
-
+$( gameMenu ).css( 'top', (availableHeight - G.GAME_MENU_HEIGHT) + 'px' );
 
 G.STAGE = new createjs.Stage( G.CANVAS );
 

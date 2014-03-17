@@ -5,6 +5,10 @@ function Game()
 
 }
 
+var UNIT_COUNT = 0;
+var UNIT_LIMIT = 150;
+
+
 Game.start = function()
 {
 var mapInfo = G.PRELOAD.getResult( 'map1' );
@@ -31,14 +35,6 @@ for (var a = 0 ; a < objects.length ; a++)
 
     new theClass( args );
     }
-
-
-new Unit({
-        column: 0,
-        line: 0,
-        destination_column: 10,
-        destination_line: 10
-    });
 
 
 
@@ -106,6 +102,24 @@ if ( event.paused )
     {
     return;
     }
+
+
+UNIT_COUNT++;
+
+if ( UNIT_COUNT >= UNIT_LIMIT )
+    {
+    UNIT_COUNT = 0;
+
+    var halfLine = parseInt( Map.getNumberOfLines() / 2, 10 );
+
+    new Unit({
+            column: 0,
+            line: halfLine,
+            destination_column: Map.getNumberOfColumns() - 1,
+            destination_line: halfLine
+        });
+    }
+
 
 var a;
 

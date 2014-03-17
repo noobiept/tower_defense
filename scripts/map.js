@@ -10,6 +10,11 @@ var WALL_THICKNESS = 3;
 
 var MAP_WIDTH = 0;
 var MAP_HEIGHT = 0;
+var NUMBER_OF_COLUMNS = 0;
+var NUMBER_OF_LINES = 0;
+
+var STARTING_X = 0;
+var STARTING_Y = 0;
 
     // 2 dimensional array, with all the positions of the map
     // 0 -> passable square
@@ -38,11 +43,14 @@ for (var column = 0 ; column < numberOfColumns ; column++)
     }
 
 
+STARTING_X = $( window ).width() / 2 - numberOfColumns * SQUARE_SIZE / 2;
+STARTING_Y = $( window ).height() / 2 - numberOfLines * SQUARE_SIZE / 2;
+
     // add walls around the map
-Map.addWall( 0, 0, WALL_THICKNESS, height );        // left
-Map.addWall( width, 0, WALL_THICKNESS, height );    // right
-Map.addWall( 0, 0, width, WALL_THICKNESS );         // top
-Map.addWall( 0, height, width, WALL_THICKNESS );    // bottom
+Map.addWall( STARTING_X - WALL_THICKNESS, STARTING_Y, WALL_THICKNESS, height + WALL_THICKNESS );        // left
+Map.addWall( STARTING_X + width, STARTING_Y, WALL_THICKNESS, height + WALL_THICKNESS );    // right
+Map.addWall( STARTING_X, STARTING_Y, width, WALL_THICKNESS );         // top
+Map.addWall( STARTING_X, STARTING_Y + height, width, WALL_THICKNESS );    // bottom
 
 GRID_HIGHLIGHT = new createjs.Shape();
 
@@ -56,6 +64,8 @@ G.STAGE.addChild( GRID_HIGHLIGHT );
 
 MAP_WIDTH = width;
 MAP_HEIGHT = height;
+NUMBER_OF_COLUMNS = numberOfColumns;
+NUMBER_OF_LINES = numberOfLines;
 };
 
 
@@ -122,6 +132,9 @@ Map.calculatePosition = function( targetX, targetY )
 var line = 0;
 var column = 0;
 
+targetX -= STARTING_X;
+targetY -= STARTING_Y;
+
 for (var x = SQUARE_SIZE ; x < MAP_WIDTH ; x += SQUARE_SIZE)
     {
     if ( x >= targetX )
@@ -150,8 +163,9 @@ Map.mouseMoveEvents = function( event )
 {
 var position = Map.calculatePosition( event.clientX, event.clientY );
 
-GRID_HIGHLIGHT.x = position[ 1 ] * SQUARE_SIZE;
-GRID_HIGHLIGHT.y = position[ 0 ] * SQUARE_SIZE;
+
+GRID_HIGHLIGHT.x = STARTING_X + position[ 1 ] * SQUARE_SIZE;
+GRID_HIGHLIGHT.y = STARTING_Y + position[ 0 ] * SQUARE_SIZE;
 };
 
 
@@ -166,10 +180,32 @@ if ( MAP[ column ][ line ] )
 return true;
 };
 
+Map.getPosition = function( column, line )
+{
+var x = STARTING_X + column * SQUARE_SIZE + SQUARE_SIZE / 2;
+var y = STARTING_Y + line * SQUARE_SIZE + SQUARE_SIZE / 2;
+
+return {
+        x: x,
+        y: y
+    };
+};
+
 
 Map.getMap = function()
 {
 return MAP;
+};
+
+Map.getNumberOfLines = function()
+{
+return NUMBER_OF_LINES;
+};
+
+
+Map.getNumberOfColumns = function()
+{
+return NUMBER_OF_COLUMNS;
 };
 
 

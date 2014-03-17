@@ -46,7 +46,6 @@ Unit.prototype.setupShape = function()
 {
 var width = this.width;
 var height = this.height;
-var squareSize = Map.getSquareSize();
 
 var shape = new createjs.Shape();
 
@@ -56,11 +55,12 @@ g.beginFill( 'red' );
 g.drawRect( 0, 0, width, height );
 g.endFill();
 
+var position = Map.getPosition( this.column, this.line );
 
 shape.regX = width / 2;
 shape.regY = height / 2;
-shape.x = this.column * squareSize + width / 2;
-shape.y = this.line * squareSize + height / 2;
+shape.x = position.x;
+shape.y = position.y;
 
 G.STAGE.addChild( shape );
 
@@ -94,10 +94,11 @@ Unit.prototype.move = function( next )
 {
 var unitX = this.getX();
 var unitY = this.getY();
-var squareSize = Map.getSquareSize();
 
-var destX = next[ 1 ] * squareSize + this.width / 2;
-var destY = next[ 0 ] * squareSize + this.height / 2;
+var position = Map.getPosition( next[ 1 ], next[ 0 ] );
+
+var destX = position.x;
+var destY = position.y;
 
 var angleRads = calculateAngle( unitX, unitY * -1, destX, destY * -1 );
 

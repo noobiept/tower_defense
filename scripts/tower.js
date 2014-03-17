@@ -29,7 +29,6 @@ Tower.prototype.setupShape = function()
 {
 var width = this.width;
 var height = this.height;
-var squareSize = Map.getSquareSize();
 
 var shape = new createjs.Shape();
 
@@ -39,11 +38,12 @@ g.beginFill( 'blue' );
 g.drawRect( 0, 0, width, height );
 g.endFill();
 
+var position = Map.getPosition( this.column, this.line );
 
 shape.regX = width / 2;
 shape.regY = height / 2;
-shape.x = this.column * squareSize + width / 2;
-shape.y = this.line * squareSize + height / 2;
+shape.x = position.x;
+shape.y = position.y;
 
 G.STAGE.addChild( shape );
 
