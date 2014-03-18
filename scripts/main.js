@@ -11,7 +11,6 @@
         - tiled ( http://www.mapeditor.org/ ) : 0.9.1
 
     to doo:
-        - sometimes the unit's shape stays on the map (isn't removed)
 
  */
 
@@ -21,8 +20,7 @@ var G = {
     PRELOAD: null,
     BASE_URL: '',
     FPS: 40,
-    GAME_MENU_HEIGHT: 100,
-    TO_BE_REMOVED: []
+    GAME_MENU_HEIGHT: 100
 };
 
 

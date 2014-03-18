@@ -24,6 +24,7 @@ this.attack_limit = 50;
 this.attack_count = this.attack_limit;
 this.attack_speed = 1 / (createjs.Ticker.getInterval() / 1000 * this.attack_limit);
 this.targetUnit = null;
+this.removed = false;   // so that we don't try to remove the unit multiple times (this may happen if several towers have the .targetUnit pointing at the same unit)
 
 this.path = [];
 this.can_attack = false;
@@ -124,8 +125,15 @@ return this.shape.y;
 
 Unit.prototype.remove = function()
 {
+if ( this.removed )
+    {
+    return;
+    }
+
+this.removed = true;
+
 G.STAGE.removeChild( this.shape );
-console.log(Unit.ALL.length);
+
 var index = Unit.ALL.indexOf( this );
 
 Unit.ALL.splice( index, 1 );
@@ -138,7 +146,6 @@ this.health -= attacker.damage;
 
 if ( this.health <= 0 )
     {
-//    G.TO_BE_REMOVED.push( this );
     this.remove();
     return true;
     }
@@ -162,7 +169,6 @@ if( circlePointCollision( this.shape.x, this.shape.y, this.width / 8, this.next_
 
     if ( this.path.length == 0 )
         {
-//        G.TO_BE_REMOVED.push( this );
         this.remove();  //HERE
         return;
         }

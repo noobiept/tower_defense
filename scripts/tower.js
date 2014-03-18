@@ -23,6 +23,7 @@ this.attack_limit = 50;
 this.attack_count = this.attack_limit;
 this.attack_speed = 1 / (createjs.Ticker.getInterval() / 1000 * this.attack_limit);
 this.targetUnit = null;
+this.removed = false;
 
 this.shape = this.setupShape();
 
@@ -75,6 +76,13 @@ return this.shape.y;
 
 Tower.prototype.remove = function()
 {
+if ( this.removed )
+    {
+    return;
+    }
+
+this.removed = true;
+
 G.STAGE.removeChild( this.shape );
 
 Map.removeTower( this );
@@ -91,7 +99,6 @@ this.health -= attacker.damage;
 
 if ( this.health <= 0 )
     {
-//    G.TO_BE_REMOVED.push( this );
     this.remove();
     return true;
     }

@@ -169,14 +169,6 @@ for (a = Tower.ALL.length - 1 ; a >= 0 ; a--)
     }
 
 
-while ( G.TO_BE_REMOVED.length > 0 )
-    {
-    var element = G.TO_BE_REMOVED.pop();
-
-    element.remove();
-    }
-
-
 G.STAGE.update();
 };
 
