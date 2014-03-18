@@ -9,14 +9,21 @@ if ( !this.name )
     this.name = 'unit';
     }
 
-this.health = 100;
-this.movement_speed = 2;
-this.damage = 0;
-this.attack_speed = 50;
-this.attack_count = 0;
-this.range = 50;
+this.column = args.column;
+this.line = args.line;
+
 this.width = squareSize;
 this.height = squareSize;
+
+this.damage = 10;
+this.health = 20;
+this.range = 50;
+this.movement_speed = 2;
+
+this.attack_limit = 50;
+this.attack_count = this.attack_limit;
+this.attack_speed = 1 / (createjs.Ticker.getInterval() / 1000 * this.attack_limit);
+this.targetUnit = null;
 
 this.path = [];
 this.can_attack = false;
@@ -27,12 +34,8 @@ this.move_y = 0;
 this.next_x = 0;
 this.next_y = 0;
 
-this.column = args.column;
-this.line = args.line;
+this.shape = this.setupShape();
 
-this.shape = null;
-
-this.setupShape();
 
 Unit.ALL.push( this );
 
@@ -64,7 +67,7 @@ shape.y = position.y;
 
 G.STAGE.addChild( shape );
 
-this.shape = shape;
+return shape;
 };
 
 
@@ -122,16 +125,32 @@ return this.shape.y;
 Unit.prototype.remove = function()
 {
 G.STAGE.removeChild( this.shape );
-
+console.log(Unit.ALL.length);
 var index = Unit.ALL.indexOf( this );
 
 Unit.ALL.splice( index, 1 );
 };
 
 
+Unit.prototype.tookDamage = function( attacker )
+{
+this.health -= attacker.damage;
+
+if ( this.health <= 0 )
+    {
+//    G.TO_BE_REMOVED.push( this );
+    this.remove();
+    return true;
+    }
+
+return false;
+};
+
+
 
 Unit.prototype.tick = function()
 {
+    // deal with the unit's movement
 this.shape.x += this.move_x;
 this.shape.y += this.move_y;
 
@@ -143,12 +162,53 @@ if( circlePointCollision( this.shape.x, this.shape.y, this.width / 8, this.next_
 
     if ( this.path.length == 0 )
         {
+//        G.TO_BE_REMOVED.push( this );
         this.remove();  //HERE
+        return;
         }
 
     else
         {
         this.move( this.path.shift() );
+        }
+    }
+
+    // deal with the unit's attack
+if ( this.damage > 0 )
+    {
+    var target = this.targetUnit;
+
+        // check if its currently attacking a unit
+    if ( target )
+        {
+            // check if the unit is within the tower's range
+        if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
+            {
+            this.attack_count--;
+
+            if ( this.attack_count < 0 )
+                {
+                this.attack_count = this.attack_limit;
+
+                    // deal damage, and see if the unit died from this attack or not
+                if ( target.tookDamage( this ) )
+                    {
+                    this.targetUnit = null;
+                    }
+                }
+            }
+
+            // can't attack anymore, find other target
+        else
+            {
+            this.targetUnit = null;
+            }
+        }
+
+        // find a target
+    else
+        {
+        this.targetUnit = Map.getTowerInRange( this );
         }
     }
 };

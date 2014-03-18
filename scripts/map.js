@@ -214,6 +214,46 @@ return AStar( MAP, startPosition, endPosition );
 };
 
 
+Map.getUnitInRange = function( tower )
+{
+var x = tower.getX();
+var y = tower.getY();
+var rangeRadius = tower.range;
+
+for (var a = 0 ; a < Unit.ALL.length ; a++)
+    {
+    var unit = Unit.ALL[ a ];
+
+    if ( circlePointCollision( x, y, rangeRadius, unit.getX(), unit.getY() ) )
+        {
+        return unit;
+        }
+    }
+
+return null;
+};
+
+
+Map.getTowerInRange = function( unit )
+{
+var x = unit.getX();
+var y = unit.getY();
+var rangeRadius = unit.range;
+
+for (var a = 0 ; a < Tower.ALL.length ; a++)
+    {
+    var tower = Tower.ALL[ a ];
+
+    if ( circlePointCollision( x, y, rangeRadius, tower.getX(), tower.getY() ) )
+        {
+        return tower;
+        }
+    }
+
+return null;
+};
+
+
 Map.getNumberOfLines = function()
 {
 return NUMBER_OF_LINES;

@@ -158,9 +158,22 @@ if ( UNIT_COUNT >= UNIT_LIMIT )
 
 var a;
 
-for (a = 0 ; a < Unit.ALL.length ; a++)
+for (a = Unit.ALL.length - 1 ; a >= 0 ; a--)
     {
     Unit.ALL[ a ].tick();
+    }
+
+for (a = Tower.ALL.length - 1 ; a >= 0 ; a--)
+    {
+    Tower.ALL[ a ].tick();
+    }
+
+
+while ( G.TO_BE_REMOVED.length > 0 )
+    {
+    var element = G.TO_BE_REMOVED.pop();
+
+    element.remove();
     }
 
 
