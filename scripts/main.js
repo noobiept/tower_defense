@@ -12,6 +12,7 @@
 
     to doo:
 
+        - add obstacles (some squares where you can't add a tower), that can be passable or not by units
  */
 
 var G = {

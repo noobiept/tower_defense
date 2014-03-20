@@ -4,10 +4,6 @@ function Game()
 {
 
 }
-
-var UNIT_COUNT = 0;
-var UNIT_LIMIT = 150;
-
     // where the units start/spawn and to where they move
 var UNIT_START = {
         column: 0,
@@ -17,7 +13,26 @@ var UNIT_END = {
         column: 0,
         line: 0
     };
-
+var ALL_WAVES = [
+        {
+            type: 'Unit',
+            howMany: 10,
+            count: 0,       // count until limit, and then add a new unit
+            countLimit: 50
+        },
+        {
+            type: 'Unit',
+            howMany: 10,
+            count: 0,
+            countLimit: 10
+        }
+    ];
+var ACTIVE_WAVES = [];  // you may have more than 1 wave active (adding units)
+var CURRENT_WAVE = 0;
+var NO_MORE_WAVES = false;
+var WAVE_LIMIT = 400;
+var WAVE_COUNT = WAVE_LIMIT;    // start the first wave immediately
+var WAVE_ELEMENT = null;
 
 var ELEMENT_SELECTED = null;
 
@@ -58,6 +73,7 @@ UNIT_START.line = halfLine;
 UNIT_END.column = mapInfo.width - 1;
 UNIT_END.line = halfLine;
 
+WAVE_ELEMENT = document.querySelector( '.currentWave span' );
 
 createjs.Ticker.on( 'tick', Game.tick );
 
@@ -176,6 +192,7 @@ ELEMENT_SELECTED.unselected();
 ELEMENT_SELECTED = null;
 };
 
+
 Game.checkIfSelected = function( element )
 {
 if ( element == ELEMENT_SELECTED )
@@ -187,6 +204,12 @@ return false;
 };
 
 
+Game.end = function()
+{
+createjs.Ticker.setPaused( true );
+console.log('game end');
+};
+
 
 Game.tick = function( event )
 {
@@ -195,23 +218,65 @@ if ( event.paused )
     return;
     }
 
+var a;
 
-UNIT_COUNT++;
+WAVE_COUNT++;
 
-if ( UNIT_COUNT >= UNIT_LIMIT )
+if ( !NO_MORE_WAVES && WAVE_COUNT >= WAVE_LIMIT )
     {
-    UNIT_COUNT = 0;
+    WAVE_COUNT = 0;
 
-    new Unit({
-            column: UNIT_START.column,
-            line: UNIT_START.line,
-            destination_column: UNIT_END.column,
-            destination_line: UNIT_END.line
-        });
+    ACTIVE_WAVES.push( ALL_WAVES[ CURRENT_WAVE ] );
+
+    $( WAVE_ELEMENT ).text( CURRENT_WAVE + 1 );
+
+    CURRENT_WAVE++;
+    
+
+    if ( CURRENT_WAVE >= ALL_WAVES.length )
+        {
+        NO_MORE_WAVES = true;
+        }
     }
 
 
-var a;
+for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
+    {
+    var wave = ACTIVE_WAVES[ a ];
+
+    wave.count++;
+
+    if ( wave.count >= wave.countLimit )
+        {
+        wave.count = 0;
+
+        var className = window[ wave.type ];
+        new className({
+                column: UNIT_START.column,
+                line: UNIT_START.line,
+                destination_column: UNIT_END.column,
+                destination_line: UNIT_END.line
+            });
+
+        wave.howMany--;
+
+        if ( wave.howMany <= 0 )
+            {
+            var index = ACTIVE_WAVES.indexOf( wave );
+
+            ACTIVE_WAVES.splice( index, 1 );
+            }
+        }
+    }
+
+
+
+if ( NO_MORE_WAVES && ACTIVE_WAVES.length == 0 && Unit.ALL.length == 0 )
+    {
+    Game.end();
+    }
+
+
 
 for (a = Unit.ALL.length - 1 ; a >= 0 ; a--)
     {
