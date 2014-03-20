@@ -35,8 +35,12 @@ this.move_y = 0;
 this.next_x = 0;
 this.next_y = 0;
 
-this.shape = this.setupShape();
 
+this.container = null;
+this.rangeElement = null;
+this.shape = null;
+
+this.setupShape();
 
 Unit.ALL.push( this );
 
@@ -63,13 +67,47 @@ var position = Map.getPosition( this.column, this.line );
 
 shape.regX = width / 2;
 shape.regY = height / 2;
-shape.x = position.x;
-shape.y = position.y;
 
-G.STAGE.addChild( shape );
+    // the range circle
+var range = new createjs.Shape();
 
-return shape;
+var g = range.graphics;
+
+g.beginStroke( 'gray' );
+g.drawCircle( 0, 0, this.range );
+g.endStroke();
+
+range.visible = false;
+
+var container = new createjs.Container();
+
+container.addChild( shape );
+container.addChild( range );
+
+
+var position = Map.getPosition( this.column, this.line );
+
+container.x = position.x;
+container.y = position.y;
+
+G.STAGE.addChild( container );
+
+this.container = container;
+this.rangeElement = range;
+this.shape = shape;
 };
+
+Unit.prototype.selected = function()
+{
+this.rangeElement.visible = true;
+};
+
+
+Unit.prototype.unselected = function()
+{
+this.rangeElement.visible = false;
+};
+
 
 
 Unit.prototype.setMoveDestination = function( column, line )
@@ -114,13 +152,13 @@ this.next_y = destY;
 
 Unit.prototype.getX = function()
 {
-return this.shape.x;
+return this.container.x;
 };
 
 
 Unit.prototype.getY = function()
 {
-return this.shape.y;
+return this.container.y;
 };
 
 Unit.prototype.remove = function()
@@ -132,7 +170,7 @@ if ( this.removed )
 
 this.removed = true;
 
-G.STAGE.removeChild( this.shape );
+G.STAGE.removeChild( this.container );
 
 var index = Unit.ALL.indexOf( this );
 
@@ -158,13 +196,13 @@ return false;
 Unit.prototype.tick = function()
 {
     // deal with the unit's movement
-this.shape.x += this.move_x;
-this.shape.y += this.move_y;
+this.container.x += this.move_x;
+this.container.y += this.move_y;
 
-if( circlePointCollision( this.shape.x, this.shape.y, this.width / 8, this.next_x, this.next_y ) )
+if( circlePointCollision( this.getX(), this.getY(), this.width / 8, this.next_x, this.next_y ) )
     {
-    this.shape.x += this.move_x;
-    this.shape.y += this.move_y;
+    this.container.x += this.move_x;
+    this.container.y += this.move_y;
 
 
     if ( this.path.length == 0 )

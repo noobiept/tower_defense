@@ -19,6 +19,8 @@ var UNIT_END = {
     };
 
 
+var ELEMENT_SELECTED = null;
+
 
 Game.start = function()
 {
@@ -72,9 +74,48 @@ var button = event.button;
 var x = event.clientX;
 var y = event.clientY;
 
+if ( ELEMENT_SELECTED )
+    {
+    ELEMENT_SELECTED.unselected();
+    ELEMENT_SELECTED = null;
+    }
+
+
     // left click
 if ( button == 0 )
     {
+        // see if we're selecting an unit
+    for (var a = 0 ; a < Unit.ALL.length ; a++)
+        {
+        var unit = Unit.ALL[ a ];
+        var point = unit.shape.globalToLocal( x, y );
+
+        if ( unit.shape.hitTest( point.x, point.y ) )
+            {
+            unit.selected();
+
+            ELEMENT_SELECTED = unit;
+            return;
+            }
+        }
+
+        // see if we're selecting a tower
+    for (var a = 0 ; a < Tower.ALL.length ; a++)
+        {
+        var tower = Tower.ALL[ a ];
+        var point = tower.shape.globalToLocal( x, y );
+
+        if ( tower.shape.hitTest( point.x, point.y ) )
+            {
+            tower.selected();
+
+            ELEMENT_SELECTED = tower;
+            return;
+            }
+        }
+
+
+
         // check if its available that position
     var position = Map.calculatePosition( x, y );
 
@@ -106,7 +147,6 @@ if ( button == 0 )
             {
             console.log( "Can't block the unit's path." );
             }
-
         }
     }
 

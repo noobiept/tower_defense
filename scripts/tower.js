@@ -25,8 +25,12 @@ this.attack_speed = 1 / (createjs.Ticker.getInterval() / 1000 * this.attack_limi
 this.targetUnit = null;
 this.removed = false;
 
-this.shape = this.setupShape();
 
+this.container = null;
+this.rangeElement = null;
+this.shape = null;
+
+this.setupShape();
 
 Tower.ALL.push( this );
 
@@ -49,28 +53,59 @@ g.beginFill( 'blue' );
 g.drawRect( 0, 0, width, height );
 g.endFill();
 
-var position = Map.getPosition( this.column, this.line );
-
 shape.regX = width / 2;
 shape.regY = height / 2;
-shape.x = position.x;
-shape.y = position.y;
 
-G.STAGE.addChild( shape );
+    // the range circle
+var range = new createjs.Shape();
 
-return shape;
+var g = range.graphics;
+
+g.beginStroke( 'gray' );
+g.drawCircle( 0, 0, this.range );
+g.endStroke();
+
+range.visible = false;
+
+var container = new createjs.Container();
+
+container.addChild( shape );
+container.addChild( range );
+
+
+var position = Map.getPosition( this.column, this.line );
+
+container.x = position.x;
+container.y = position.y;
+
+G.STAGE.addChild( container );
+
+this.container = container;
+this.rangeElement = range;
+this.shape = shape;
+};
+
+Tower.prototype.selected = function()
+{
+    // show the range
+this.rangeElement.visible = true;
+};
+
+Tower.prototype.unselected = function()
+{
+this.rangeElement.visible = false;
 };
 
 
 Tower.prototype.getX = function()
 {
-return this.shape.x;
+return this.container.x;
 };
 
 
 Tower.prototype.getY = function()
 {
-return this.shape.y;
+return this.container.y;
 };
 
 
@@ -83,7 +118,7 @@ if ( this.removed )
 
 this.removed = true;
 
-G.STAGE.removeChild( this.shape );
+G.STAGE.removeChild( this.container );
 
 Map.removeTower( this );
 
