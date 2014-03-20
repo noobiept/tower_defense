@@ -43,6 +43,10 @@ G.STAGE = new createjs.Stage( G.CANVAS );
 
 createjs.Ticker.setFPS( G.FPS );
 
+Tower.init();
+Unit.init();
+
+
 G.PRELOAD = new createjs.LoadQueue();
 
 var manifest = [

@@ -39,6 +39,28 @@ Map.addTower( this );
 
 Tower.ALL = [];
 
+var SELECTION_MENU;
+
+Tower.init = function()
+{
+var container = document.querySelector( '#GameMenu-tower' );
+
+var name = container.querySelector( '.name span' );
+var health = container.querySelector( '.health span' );
+var damage = container.querySelector( '.damage span' );
+var attack_speed = container.querySelector( '.attack_speed span' );
+var range = container.querySelector( '.range span' );
+
+SELECTION_MENU = {
+        container: container,
+        name: name,
+        health: health,
+        damage: damage,
+        attack_speed: attack_speed,
+        range: range
+    };
+};
+
 
 Tower.prototype.setupShape = function()
 {
@@ -89,12 +111,30 @@ Tower.prototype.selected = function()
 {
     // show the range
 this.rangeElement.visible = true;
+
+    // show the game menu
+$( SELECTION_MENU.container ).css( 'display', 'flex' );
+
+    // update the info that won't change during the selection
+$( SELECTION_MENU.name ).text( this.name );
+$( SELECTION_MENU.damage ).text( this.damage );
+$( SELECTION_MENU.attack_speed ).text( this.attack_speed );
+$( SELECTION_MENU.range ).text( this.range );
 };
 
 Tower.prototype.unselected = function()
 {
 this.rangeElement.visible = false;
+
+    // hide the game menu
+$( SELECTION_MENU.container ).css( 'display', 'none' );
 };
+
+Tower.prototype.updateSelection = function()
+{
+$( SELECTION_MENU.health ).text( this.health );
+};
+
 
 
 Tower.prototype.getX = function()
@@ -125,6 +165,11 @@ Map.removeTower( this );
 var index = Tower.ALL.indexOf( this );
 
 Tower.ALL.splice( index, 1 );
+
+if ( Game.checkIfSelected( this ) )
+    {
+    Game.clearSelection();
+    }
 };
 
 

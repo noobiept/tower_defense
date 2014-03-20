@@ -49,6 +49,32 @@ this.setMoveDestination( this.destination_column, this.destination_line );
 
 Unit.ALL = [];
 
+var SELECTION_MENU;
+
+
+Unit.init = function()
+{
+var container = document.querySelector( '#GameMenu-unit' );
+
+var name = container.querySelector( '.name span' );
+var health = container.querySelector( '.health span' );
+var damage = container.querySelector( '.damage span' );
+var attack_speed = container.querySelector( '.attack_speed span' );
+var range = container.querySelector( '.range span' );
+var mov_speed = container.querySelector( '.mov_speed span' );
+
+SELECTION_MENU = {
+        container: container,
+        name: name,
+        health: health,
+        damage: damage,
+        attack_speed: attack_speed,
+        range: range,
+        mov_speed: mov_speed
+    };
+};
+
+
 
 Unit.prototype.setupShape = function()
 {
@@ -100,13 +126,32 @@ this.shape = shape;
 Unit.prototype.selected = function()
 {
 this.rangeElement.visible = true;
+
+    // show the game menu
+$( SELECTION_MENU.container ).css( 'display', 'flex' );
+
+    // update the info that won't change during the selection
+$( SELECTION_MENU.name ).text( this.name );
+$( SELECTION_MENU.damage ).text( this.damage );
+$( SELECTION_MENU.attack_speed ).text( this.attack_speed );
+$( SELECTION_MENU.range ).text( this.range );
+$( SELECTION_MENU.mov_speed ).text( this.movement_speed );
 };
 
 
 Unit.prototype.unselected = function()
 {
 this.rangeElement.visible = false;
+
+    // hide the game menu
+$( SELECTION_MENU.container ).css( 'display', 'none' );
 };
+
+Unit.prototype.updateSelection = function()
+{
+$( SELECTION_MENU.health ).text( this.health );
+};
+
 
 
 
@@ -175,6 +220,11 @@ G.STAGE.removeChild( this.container );
 var index = Unit.ALL.indexOf( this );
 
 Unit.ALL.splice( index, 1 );
+
+if ( Game.checkIfSelected( this ) )
+    {
+    Game.clearSelection();
+    }
 };
 
 

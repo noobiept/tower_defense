@@ -171,7 +171,7 @@ return [ line, column ];
 
 Map.mouseMoveEvents = function( event )
 {
-var position = Map.calculatePosition( event.clientX, event.clientY );
+var position = Map.calculatePosition( event.stageX, event.stageY );
 
 
 GRID_HIGHLIGHT.x = STARTING_X + position[ 1 ] * SQUARE_SIZE;

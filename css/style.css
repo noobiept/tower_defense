@@ -4,3 +4,31 @@
     top: 0;
     left: 0;
     }
+
+
+#GameMenu
+    {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    -webkit-user-select: none;
+    user-select: none;
+    text-align: center;
+    font-size: 18px;
+    }
+
+
+#GameMenu-unit, #GameMenu-tower
+    {
+    display: none;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    }
+
+.MenuBlock
+    {
+    min-width: 200px;
+    margin: 0 20px;
+    }

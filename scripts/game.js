@@ -64,7 +64,7 @@ createjs.Ticker.on( 'tick', Game.tick );
     // disable the context menu (when right-clicking)
 window.oncontextmenu = function( event ) { return false; };
 G.CANVAS.addEventListener( 'mouseup', Game.mouseEvents );
-G.CANVAS.addEventListener( 'mousemove', Map.mouseMoveEvents );
+G.STAGE.on( 'stagemousemove', Map.mouseMoveEvents );
 };
 
 
@@ -76,8 +76,7 @@ var y = event.clientY;
 
 if ( ELEMENT_SELECTED )
     {
-    ELEMENT_SELECTED.unselected();
-    ELEMENT_SELECTED = null;
+    Game.clearSelection();
     }
 
 
@@ -171,6 +170,22 @@ else if ( button == 2 )
 };
 
 
+Game.clearSelection = function()
+{
+ELEMENT_SELECTED.unselected();
+ELEMENT_SELECTED = null;
+};
+
+Game.checkIfSelected = function( element )
+{
+if ( element == ELEMENT_SELECTED )
+    {
+    return true;
+    }
+
+return false;
+};
+
 
 
 Game.tick = function( event )
@@ -208,6 +223,11 @@ for (a = Tower.ALL.length - 1 ; a >= 0 ; a--)
     Tower.ALL[ a ].tick();
     }
 
+
+if ( ELEMENT_SELECTED )
+    {
+    ELEMENT_SELECTED.updateSelection();
+    }
 
 G.STAGE.update();
 };
