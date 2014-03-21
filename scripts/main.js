@@ -13,11 +13,8 @@
     to doo:
 
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
-        - be able to upgrade towers
         - a delay when removing towers
         - a delay when upgrading towers
-        - add gold to buy towers/upgrades
-        - add lives, you loose game if let a certain number of units reach the end
         - show what the upgrade will do (what is the increase in damage/range/etc)
         - add armor (damage reduction)
         - add a line around the tower's shape, to distinguish when they are all together

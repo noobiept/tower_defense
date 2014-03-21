@@ -237,6 +237,11 @@ ELEMENT_SELECTED.unselected();
 ELEMENT_SELECTED = null;
 };
 
+Game.getSelection = function()
+{
+return ELEMENT_SELECTED;
+};
+
 
 Game.checkIfSelected = function( element )
 {

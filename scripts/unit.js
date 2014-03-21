@@ -274,17 +274,16 @@ if( circlePointCollision( this.getX(), this.getY(), this.width / 8, this.next_x,
     // deal with the unit's attack
 if ( this.damage > 0 )
     {
-    var target = this.targetUnit;
-
-        // check if its currently attacking a unit
-    if ( target )
+            // see if we can attack right now
+    if ( this.attack_count <= 0 )
         {
-            // check if the unit is within the tower's range
-        if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
-            {
-            this.attack_count--;
+        var target = this.targetUnit;
 
-            if ( this.attack_count < 0 )
+            // check if its currently attacking a unit
+        if ( target )
+            {
+                // check if the unit is within the tower's range
+            if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
                 {
                 this.attack_count = this.attack_limit;
 
@@ -294,19 +293,25 @@ if ( this.damage > 0 )
                     this.targetUnit = null;
                     }
                 }
+
+                // can't attack anymore, find other target
+            else
+                {
+                this.targetUnit = null;
+                }
             }
 
-            // can't attack anymore, find other target
+            // find a target
         else
             {
-            this.targetUnit = null;
+            this.targetUnit = Map.getTowerInRange( this );
             }
         }
 
-        // find a target
+        // we need to wait a bit
     else
         {
-        this.targetUnit = Map.getTowerInRange( this );
+        this.attack_count--;
         }
     }
 };

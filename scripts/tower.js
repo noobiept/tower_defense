@@ -15,14 +15,24 @@ this.line = parseInt( args.line, 10 );
 this.width = squareSize * 2;
 this.height = squareSize * 2;
 
-this.damage = 10;
-this.health = 20;
-this.range = 50;
+this.upgrade_level = 0;
+this.stats_level = [
+        { damage: 10, health: 20, range: 50, attack_speed: 2 },
+        { damage: 15, health: 30, range: 55, attack_speed: 4 },
+        { damage: 20, health: 40, range: 60, attack_speed: 6 }
+    ];
+
+var currentLevel = this.stats_level[ this.upgrade_level ];
+
+this.damage = currentLevel.damage;
+this.health = currentLevel.health;
+this.range = currentLevel.range;
 this.cost = Tower.cost;
 
-this.attack_limit = 50;
-this.attack_count = this.attack_limit;
-this.attack_speed = 1 / (createjs.Ticker.getInterval() / 1000 * this.attack_limit);
+this.attack_speed = currentLevel.attack_speed;
+this.attack_limit = 1 / (createjs.Ticker.getInterval() / 1000 * this.attack_speed);
+this.attack_count = 0;
+
 this.targetUnit = null;
 this.removed = false;
 
@@ -51,6 +61,15 @@ var health = container.querySelector( '.health span' );
 var damage = container.querySelector( '.damage span' );
 var attack_speed = container.querySelector( '.attack_speed span' );
 var range = container.querySelector( '.range span' );
+var upgrade = container.querySelector( '.upgrade' );
+
+upgrade.onclick = function()
+    {
+        // if we can click on this element, it means we have a tower selected, so we can assume that what we get is a tower object
+    var tower = Game.getSelection();
+
+    tower.upgrade();
+    };
 
 SELECTION_MENU = {
         container: container,
@@ -119,9 +138,7 @@ $( SELECTION_MENU.container ).css( 'display', 'flex' );
 
     // update the info that won't change during the selection
 $( SELECTION_MENU.name ).text( this.name );
-$( SELECTION_MENU.damage ).text( this.damage );
-$( SELECTION_MENU.attack_speed ).text( this.attack_speed );
-$( SELECTION_MENU.range ).text( this.range );
+
 };
 
 Tower.prototype.unselected = function()
@@ -134,9 +151,39 @@ $( SELECTION_MENU.container ).css( 'display', 'none' );
 
 Tower.prototype.updateSelection = function()
 {
+$( SELECTION_MENU.damage ).text( this.damage );
+$( SELECTION_MENU.attack_speed ).text( this.attack_speed );
+$( SELECTION_MENU.range ).text( this.range );
 $( SELECTION_MENU.health ).text( this.health );
 };
 
+
+Tower.prototype.upgrade = function()
+{
+    // no more upgrades
+if ( this.upgrade_level + 1 >= this.stats_level.length )
+    {
+    console.log('no more tower upgrades');
+    return;
+    }
+
+this.upgrade_level++;
+
+var currentLevel = this.stats_level[ this.upgrade_level ];
+
+this.damage = currentLevel.damage;
+this.health = currentLevel.health;
+this.range = currentLevel.range;
+this.attack_speed = currentLevel.attack_speed;
+
+
+var g = this.rangeElement.graphics;
+
+g.clear();
+g.beginStroke( 'gray' );
+g.drawCircle( 0, 0, this.range );
+g.endStroke();
+};
 
 
 Tower.prototype.getX = function()
@@ -193,17 +240,16 @@ Tower.prototype.tick = function()
 {
 if ( this.damage > 0 )
     {
-    var target = this.targetUnit;
-
-        // check if its currently attacking a unit
-    if ( target )
+        // see if we can attack right now
+    if ( this.attack_count <= 0 )
         {
-            // check if the unit is within the tower's range
-        if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
-            {
-            this.attack_count--;
+        var target = this.targetUnit;
 
-            if ( this.attack_count < 0 )
+            // check if its currently attacking a unit
+        if ( target )
+            {
+                // check if the unit is within the tower's range
+            if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
                 {
                 this.attack_count = this.attack_limit;
 
@@ -214,19 +260,25 @@ if ( this.damage > 0 )
                     this.targetUnit = null;
                     }
                 }
+
+                // can't attack anymore, find other target
+            else
+                {
+                this.targetUnit = null;
+                }
             }
 
-            // can't attack anymore, find other target
+            // find a target
         else
             {
-            this.targetUnit = null;
+            this.targetUnit = Map.getUnitInRange( this );
             }
         }
 
-        // find a target
+        // we need to wait a bit
     else
         {
-        this.targetUnit = Map.getUnitInRange( this );
+        this.attack_count--;
         }
     }
 };
