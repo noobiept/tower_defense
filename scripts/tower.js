@@ -17,8 +17,8 @@ this.height = squareSize * 2;
 
 this.upgrade_level = 0;
 this.stats_level = [
-        { damage: 10, health: 20, range: 50, attack_speed: 2 },
-        { damage: 15, health: 30, range: 55, attack_speed: 4 },
+        { damage: 10, health: 20, range: 50, attack_speed: 2, upgrade_cost: 10 },
+        { damage: 15, health: 30, range: 55, attack_speed: 4, upgrade_cost: 10 },
         { damage: 20, health: 40, range: 60, attack_speed: 6 }
     ];
 
@@ -67,9 +67,35 @@ upgrade.onclick = function()
     {
         // if we can click on this element, it means we have a tower selected, so we can assume that what we get is a tower object
     var tower = Game.getSelection();
+    var upgradeCost = tower.stats_level[ tower.upgrade_level ].upgrade_cost;
+    if ( Game.haveEnoughGold( upgradeCost ) )
+        {
+        tower.upgrade();
+        Game.updateGold( -upgradeCost );
 
-    tower.upgrade();
+            // can't upgrade anymore, we can remove the upgrade button
+        if ( tower.maxUpgrade() )
+            {
+            SELECTION_MENU.showNextUpgrade = false;
+            $( upgrade ).css( 'display', 'none' );
+            }
+        }
+
+    else
+        {
+        console.log('not enough gold to upgrade');
+        }
     };
+
+upgrade.onmouseover = function()
+    {
+    SELECTION_MENU.showNextUpgrade = true;
+    };
+upgrade.onmouseout = function()
+    {
+    SELECTION_MENU.showNextUpgrade = false;
+    };
+
 
 SELECTION_MENU = {
         container: container,
@@ -77,7 +103,9 @@ SELECTION_MENU = {
         health: health,
         damage: damage,
         attack_speed: attack_speed,
-        range: range
+        range: range,
+        upgrade: upgrade,
+        showNextUpgrade: false
     };
 };
 
@@ -136,6 +164,16 @@ this.rangeElement.visible = true;
     // show the game menu
 $( SELECTION_MENU.container ).css( 'display', 'flex' );
 
+if ( this.maxUpgrade() )
+    {
+    $( SELECTION_MENU.upgrade ).css( 'display', 'none' );
+    }
+
+else
+    {
+    $( SELECTION_MENU.upgrade ).css( 'display', 'block' );
+    }
+
     // update the info that won't change during the selection
 $( SELECTION_MENU.name ).text( this.name );
 
@@ -151,10 +189,26 @@ $( SELECTION_MENU.container ).css( 'display', 'none' );
 
 Tower.prototype.updateSelection = function()
 {
-$( SELECTION_MENU.damage ).text( this.damage );
-$( SELECTION_MENU.attack_speed ).text( this.attack_speed );
-$( SELECTION_MENU.range ).text( this.range );
-$( SELECTION_MENU.health ).text( this.health );
+var damage = this.damage;
+var attack_speed = this.attack_speed;
+var range = this.range;
+var health = this.health;
+
+if ( SELECTION_MENU.showNextUpgrade )
+    {
+    var next = this.stats_level[ this.upgrade_level + 1 ];
+
+    damage       += ' (' + next.damage       + ')';
+    attack_speed += ' (' + next.attack_speed + ')';
+    range        += ' (' + next.range        + ')';
+    health       += ' (' + next.health       + ')';
+    }
+
+
+$( SELECTION_MENU.damage ).text( damage );
+$( SELECTION_MENU.attack_speed ).text( attack_speed );
+$( SELECTION_MENU.range ).text( range );
+$( SELECTION_MENU.health ).text( health );
 };
 
 
@@ -183,6 +237,17 @@ g.clear();
 g.beginStroke( 'gray' );
 g.drawCircle( 0, 0, this.range );
 g.endStroke();
+};
+
+
+Tower.prototype.maxUpgrade = function()
+{
+if ( this.upgrade_level + 1 >= this.stats_level.length )
+    {
+    return true;
+    }
+
+return false;
 };
 
 

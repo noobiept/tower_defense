@@ -15,7 +15,6 @@
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - a delay when removing towers
         - a delay when upgrading towers
-        - show what the upgrade will do (what is the increase in damage/range/etc)
         - add armor (damage reduction)
         - add a line around the tower's shape, to distinguish when they are all together
         - try not to add towers on top of a unit

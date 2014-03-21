@@ -106,6 +106,18 @@ GOLD += gold;
 $( ELEMENTS.currentGold ).text( GOLD );
 };
 
+
+Game.haveEnoughGold = function( price )
+{
+if ( GOLD < price )
+    {
+    return false;
+    }
+
+return true;
+};
+
+
 Game.updateLife = function( life )
 {
 LIFE += life;
@@ -166,7 +178,7 @@ if ( button == 0 )
 
 
         // see if we can afford a tower
-    if ( GOLD < Tower.cost )
+    if ( !Game.haveEnoughGold( Tower.cost ) )
         {
         console.log('not enough gold');
         return;
