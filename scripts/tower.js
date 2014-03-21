@@ -18,6 +18,7 @@ this.height = squareSize * 2;
 this.damage = 10;
 this.health = 20;
 this.range = 50;
+this.cost = Tower.cost;
 
 this.attack_limit = 50;
 this.attack_count = this.attack_limit;
@@ -37,6 +38,7 @@ Map.addTower( this );
 }
 
 Tower.ALL = [];
+Tower.cost = 10;
 
 var SELECTION_MENU;
 
@@ -208,6 +210,7 @@ if ( this.damage > 0 )
                     // deal damage, and see if the unit died from this attack or not
                 if ( target.tookDamage( this ) )
                     {
+                    Game.updateGold( target.gold );
                     this.targetUnit = null;
                     }
                 }

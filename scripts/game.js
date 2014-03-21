@@ -32,9 +32,18 @@ var CURRENT_WAVE = 0;
 var NO_MORE_WAVES = false;
 var WAVE_LIMIT = 400;
 var WAVE_COUNT = WAVE_LIMIT;    // start the first wave immediately
-var WAVE_ELEMENT = null;
 
 var ELEMENT_SELECTED = null;
+
+var ELEMENTS = {
+            // game menu
+        currentWave: null,
+        currentGold: null,
+        currentLife: null
+    };
+
+var GOLD = 0;
+var LIFE = 0;
 
 
 Game.start = function()
@@ -73,7 +82,13 @@ UNIT_START.line = halfLine;
 UNIT_END.column = mapInfo.width - 1;
 UNIT_END.line = halfLine;
 
-WAVE_ELEMENT = document.querySelector( '.currentWave span' );
+ELEMENTS.currentWave = document.querySelector( '.currentWave span' );
+ELEMENTS.currentGold = document.querySelector( '.currentGold span' );
+ELEMENTS.currentLife = document.querySelector( '.currentLife span' );
+
+
+Game.updateGold( 100 );
+Game.updateLife( 20 );
 
 createjs.Ticker.on( 'tick', Game.tick );
 
@@ -82,6 +97,27 @@ window.oncontextmenu = function( event ) { return false; };
 G.CANVAS.addEventListener( 'mouseup', Game.mouseEvents );
 G.STAGE.on( 'stagemousemove', Map.mouseMoveEvents );
 };
+
+
+Game.updateGold = function( gold )
+{
+GOLD += gold;
+
+$( ELEMENTS.currentGold ).text( GOLD );
+};
+
+Game.updateLife = function( life )
+{
+LIFE += life;
+
+if ( LIFE <= 0 )
+    {
+    Game.end();
+    }
+
+$( ELEMENTS.currentLife ).text( LIFE );
+};
+
 
 
 Game.mouseEvents = function( event )
@@ -128,6 +164,15 @@ if ( button == 0 )
             }
         }
 
+
+        // see if we can afford a tower
+    if ( GOLD < Tower.cost )
+        {
+        console.log('not enough gold');
+        return;
+        }
+
+
     var highlight = Map.getHighlightSquare();
 
     var column = highlight.column;
@@ -146,10 +191,11 @@ if ( button == 0 )
 
         if ( path.length > 0 )
             {
-            new Tower({
+            var tower = new Tower({
                     column: column,
                     line: line
                 });
+            Game.updateGold( -tower.cost );
 
             Unit.redoMoveDestination();
             }
@@ -175,6 +221,9 @@ else if ( button == 2 )
     if ( tower )
         {
         tower.remove();
+
+            // recover half the cost
+        Game.updateGold( tower.cost / 2 );
 
         Unit.redoMoveDestination();
         }
@@ -224,7 +273,7 @@ if ( !NO_MORE_WAVES && WAVE_COUNT >= WAVE_LIMIT )
 
     ACTIVE_WAVES.push( ALL_WAVES[ CURRENT_WAVE ] );
 
-    $( WAVE_ELEMENT ).text( CURRENT_WAVE + 1 );
+    $( ELEMENTS.currentWave ).text( CURRENT_WAVE + 1 );
 
     CURRENT_WAVE++;
 

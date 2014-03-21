@@ -19,6 +19,7 @@ this.damage = 10;
 this.health = 20;
 this.range = 50;
 this.movement_speed = 2;
+this.gold = 10;
 
 this.attack_limit = 50;
 this.attack_count = this.attack_limit;
@@ -260,6 +261,7 @@ if( circlePointCollision( this.getX(), this.getY(), this.width / 8, this.next_x,
     if ( this.path.length == 0 )
         {
         this.remove();  //HERE
+        Game.updateLife( -1 );
         return;
         }
 
