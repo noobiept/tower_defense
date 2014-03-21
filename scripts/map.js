@@ -21,9 +21,14 @@ var STARTING_Y = 0;
     // 1 -> impassable square
     // main array represents the columns (MAP[ 0 ], first column, MAP[ 0 ][ 1 ], first column and second line)
 var MAP = [];
-var SQUARE_SIZE = 20;   // in pixels
+var SQUARE_SIZE = 10;   // in pixels
 
-var GRID_HIGHLIGHT = null;
+var GRID_HIGHLIGHT = {
+        shape: null,
+        column: 0,
+        line: 0
+    };
+
 
 
 Map.init = function( width, height )
@@ -52,16 +57,19 @@ Map.addWall( STARTING_X + width, STARTING_Y, WALL_THICKNESS, height + WALL_THICK
 Map.addWall( STARTING_X, STARTING_Y, width, WALL_THICKNESS );         // top
 Map.addWall( STARTING_X, STARTING_Y + height, width, WALL_THICKNESS );    // bottom
 
-GRID_HIGHLIGHT = new createjs.Shape();
 
-var g = GRID_HIGHLIGHT.graphics;
+var highlight = new createjs.Shape();
+
+
+var g = highlight.graphics;
 
 g.beginFill( 'rgba(0,255,0,0.3)' );
-g.drawRect( 0, 0, SQUARE_SIZE, SQUARE_SIZE );
+g.drawRect( 0, 0, SQUARE_SIZE * 2, SQUARE_SIZE * 2 );
 g.endFill();
 
-G.STAGE.addChild( GRID_HIGHLIGHT );
+G.STAGE.addChild( highlight );
 
+GRID_HIGHLIGHT.shape = highlight;
 MAP_WIDTH = width;
 MAP_HEIGHT = height;
 NUMBER_OF_COLUMNS = numberOfColumns;
@@ -73,12 +81,18 @@ NUMBER_OF_LINES = numberOfLines;
 Map.addTower = function( tower )
 {
 MAP[ tower.column ][ tower.line ] = tower;
+MAP[ tower.column + 1 ][ tower.line ] = tower;
+MAP[ tower.column ][ tower.line + 1 ] = tower;
+MAP[ tower.column + 1 ][ tower.line + 1 ] = tower;
 };
 
 
 Map.removeTower = function( tower )
 {
 MAP[ tower.column ][ tower.line ] = null;
+MAP[ tower.column + 1 ][ tower.line ] = null;
+MAP[ tower.column ][ tower.line + 1 ] = null;
+MAP[ tower.column + 1 ][ tower.line + 1 ] = null;
 };
 
 
@@ -173,16 +187,49 @@ Map.mouseMoveEvents = function( event )
 {
 var position = Map.calculatePosition( event.stageX, event.stageY );
 
+var column = position[ 1 ];
+var line = position[ 0 ];
 
-GRID_HIGHLIGHT.x = STARTING_X + position[ 1 ] * SQUARE_SIZE;
-GRID_HIGHLIGHT.y = STARTING_Y + position[ 0 ] * SQUARE_SIZE;
+    // highlight is same size as a tower (2x2), so can't let it go to last position
+if ( column + 1 >= NUMBER_OF_COLUMNS )
+    {
+    column--;
+    }
+
+if ( line + 1 >= NUMBER_OF_LINES )
+    {
+    line--;
+    }
+
+GRID_HIGHLIGHT.column = column;
+GRID_HIGHLIGHT.line = line;
+
+GRID_HIGHLIGHT.shape.x = STARTING_X + column * SQUARE_SIZE;
+GRID_HIGHLIGHT.shape.y = STARTING_Y + line * SQUARE_SIZE;
+};
+
+Map.getHighlightSquare = function()
+{
+return GRID_HIGHLIGHT;
 };
 
 
+/*
+    Checks if its possible to add a tower in this position (tower occupies 2x2 squares)
+ */
 
 Map.isAvailable = function( column, line )
 {
-if ( MAP[ column ][ line ] )
+    // check for the limits of the map
+if ( column < 0 || column + 1 >= NUMBER_OF_COLUMNS ||
+     line < 0 || line + 1 >= NUMBER_OF_LINES )
+    {
+    return false;
+    }
+
+    // check if there's already a tower in this position
+if ( MAP[ column ][ line ] || MAP[ column + 1 ][ line ] ||
+     MAP[ column ][ line + 1 ] || MAP[ column + 1 ][ line + 1 ] )
     {
     return false;
     }
@@ -192,8 +239,8 @@ return true;
 
 Map.getPosition = function( column, line )
 {
-var x = STARTING_X + column * SQUARE_SIZE + SQUARE_SIZE / 2;
-var y = STARTING_Y + line * SQUARE_SIZE + SQUARE_SIZE / 2;
+var x = STARTING_X + column * SQUARE_SIZE;
+var y = STARTING_Y + line * SQUARE_SIZE;
 
 return {
         x: x,

@@ -12,8 +12,8 @@ if ( !this.name )
 this.column = parseInt( args.column, 10 );
 this.line = parseInt( args.line, 10 );
 
-this.width = squareSize;
-this.height = squareSize;
+this.width = squareSize * 2;
+this.height = squareSize * 2;
 
 this.damage = 10;
 this.health = 20;
@@ -24,7 +24,6 @@ this.attack_count = this.attack_limit;
 this.attack_speed = 1 / (createjs.Ticker.getInterval() / 1000 * this.attack_limit);
 this.targetUnit = null;
 this.removed = false;
-
 
 this.container = null;
 this.rangeElement = null;
@@ -75,8 +74,6 @@ g.beginFill( 'blue' );
 g.drawRect( 0, 0, width, height );
 g.endFill();
 
-shape.regX = width / 2;
-shape.regY = height / 2;
 
     // the range circle
 var range = new createjs.Shape();
@@ -88,6 +85,9 @@ g.drawCircle( 0, 0, this.range );
 g.endStroke();
 
 range.visible = false;
+
+range.regX = -(width / 2);
+range.regY = -(height / 2);
 
 var container = new createjs.Container();
 

@@ -16,7 +16,7 @@ var UNIT_END = {
 var ALL_WAVES = [
         {
             type: 'Unit',
-            howMany: 10,
+            howMany: 50,
             count: 0,       // count until limit, and then add a new unit
             countLimit: 50
         },
@@ -57,7 +57,7 @@ for (var a = 0 ; a < objects.length ; a++)
 
         // the map editor gives the x/y position based on the bottom left corner, but in the game we use the top left, so need to adjust that (since each element occupies a square, we can just subtract 1)
     args.column = parseInt( element.x / squareSize );
-    args.line = parseInt( element.y / squareSize ) - 1;
+    args.line = parseInt( element.y / squareSize ) - 2;
 
     var theClass = window[ element.type ];
 
@@ -95,7 +95,6 @@ if ( ELEMENT_SELECTED )
     Game.clearSelection();
     }
 
-
     // left click
 if ( button == 0 )
     {
@@ -129,13 +128,10 @@ if ( button == 0 )
             }
         }
 
+    var highlight = Map.getHighlightSquare();
 
-
-        // check if its available that position
-    var position = Map.calculatePosition( x, y );
-
-    var column = position[ 1 ];
-    var line = position[ 0 ];
+    var column = highlight.column;
+    var line = highlight.line;
 
     if ( Map.isAvailable( column, line ) )
         {
@@ -206,7 +202,7 @@ return false;
 
 Game.end = function()
 {
-createjs.Ticker.setPaused( true );
+//createjs.Ticker.setPaused( true );
 console.log('game end');
 };
 
@@ -231,7 +227,7 @@ if ( !NO_MORE_WAVES && WAVE_COUNT >= WAVE_LIMIT )
     $( WAVE_ELEMENT ).text( CURRENT_WAVE + 1 );
 
     CURRENT_WAVE++;
-    
+
 
     if ( CURRENT_WAVE >= ALL_WAVES.length )
         {

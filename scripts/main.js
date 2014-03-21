@@ -13,6 +13,76 @@
     to doo:
 
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
+        - be able to upgrade towers
+        - a delay when removing towers
+        - a delay when upgrading towers
+        - add gold to buy towers/upgrades
+        - add lives, you loose game if let a certain number of units reach the end
+        - show what the upgrade will do (what is the increase in damage/range/etc)
+        - add armor (damage reduction)
+        - add a line around the tower's shape, to distinguish when they are all together
+        - try not to add towers on top of a unit
+
+        types of units:
+
+            - normal
+            - group
+            - fast
+            - flying
+            - spawn
+            - boss (a bigger version of the other types)
+            - group
+            - immune
+
+        types of towers:
+
+            - basic tower
+                - single target
+                - ground/air
+                - low cost
+                - low damage
+                - low fire rate
+                - mid range
+
+            - fast tower
+                - single target
+                - ground/air
+                - mid cost
+                - low damage
+                - high fire rate
+                - mid range
+
+            - rocket tower
+                - area of damage
+                - ground
+                - mid cost
+                - low fire rate
+                - low damage
+                - mid range
+
+            - anti-air
+                - fires 4 shots at the time
+                - air
+                - high cost
+                - mid fire rate
+                - mid damage
+                - mid range
+
+            - frost tower
+                - single target. slows down unit
+                - ground/air
+                - low fire rate
+                - high cost
+                - low damage
+                - mid range
+
+            - bash tower
+                - area of damage. chance to stun/slow
+                - ground
+                - high cost
+                - mid fire rate
+                - high damage
+                - small range
  */
 
 var G = {

@@ -89,13 +89,14 @@ g.beginFill( 'red' );
 g.drawRect( 0, 0, width, height );
 g.endFill();
 
-var position = Map.getPosition( this.column, this.line );
-
-shape.regX = width / 2;
-shape.regY = height / 2;
+//shape.regX = width / 2;
+//shape.regY = height / 2;
 
     // the range circle
 var range = new createjs.Shape();
+
+range.regX = -(width / 2);
+range.regY = -(height / 2);
 
 var g = range.graphics;
 
@@ -170,6 +171,7 @@ if ( this.path.length <= 1 )
 
     // the first element is the current position of the unit, so we remove it
     // also since if the unit is already moving somewhere, and you give another command, the shape will sometimes move a bit back and then proceeds with the path (this is due to the shape being in a position between the squares)
+this.path.shift();
 this.path.shift();
 
 this.move( this.path.shift() );

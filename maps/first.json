@@ -1,4 +1,4 @@
-{ "height":10,
+{ "height":20,
  "layers":[
         {
          "height":100,
@@ -15,8 +15,8 @@
                  "type":"Tower",
                  "visible":true,
                  "width":0,
-                 "x":20,
-                 "y":40
+                 "x":0,
+                 "y":20
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -30,7 +30,7 @@
     {
 
     },
- "tileheight":20,
+ "tileheight":10,
  "tilesets":[
         {
          "firstgid":1,
@@ -48,7 +48,7 @@
          "tilewidth":20,
          "transparentcolor":"#ff00ff"
         }],
- "tilewidth":20,
+ "tilewidth":10,
  "version":1,
- "width":50
+ "width":100
 }
