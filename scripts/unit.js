@@ -3,6 +3,8 @@
 function Unit( args )
 {
 var squareSize = Map.getSquareSize();
+var interval = createjs.Ticker.getInterval();
+var intervalSeconds = interval / 1000;
 
 if ( !this.name )
     {
@@ -15,15 +17,17 @@ this.line = args.line;
 this.width = squareSize;
 this.height = squareSize;
 
-this.damage = 10;
-this.health = 20;
+this.damage = 2;
+this.max_health = 40;
+this.health = this.max_health;
 this.range = 50;
-this.movement_speed = 2;
+this.movement_speed = 60;    // pixels per second
+this.movement_per_tick = intervalSeconds * this.movement_speed; // pixels per tick
 this.gold = 10;
 
 this.attack_limit = 50;
 this.attack_count = this.attack_limit;
-this.attack_speed = 1 / (createjs.Ticker.getInterval() / 1000 * this.attack_limit);
+this.attack_speed = 1 / (intervalSeconds * this.attack_limit);
 this.targetUnit = null;
 this.removed = false;   // so that we don't try to remove the unit multiple times (this may happen if several towers have the .targetUnit pointing at the same unit)
 
@@ -81,23 +85,33 @@ Unit.prototype.setupShape = function()
 {
 var width = this.width;
 var height = this.height;
+var halfWidth = width / 2;
+var halfHeight = height / 2;
 
-var shape = new createjs.Shape();
+    // the unit
+var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'creep' ) );
 
-var g = shape.graphics;
+shape.regX = halfWidth;
+shape.regY = halfHeight;
 
-g.beginFill( 'red' );
-g.drawRect( 0, 0, width, height );
+    // health bar
+
+var healthBar = new createjs.Shape();
+
+healthBar.x = 0;
+healthBar.y = -2;
+healthBar.regX = halfWidth;
+healthBar.regY = halfHeight;
+
+var g = healthBar.graphics;
+
+g.beginFill( 'green' );
+g.drawRoundRect( 0, 0, width, 2, 1 );
 g.endFill();
-
-//shape.regX = width / 2;
-//shape.regY = height / 2;
 
     // the range circle
 var range = new createjs.Shape();
 
-range.regX = -(width / 2);
-range.regY = -(height / 2);
 
 var g = range.graphics;
 
@@ -110,17 +124,21 @@ range.visible = false;
 var container = new createjs.Container();
 
 container.addChild( shape );
+container.addChild( healthBar );
 container.addChild( range );
 
 
 var position = Map.getPosition( this.column, this.line );
 
-container.x = position.x;
-container.y = position.y;
+container.regX = halfWidth;
+container.regY = halfHeight;
+container.x = position.x + width;
+container.y = position.y + height;
 
 G.STAGE.addChild( container );
 
 this.container = container;
+this.healthBar = healthBar;
 this.rangeElement = range;
 this.shape = shape;
 };
@@ -186,15 +204,17 @@ var unitY = this.getY();
 
 var position = Map.getPosition( next[ 1 ], next[ 0 ] );
 
-var destX = position.x;
-var destY = position.y;
+var destX = position.x + this.width;
+var destY = position.y + this.height;
 
 var angleRads = calculateAngle( unitX, unitY * -1, destX, destY * -1 );
 
-this.move_x = Math.cos( angleRads ) * this.movement_speed;
-this.move_y = Math.sin( angleRads ) * this.movement_speed;
+this.move_x = Math.cos( angleRads ) * this.movement_per_tick;
+this.move_y = Math.sin( angleRads ) * this.movement_per_tick;
 this.next_x = destX;
 this.next_y = destY;
+
+this.shape.rotation = toDegrees( angleRads );
 };
 
 
@@ -234,6 +254,25 @@ if ( Game.checkIfSelected( this ) )
 Unit.prototype.tookDamage = function( attacker )
 {
 this.health -= attacker.damage;
+
+if ( this.health < 0 )
+    {
+    this.health = 0;
+    }
+
+    // update the health bar
+var ratio = this.health / this.max_health;
+var currentHealth = ratio * this.width;
+var missingHealth = (1 - ratio) * this.width;
+
+var g = this.healthBar.graphics;
+
+g.beginFill( 'red' );
+g.drawRoundRect( 0, 0, missingHealth, 2, 1 );
+
+g.beginFill( 'green' );
+g.drawRoundRect( missingHealth, 0, currentHealth, 2, 1 );
+g.endFill();
 
 if ( this.health <= 0 )
     {

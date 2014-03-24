@@ -86,7 +86,7 @@ var G = {
     STAGE: null,
     PRELOAD: null,
     BASE_URL: '',
-    FPS: 40,
+    FPS: 60,
     GAME_MENU_HEIGHT: 100
 };
 
@@ -117,7 +117,8 @@ Unit.init();
 G.PRELOAD = new createjs.LoadQueue();
 
 var manifest = [
-        { id: 'map1', src: G.BASE_URL + 'maps/first.json' }
+        { id: 'map1', src: G.BASE_URL + 'maps/first.json' },
+        { id: 'creep', src: G.BASE_URL + 'images/creep.png' }
     ];
 
 G.PRELOAD.addEventListener( 'progress', function( event )

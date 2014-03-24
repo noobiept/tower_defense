@@ -45,6 +45,7 @@ this.setupShape();
 Tower.ALL.push( this );
 
 Map.addTower( this );
+Unit.redoMoveDestination();
 }
 
 Tower.ALL = [];
@@ -284,6 +285,8 @@ if ( Game.checkIfSelected( this ) )
     {
     Game.clearSelection();
     }
+
+Unit.redoMoveDestination();
 };
 
 

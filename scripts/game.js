@@ -18,7 +18,7 @@ var ALL_WAVES = [
             type: 'Unit',
             howMany: 50,
             count: 0,       // count until limit, and then add a new unit
-            countLimit: 50
+            countLimit: 50  //HERE make this independent of the fps (have a var that is based on seconds, and then calculate the limit based on the current fps/interval
         },
         {
             type: 'Unit',
@@ -208,8 +208,6 @@ if ( button == 0 )
                     line: line
                 });
             Game.updateGold( -tower.cost );
-
-            Unit.redoMoveDestination();
             }
 
         else
@@ -236,8 +234,6 @@ else if ( button == 2 )
 
             // recover half the cost
         Game.updateGold( tower.cost / 2 );
-
-        Unit.redoMoveDestination();
         }
     }
 };
