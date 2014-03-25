@@ -16,7 +16,6 @@
         - a delay when removing towers
         - a delay when upgrading towers
         - add armor (damage reduction)
-        - add a line around the tower's shape, to distinguish when they are all together
         - try not to add towers on top of a unit
 
         types of units:
@@ -118,7 +117,9 @@ G.PRELOAD = new createjs.LoadQueue();
 
 var manifest = [
         { id: 'map1', src: G.BASE_URL + 'maps/first.json' },
-        { id: 'creep', src: G.BASE_URL + 'images/creep.png' }
+        { id: 'creep', src: G.BASE_URL + 'images/creep.png' },
+        { id: 'tower_base', src: G.BASE_URL + 'images/tower_base.png' },
+        { id: 'tower1', src: G.BASE_URL + 'images/tower1.png' }
     ];
 
 G.PRELOAD.addEventListener( 'progress', function( event )

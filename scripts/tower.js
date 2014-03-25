@@ -115,15 +115,20 @@ Tower.prototype.setupShape = function()
 {
 var width = this.width;
 var height = this.height;
+var halfWidth = width / 2;
+var halfHeight = height / 2;
 
-var shape = new createjs.Shape();
+    // the tower base
+var base = new createjs.Bitmap( G.PRELOAD.getResult( 'tower_base' ) );
 
-var g = shape.graphics;
+base.regX = halfWidth;
+base.regY = halfHeight;
 
-g.beginFill( 'blue' );
-g.drawRect( 0, 0, width, height );
-g.endFill();
+    // the tower
+var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'tower1' ) );
 
+shape.regX = halfWidth;
+shape.regY = halfHeight;
 
     // the range circle
 var range = new createjs.Shape();
@@ -136,24 +141,26 @@ g.endStroke();
 
 range.visible = false;
 
-range.regX = -(width / 2);
-range.regY = -(height / 2);
 
 var container = new createjs.Container();
 
+container.addChild( base );
 container.addChild( shape );
 container.addChild( range );
 
 
 var position = Map.getPosition( this.column, this.line );
 
-container.x = position.x;
-container.y = position.y;
+container.regX = halfWidth;
+container.regY = halfHeight;
+container.x = position.x + width;
+container.y = position.y + height;
 
 G.STAGE.addChild( container );
 
 this.container = container;
 this.rangeElement = range;
+this.baseElement = base;
 this.shape = shape;
 };
 
@@ -290,6 +297,20 @@ Unit.redoMoveDestination();
 };
 
 
+/*
+    Rotate the tower (the center part, not the whole element) to point in the direction of a unit
+ */
+
+Tower.prototype.rotateTower = function( unit )
+{
+var angleRads = calculateAngle( this.getX(), this.getY() * -1, unit.getX(), unit.getY() * -1 );
+
+var angleDegrees = toDegrees( angleRads );
+
+this.shape.rotation = angleDegrees;
+};
+
+
 Tower.prototype.tookDamage = function( attacker )
 {
 this.health -= attacker.damage;
@@ -316,6 +337,9 @@ if ( this.damage > 0 )
             // check if its currently attacking a unit
         if ( target )
             {
+            this.rotateTower( target );
+
+
                 // check if the unit is within the tower's range
             if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
                 {

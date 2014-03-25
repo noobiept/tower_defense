@@ -190,8 +190,11 @@ if ( this.path.length <= 1 )
 
     // the first element is the current position of the unit, so we remove it
     // also since if the unit is already moving somewhere, and you give another command, the shape will sometimes move a bit back and then proceeds with the path (this is due to the shape being in a position between the squares)
-this.path.shift();
-this.path.shift();
+if ( this.path.length > 3 )
+    {
+    this.path.shift();
+    this.path.shift();
+    }
 
 this.move( this.path.shift() );
 };
