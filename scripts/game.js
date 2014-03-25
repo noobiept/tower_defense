@@ -165,12 +165,12 @@ if ( button == 0 )
     for (var a = 0 ; a < Tower.ALL.length ; a++)
         {
         var tower = Tower.ALL[ a ];
-        var point = tower.shape.globalToLocal( x, y );
+        var point = tower.baseElement.globalToLocal( x, y );
 
-        if ( tower.shape.hitTest( point.x, point.y ) )
+        if ( tower.baseElement.hitTest( point.x, point.y ) )
             {
             tower.selected();
-
+                
             ELEMENT_SELECTED = tower;
             return;
             }

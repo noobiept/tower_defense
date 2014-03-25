@@ -144,13 +144,11 @@ range.visible = false;
 
 var container = new createjs.Container();
 
+var position = Map.getPosition( this.column, this.line );
+
 container.addChild( base );
 container.addChild( shape );
 container.addChild( range );
-
-
-var position = Map.getPosition( this.column, this.line );
-
 container.regX = halfWidth;
 container.regY = halfHeight;
 container.x = position.x + width;

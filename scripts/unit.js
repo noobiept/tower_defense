@@ -32,7 +32,6 @@ this.targetUnit = null;
 this.removed = false;   // so that we don't try to remove the unit multiple times (this may happen if several towers have the .targetUnit pointing at the same unit)
 
 this.path = [];
-this.can_attack = false;
 this.destination_column = args.destination_column;
 this.destination_line = args.destination_line;
 this.move_x = 0;
