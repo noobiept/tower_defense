@@ -31,11 +31,11 @@ var GRID_HIGHLIGHT = {
 
 
 
-Map.init = function( width, height )
+Map.init = function( numberOfColumns, numberOfLines )
 {
-var numberOfColumns = Math.floor( width / SQUARE_SIZE );
-var numberOfLines = Math.floor( height / SQUARE_SIZE );
-
+var squareSize = Map.getSquareSize();
+var width = numberOfColumns * squareSize;
+var height = numberOfLines * squareSize;
 
 for (var column = 0 ; column < numberOfColumns ; column++)
     {
@@ -99,11 +99,17 @@ MAP[ tower.column + 1 ][ tower.line + 1 ] = null;
 Map.addDummy = function( column, line )
 {
 MAP[ column ][ line ] = 1;
+MAP[ column + 1 ][ line ] = 1;
+MAP[ column ][ line + 1 ] = 1;
+MAP[ column + 1 ][ line + 1 ] = 1;
 };
 
 Map.clearPosition = function( column, line )
 {
 MAP[ column ][ line ] = null;
+MAP[ column + 1 ][ line ] = null;
+MAP[ column ][ line + 1 ] = null;
+MAP[ column + 1 ][ line + 1 ] = null;
 };
 
 

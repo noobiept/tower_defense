@@ -1,54 +1,27 @@
-{ "height":20,
- "layers":[
-        {
-         "height":100,
-         "name":"layer1",
-         "objects":[
-                {
-                 "gid":1,
-                 "height":0,
-                 "name":"Tower",
-                 "properties":
-                    {
-
-                    },
-                 "type":"Tower",
-                 "visible":true,
-                 "width":0,
-                 "x":0,
-                 "y":20
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "width":100,
-         "x":0,
-         "y":0
-        }],
- "orientation":"orthogonal",
- "properties":
-    {
-
-    },
- "tileheight":10,
- "tilesets":[
-        {
-         "firstgid":1,
-         "image":"..\/images\/tower.png",
-         "imageheight":20,
-         "imagewidth":20,
-         "margin":0,
-         "name":"tower",
-         "properties":
+{
+    "numberOfColumns": 80,
+    "numberOfLines": 20,
+    "creepLanes": [
             {
-
+                "start": { "column": 0, "line": 15 },
+                "end": { "column": 79, "line": 15 }
             },
-         "spacing":0,
-         "tileheight":20,
-         "tilewidth":20,
-         "transparentcolor":"#ff00ff"
-        }],
- "tilewidth":10,
- "version":1,
- "width":100
+            {
+                "start": { "column": 0, "line": 5 },
+                "end": { "column": 79, "line": 5 }
+            }
+        ],
+    "waves": [
+            {
+                "type": "Unit",
+                "howMany": 50,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "spawnInterval": 0.5
+            }
+
+        ]
 }

@@ -8,7 +8,6 @@
             - easeljs : 0.7
             - preloadjs: 0.4
         - AStar ( http://devpro.it/javascript_id_137.html )
-        - tiled ( http://www.mapeditor.org/ ) : 0.9.1
 
     to doo:
 
@@ -17,6 +16,9 @@
         - a delay when upgrading towers
         - add armor (damage reduction)
         - try not to add towers on top of a unit
+        - upgrading a tower sets the health back to full (maybe upgrading only adds +health to current one)
+            - have a current health, and maxHealth, and when upgrading a tower with for example 20/30 health, goes to 30/40
+        - add health regeneration to all elements
 
         types of units:
 

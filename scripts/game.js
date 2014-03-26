@@ -13,20 +13,8 @@ var UNIT_END = {
         column: 0,
         line: 0
     };
-var ALL_WAVES = [
-        {
-            type: 'Unit',
-            howMany: 50,
-            count: 0,       // count until limit, and then add a new unit
-            countLimit: 50  //HERE make this independent of the fps (have a var that is based on seconds, and then calculate the limit based on the current fps/interval
-        },
-        {
-            type: 'Unit',
-            howMany: 10,
-            count: 0,
-            countLimit: 10
-        }
-    ];
+var CREEP_LANES = [];   // contains the start/end point of each lane
+var ALL_WAVES = [];
 var ACTIVE_WAVES = [];  // you may have more than 1 wave active (adding units)
 var CURRENT_WAVE = 0;
 var NO_MORE_WAVES = false;
@@ -50,37 +38,40 @@ Game.start = function()
 {
 var mapInfo = G.PRELOAD.getResult( 'map1' );
 
-var mapWidth = mapInfo.width * mapInfo.tilewidth;
-var mapHeight = mapInfo.height * mapInfo.tileheight;
+var columns = mapInfo.numberOfColumns;
+var lines = mapInfo.numberOfLines;
+var a;
 
-Map.init( mapWidth, mapHeight );
+Map.init( columns, lines );
 
-var objects = mapInfo.layers[ 0 ].objects;
-var squareSize = Map.getSquareSize();
 
-for (var a = 0 ; a < objects.length ; a++)
+var intervalSeconds = createjs.Ticker.getInterval() / 1000;
+
+for (a = 0 ; a < mapInfo.waves.length ; a++)
     {
-    var element = objects[ a ];
+    var wave = mapInfo.waves[ a ];
 
-    var args = element.properties;
-
-        // the map editor gives the x/y position based on the bottom left corner, but in the game we use the top left, so need to adjust that (since each element occupies a square, we can just subtract 1)
-    args.column = parseInt( element.x / squareSize );
-    args.line = parseInt( element.y / squareSize ) - 2;
-
-    var theClass = window[ element.type ];
-
-    new theClass( args );
+    ALL_WAVES.push({
+            type: wave.type,
+            howMany: wave.howMany,
+            spawnInterval: wave.spawnInterval,
+            count: 0,
+            countLimit: wave.spawnInterval / intervalSeconds
+        });
     }
 
 
-    // the width/height from the mapInfo is the number of columns/lines
-var halfLine = parseInt( mapInfo.height / 2, 10 );
 
-UNIT_START.column = 0;
-UNIT_START.line = halfLine;
-UNIT_END.column = mapInfo.width - 1;
-UNIT_END.line = halfLine;
+for (a = 0 ; a < mapInfo.creepLanes.length ; a++)
+    {
+    var lane = mapInfo.creepLanes[ a ];
+
+    CREEP_LANES.push({
+            start: lane.start,
+            end: lane.end
+        });
+    }
+
 
 ELEMENTS.currentWave = document.querySelector( '.currentWave span' );
 ELEMENTS.currentGold = document.querySelector( '.currentGold span' );
@@ -195,25 +186,31 @@ if ( button == 0 )
             // check if by filling this position, we're not blocking the units (they need to be always be able to reach the destination)
         Map.addDummy( column, line );
 
-            // check if there is a possible path
-        var path = Map.getPath( [ UNIT_START.line, UNIT_START.column ], [ UNIT_END.line, UNIT_END.column ] );
+            // check if there is a possible path (if its not going to block a lane)
+        for (var b = 0 ; b < CREEP_LANES.length ; b++)
+            {
+            var lane = CREEP_LANES[ b ];
+
+            var path = Map.getPath( [ lane.start.line, lane.start.column ], [ lane.end.line, lane.end.column ] );
+
+            if ( path.length <= 0 )
+                {
+                console.log( "Can't block the unit's path." );
+
+                    // reset the position
+                Map.clearPosition( column, line );
+                return;
+                }
+            }
 
             // reset the position
         Map.clearPosition( column, line );
 
-        if ( path.length > 0 )
-            {
-            var tower = new Tower({
-                    column: column,
-                    line: line
-                });
-            Game.updateGold( -tower.cost );
-            }
-
-        else
-            {
-            console.log( "Can't block the unit's path." );
-            }
+        var tower = new Tower({
+                column: column,
+                line: line
+            });
+        Game.updateGold( -tower.cost );
         }
     }
 
@@ -309,12 +306,19 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
         wave.count = 0;
 
         var className = window[ wave.type ];
-        new className({
-                column: UNIT_START.column,
-                line: UNIT_START.line,
-                destination_column: UNIT_END.column,
-                destination_line: UNIT_END.line
-            });
+
+        for (var b = 0 ; b < CREEP_LANES.length ; b++)
+            {
+            var lane = CREEP_LANES[ b ];
+
+            new className({
+                    column: lane.start.column,
+                    line: lane.start.line,
+                    destination_column: lane.end.column,
+                    destination_line: lane.end.line
+                });
+            }
+
 
         wave.howMany--;
 

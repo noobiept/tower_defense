@@ -25,9 +25,10 @@ this.movement_speed = 60;    // pixels per second
 this.movement_per_tick = intervalSeconds * this.movement_speed; // pixels per tick
 this.gold = 10;
 
-this.attack_limit = 50;
-this.attack_count = this.attack_limit;
-this.attack_speed = 1 / (intervalSeconds * this.attack_limit);
+this.attack_speed = 1;
+this.attack_limit = 1 / (intervalSeconds * this.attack_speed);
+this.attack_count = 0;
+
 this.targetUnit = null;
 this.removed = false;   // so that we don't try to remove the unit multiple times (this may happen if several towers have the .targetUnit pointing at the same unit)
 
