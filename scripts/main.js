@@ -17,7 +17,6 @@
         - a delay when upgrading towers
         - add armor (damage reduction)
         - try not to add towers on top of a unit
-        - have the getX/getY give the position in the center of the element (and remove the getCenterX/getCenterY)
 
         types of units:
 

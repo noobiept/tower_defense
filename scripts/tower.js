@@ -149,10 +149,8 @@ var position = Map.getPosition( this.column, this.line );
 container.addChild( base );
 container.addChild( shape );
 container.addChild( range );
-container.regX = halfWidth;
-container.regY = halfHeight;
-container.x = position.x + width;
-container.y = position.y + height;
+container.x = position.x + halfWidth;
+container.y = position.y + halfHeight;
 
 G.STAGE.addChild( container );
 
@@ -267,19 +265,6 @@ Tower.prototype.getY = function()
 {
 return this.container.y;
 };
-
-
-Tower.prototype.getCenterX = function() //HERE the getX/getY should give the center
-{
-return this.container.x - this.width / 2;
-};
-
-
-Tower.prototype.getCenterY = function()
-{
-return this.container.y - this.height / 2;
-};
-
 
 
 Tower.prototype.remove = function()

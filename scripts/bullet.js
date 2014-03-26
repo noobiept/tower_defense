@@ -35,8 +35,8 @@ var shape = new createjs.Shape();
 
 shape.regX = width / 2;
 shape.regY = height / 2;
-shape.x = this.shooter.getCenterX();
-shape.y = this.shooter.getCenterY();
+shape.x = this.shooter.getX();
+shape.y = this.shooter.getY();
 
 
 var g = shape.graphics;

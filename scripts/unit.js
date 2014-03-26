@@ -122,17 +122,13 @@ range.visible = false;
 
 var container = new createjs.Container();
 
+var position = Map.getPosition( this.column, this.line );
+
 container.addChild( shape );
 container.addChild( healthBar );
 container.addChild( range );
-
-
-var position = Map.getPosition( this.column, this.line );
-
-container.regX = halfWidth;
-container.regY = halfHeight;
-container.x = position.x + width;
-container.y = position.y + height;
+container.x = position.x + halfWidth;
+container.y = position.y + halfHeight;
 
 G.STAGE.addChild( container );
 
@@ -206,8 +202,8 @@ var unitY = this.getY();
 
 var position = Map.getPosition( next[ 1 ], next[ 0 ] );
 
-var destX = position.x + this.width;
-var destY = position.y + this.height;
+var destX = position.x + this.width / 2;
+var destY = position.y + this.height / 2;
 
 var angleRads = calculateAngle( unitX, unitY * -1, destX, destY * -1 );
 
@@ -229,17 +225,6 @@ return this.container.x;
 Unit.prototype.getY = function()
 {
 return this.container.y;
-};
-
-Unit.prototype.getCenterX = function()
-{
-return this.container.x - this.width / 2;
-};
-
-
-Unit.prototype.getCenterY = function()
-{
-return this.container.y - this.height / 2;
 };
 
 
