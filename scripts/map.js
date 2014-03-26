@@ -249,6 +249,9 @@ return {
 };
 
 
+
+
+
 /*
     startPosition/endPosition is an array with the line/column
 

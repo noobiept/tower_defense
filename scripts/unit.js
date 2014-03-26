@@ -18,7 +18,7 @@ this.width = squareSize;
 this.height = squareSize;
 
 this.damage = 2;
-this.max_health = 40;
+this.max_health = 20;
 this.health = this.max_health;
 this.range = 50;
 this.movement_speed = 60;    // pixels per second
@@ -231,6 +231,18 @@ Unit.prototype.getY = function()
 return this.container.y;
 };
 
+Unit.prototype.getCenterX = function()
+{
+return this.container.x - this.width / 2;
+};
+
+
+Unit.prototype.getCenterY = function()
+{
+return this.container.y - this.height / 2;
+};
+
+
 Unit.prototype.remove = function()
 {
 if ( this.removed )
@@ -289,6 +301,8 @@ return false;
 
 Unit.prototype.tick = function()
 {
+var _this = this;
+
     // deal with the unit's movement
 this.container.x += this.move_x;
 this.container.y += this.move_y;
@@ -327,12 +341,18 @@ if ( this.damage > 0 )
             if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
                 {
                 this.attack_count = this.attack_limit;
-
-                    // deal damage, and see if the unit died from this attack or not
-                if ( target.tookDamage( this ) )
-                    {
-                    this.targetUnit = null;
-                    }
+                new Bullet({
+                        shooter: this,
+                        target: target,
+                        onCollision: function()
+                            {
+                                // deal damage, and see if the unit died from this attack or not
+                            if ( target.tookDamage( _this ) )
+                                {
+                                _this.targetUnit = null;
+                                }
+                            }
+                    });
                 }
 
                 // can't attack anymore, find other target

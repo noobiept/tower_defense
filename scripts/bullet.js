@@ -1,0 +1,99 @@
+(function(window)
+{
+function Bullet( args )
+{
+var intervalSeconds = createjs.Ticker.getInterval() / 1000;
+
+this.shooter = args.shooter;
+this.target = args.target;
+this.onCollision = args.onCollision;
+
+this.width = 4;
+this.height = 4;
+this.radius = 2;
+this.movement_speed = 100;
+this.movement_per_tick = intervalSeconds * this.movement_speed;
+
+this.shape = null;
+this.removed = false;
+
+this.setupShape();
+
+Bullet.ALL.push( this );
+}
+
+Bullet.ALL = [];
+
+
+
+Bullet.prototype.setupShape = function()
+{
+var width = this.width;
+var height = this.height;
+
+var shape = new createjs.Shape();
+
+shape.regX = width / 2;
+shape.regY = height / 2;
+shape.x = this.shooter.getCenterX();
+shape.y = this.shooter.getCenterY();
+
+
+var g = shape.graphics;
+
+g.beginFill( 'blue' );
+g.drawRoundRect( 0, 0, this.width, this.height, 2 );
+g.endFill();
+
+G.STAGE.addChild( shape );
+
+this.shape = shape;
+};
+
+
+
+Bullet.prototype.tick = function()
+{
+var target = this.target;
+var targetX = target.getX();
+var targetY = target.getY();
+var targetRadius = target.width / 2;
+
+var angle = calculateAngle( this.shape.x, this.shape.y * -1, targetX, targetY * -1 );
+
+this.shape.x += Math.cos( angle ) * this.movement_per_tick;
+this.shape.y += Math.sin( angle ) * this.movement_per_tick;
+
+this.shape.rotation = toDegrees( angle );
+
+if ( circleCircleCollision( this.shape.x, this.shape.y, this.radius, targetX, targetY, targetRadius ) )
+    {
+    this.onCollision();
+
+    this.remove();
+    }
+};
+
+
+Bullet.prototype.remove = function()
+{
+if ( this.removed )
+    {
+    return;
+    }
+
+this.removed = true;
+
+G.STAGE.removeChild( this.shape );
+
+var index = Bullet.ALL.indexOf( this );
+
+Bullet.ALL.splice( index, 1 );
+
+};
+
+
+
+window.Bullet = Bullet;
+
+}(window));

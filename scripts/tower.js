@@ -269,6 +269,19 @@ return this.container.y;
 };
 
 
+Tower.prototype.getCenterX = function() //HERE the getX/getY should give the center
+{
+return this.container.x - this.width / 2;
+};
+
+
+Tower.prototype.getCenterY = function()
+{
+return this.container.y - this.height / 2;
+};
+
+
+
 Tower.prototype.remove = function()
 {
 if ( this.removed )
@@ -325,6 +338,8 @@ return false;
 
 Tower.prototype.tick = function()
 {
+var _this = this;
+
 if ( this.damage > 0 )
     {
         // see if we can attack right now
@@ -342,13 +357,19 @@ if ( this.damage > 0 )
             if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
                 {
                 this.attack_count = this.attack_limit;
-
-                    // deal damage, and see if the unit died from this attack or not
-                if ( target.tookDamage( this ) )
-                    {
-                    Game.updateGold( target.gold );
-                    this.targetUnit = null;
-                    }
+                new Bullet({
+                        shooter: this,
+                        target: target,
+                        onCollision: function()
+                            {
+                                // deal damage, and see if the unit died from this attack or not
+                            if ( target.tookDamage( _this ) )
+                                {
+                                Game.updateGold( target.gold );
+                                _this.targetUnit = null;
+                                }
+                            }
+                    });
                 }
 
                 // can't attack anymore, find other target

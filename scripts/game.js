@@ -170,7 +170,7 @@ if ( button == 0 )
         if ( tower.baseElement.hitTest( point.x, point.y ) )
             {
             tower.selected();
-                
+
             ELEMENT_SELECTED = tower;
             return;
             }
@@ -265,7 +265,7 @@ return false;
 Game.end = function()
 {
 //createjs.Ticker.setPaused( true );
-console.log('game end');
+//console.log('game end');
 };
 
 
@@ -346,6 +346,10 @@ for (a = Tower.ALL.length - 1 ; a >= 0 ; a--)
     Tower.ALL[ a ].tick();
     }
 
+for (a = Bullet.ALL.length - 1 ; a >= 0 ; a--)
+    {
+    Bullet.ALL[ a ].tick();
+    }
 
 if ( ELEMENT_SELECTED )
     {
