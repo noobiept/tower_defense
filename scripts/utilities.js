@@ -1,3 +1,17 @@
+function getRandomInt( min, max )
+{
+return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+function getRandomFloat( min, max )
+{
+return Math.random() * (max - min) + min;
+}
+
+
+
+
 function calculateAngle( aX, aY, bX, bY )
 {
     // make a triangle from the position the objectA is in, relative to the objectB position

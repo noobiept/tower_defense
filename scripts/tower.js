@@ -18,8 +18,8 @@ this.height = squareSize * 2;
 this.upgrade_level = 0;
 this.stats_level = [
         { damage: 10, health: 20, range: 50, attack_speed: 2, upgrade_cost: 10 },
-        { damage: 15, health: 30, range: 55, attack_speed: 4, upgrade_cost: 10 },
-        { damage: 20, health: 40, range: 60, attack_speed: 6 }
+        { damage: 15, health: 30, range: 55, attack_speed: 4, upgrade_cost: 10, filter: { red: 0, green: 0, blue: 150 } },
+        { damage: 20, health: 40, range: 60, attack_speed: 6, filter: { red: 150, green: 0, blue: 0 } }
     ];
 
 var currentLevel = this.stats_level[ this.upgrade_level ];
@@ -129,6 +129,7 @@ var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'tower1' ) );
 
 shape.regX = halfWidth;
 shape.regY = halfHeight;
+shape.rotation = getRandomInt( 0, 360 );
 
     // the range circle
 var range = new createjs.Shape();
@@ -225,6 +226,10 @@ if ( this.upgrade_level + 1 >= this.stats_level.length )
     return;
     }
 
+    // update the overall cost of the tower
+this.cost = this.stats_level[ this.upgrade_level ].upgrade_cost;
+
+    // upgrade a level
 this.upgrade_level++;
 
 var currentLevel = this.stats_level[ this.upgrade_level ];
@@ -235,12 +240,22 @@ this.range = currentLevel.range;
 this.attack_speed = currentLevel.attack_speed;
 
 
+    // re-draw the range element (since we may have increased the range in the upgrade)
 var g = this.rangeElement.graphics;
 
 g.clear();
 g.beginStroke( 'gray' );
 g.drawCircle( 0, 0, this.range );
 g.endStroke();
+
+    // add some visual clue, to differentiate the towers per their upgrade level
+var filter = new createjs.ColorFilter( 1, 1, 1, 1, currentLevel.filter.red, currentLevel.filter.green, currentLevel.filter.blue );
+
+this.baseElement.filters = [
+        filter
+    ];
+
+this.baseElement.cache( 0, 0, this.width, this.height );
 };
 
 
