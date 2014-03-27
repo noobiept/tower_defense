@@ -23,7 +23,7 @@ this.health = this.max_health;
 this.range = 50;
 this.movement_speed = 60;    // pixels per second
 this.movement_per_tick = intervalSeconds * this.movement_speed; // pixels per tick
-this.gold = 10;
+this.gold = 5;
 
 this.attack_speed = 1;
 this.attack_limit = 1 / (intervalSeconds * this.attack_speed);

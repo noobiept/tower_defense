@@ -4,15 +4,7 @@ function Game()
 {
 
 }
-    // where the units start/spawn and to where they move
-var UNIT_START = {
-        column: 0,
-        line: 0
-    };
-var UNIT_END = {
-        column: 0,
-        line: 0
-    };
+
 var CREEP_LANES = [];   // contains the start/end point of each lane
 var ALL_WAVES = [];
 var ACTIVE_WAVES = [];  // you may have more than 1 wave active (adding units)
@@ -42,9 +34,7 @@ var columns = mapInfo.numberOfColumns;
 var lines = mapInfo.numberOfLines;
 var a;
 
-Map.init( columns, lines );
-
-
+    // read from the map info and update the appropriate variables
 var intervalSeconds = createjs.Ticker.getInterval() / 1000;
 
 for (a = 0 ; a < mapInfo.waves.length ; a++)
@@ -61,22 +51,27 @@ for (a = 0 ; a < mapInfo.waves.length ; a++)
     }
 
 
-
 for (a = 0 ; a < mapInfo.creepLanes.length ; a++)
     {
     var lane = mapInfo.creepLanes[ a ];
 
     CREEP_LANES.push({
             start: lane.start,
-            end: lane.end
+            end: lane.end,
+            length: lane.length,
+            orientation: lane.orientation
         });
     }
 
 
+    // game menu html elements
 ELEMENTS.currentWave = document.querySelector( '.currentWave span' );
 ELEMENTS.currentGold = document.querySelector( '.currentGold span' );
 ELEMENTS.currentLife = document.querySelector( '.currentLife span' );
 
+
+    // init the game
+Map.init( columns, lines, CREEP_LANES );
 
 Game.updateGold( 100 );
 Game.updateLife( 20 );
@@ -310,10 +305,25 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
         for (var b = 0 ; b < CREEP_LANES.length ; b++)
             {
             var lane = CREEP_LANES[ b ];
+            var startLine, startColumn;
+            var halfLength = parseInt( lane.length / 2, 10 );
+
+                // add units randomly in the start zone
+            if ( lane.orientation == 'vertical' )
+                {
+                startColumn = lane.start.column;
+                startLine = getRandomInt( lane.start.line - halfLength, lane.start.line + halfLength - 1 );
+                }
+
+            else
+                {
+                startColumn = getRandomInt( lane.start.column - halfLength, lane.start.column + halfLength - 1 );
+                startLine = lane.start.line;
+                }
 
             new className({
-                    column: lane.start.column,
-                    line: lane.start.line,
+                    column: startColumn,
+                    line: startLine,
                     destination_column: lane.end.column,
                     destination_line: lane.end.line
                 });

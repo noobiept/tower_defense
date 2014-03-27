@@ -31,7 +31,7 @@ var GRID_HIGHLIGHT = {
 
 
 
-Map.init = function( numberOfColumns, numberOfLines )
+Map.init = function( numberOfColumns, numberOfLines, creepLanes )
 {
 var squareSize = Map.getSquareSize();
 var width = numberOfColumns * squareSize;
@@ -52,10 +52,48 @@ STARTING_X = $( window ).width() / 2 - numberOfColumns * SQUARE_SIZE / 2;
 STARTING_Y = $( window ).height() / 2 - numberOfLines * SQUARE_SIZE / 2;
 
     // add walls around the map
-Map.addWall( STARTING_X - WALL_THICKNESS, STARTING_Y, WALL_THICKNESS, height + WALL_THICKNESS );        // left
-Map.addWall( STARTING_X + width, STARTING_Y, WALL_THICKNESS, height + WALL_THICKNESS );    // right
-Map.addWall( STARTING_X, STARTING_Y, width, WALL_THICKNESS );         // top
-Map.addWall( STARTING_X, STARTING_Y + height, width, WALL_THICKNESS );    // bottom
+Map.addWall( -WALL_THICKNESS, 0, WALL_THICKNESS, height + WALL_THICKNESS );        // left
+Map.addWall( width, 0, WALL_THICKNESS, height + WALL_THICKNESS );    // right
+Map.addWall( 0, 0, width, WALL_THICKNESS );         // top
+Map.addWall( 0, height, width, WALL_THICKNESS );    // bottom
+
+    // add the part of the wall where the creeps start/end (new wall with different color)
+for (var a = 0 ; a < creepLanes.length ; a++)
+    {
+    var lane = creepLanes[ a ];
+    var startX, startY, startWidth, startHeight;
+    var endX, endY, endWidth, endHeight;
+    var halfLength = lane.length / 2;
+
+    if ( lane.orientation == 'vertical' )
+        {
+        startX = lane.start.column * squareSize - WALL_THICKNESS;
+        startY = (lane.start.line - halfLength) * squareSize;
+
+        endX = (lane.end.column + 1) * squareSize;
+        endY = (lane.end.line - halfLength) * squareSize;
+
+        startWidth = endWidth = WALL_THICKNESS;
+        startHeight = endHeight = lane.length * squareSize;
+        }
+
+    else
+        {
+        startX = (lane.start.column - halfLength) * squareSize;
+        startY = lane.start.line * squareSize;
+
+        endX = (lane.end.column - halfLength) * squareSize;
+        endY = (lane.end.line + 1) * squareSize;
+
+        startWidth = endWidth = lane.length * squareSize;
+        startHeight = endHeight = WALL_THICKNESS;
+        }
+
+
+    Map.addWall( startX, startY, startWidth, startHeight, 'rgb(0,200,0)' );
+    Map.addWall( endX, endY, endWidth, endHeight, 'rgb(0,200,0)' );
+    }
+
 
 
 var highlight = new createjs.Shape();
@@ -120,23 +158,29 @@ return MAP[ column ][ line ];
 
 
 
-Map.addWall = function( x, y, width, height )
+Map.addWall = function( x, y, width, height, fillColor )
 {
+if ( typeof fillColor == 'undefined' )
+    {
+    fillColor = 'black';
+    }
+
 var wall = new createjs.Shape();
 
 var g = wall.graphics;
 
-g.beginFill( 'black' );
+g.beginFill( fillColor );
 g.drawRect( 0, 0, width, height );
 g.endFill();
 
-wall.x = x;
-wall.y = y;
+wall.x = STARTING_X + x;
+wall.y = STARTING_Y + y;
 
 G.STAGE.addChild( wall );
 
 WALLS.push( wall );
 };
+
 
 
 Map.clear = function()
