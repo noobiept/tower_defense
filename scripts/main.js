@@ -13,9 +13,9 @@
 
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - a delay when removing towers
-        - a delay when upgrading towers
         - add armor (damage reduction)
         - try not to add towers on top of a unit
+
 
         types of units:
 

@@ -17,9 +17,10 @@ this.width = squareSize * 2;
 this.height = squareSize * 2;
 
 this.upgrade_level = 0;
+this.is_upgrading = false;
 this.stats_level = [
-        { damage: 10, health: 20, range: 50, attack_speed: 2, upgrade_cost: 10 },
-        { damage: 15, health: 30, range: 55, attack_speed: 4, upgrade_cost: 10, filter: { red: 0, green: 0, blue: 150 } },
+        { damage: 10, health: 20, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1 },
+        { damage: 15, health: 30, range: 55, attack_speed: 4, upgrade_cost: 10, upgrade_time: 2, filter: { red: 0, green: 0, blue: 150 } },
         { damage: 20, health: 40, range: 60, attack_speed: 6, filter: { red: 150, green: 0, blue: 0 } }
     ];
 
@@ -39,16 +40,22 @@ this.health_regeneration = 2;
 this.regeneration_count = 0;
 this.regeneration_limit = 1 / (intervalSeconds * this.health_regeneration);
 
+
 this.targetUnit = null;
 this.removed = false;
 
 this.container = null;
 this.rangeElement = null;
 this.shape = null;
+this.progressElement = null;
+this.progress_length = 3;
 
 this.setupShape();
+this.tick = this.tick_normal;
 
 Tower.ALL.push( this );
+
+Game.updateGold( -this.cost );
 
 Map.addTower( this );
 Unit.redoMoveDestination();
@@ -69,6 +76,7 @@ var damage = container.querySelector( '.damage span' );
 var attack_speed = container.querySelector( '.attack_speed span' );
 var range = container.querySelector( '.range span' );
 var upgrade = container.querySelector( '.upgrade' );
+var upgradeMessage = container.querySelector( '.upgradeMessage' );
 
 upgrade.onclick = function()
     {
@@ -77,15 +85,7 @@ upgrade.onclick = function()
     var upgradeCost = tower.stats_level[ tower.upgrade_level ].upgrade_cost;
     if ( Game.haveEnoughGold( upgradeCost ) )
         {
-        tower.upgrade();
-        Game.updateGold( -upgradeCost );
-
-            // can't upgrade anymore, we can remove the upgrade button
-        if ( tower.maxUpgrade() )
-            {
-            SELECTION_MENU.showNextUpgrade = false;
-            $( upgrade ).css( 'display', 'none' );
-            }
+        tower.startUpgrading();
         }
 
     else
@@ -112,6 +112,7 @@ SELECTION_MENU = {
         attack_speed: attack_speed,
         range: range,
         upgrade: upgrade,
+        upgradeMessage: upgradeMessage,
         showNextUpgrade: false
     };
 };
@@ -148,7 +149,16 @@ g.endStroke();
 
 range.visible = false;
 
+    // progress bar (shown when upgrading or selling the tower)
+var progress = new createjs.Shape();
 
+progress.x = -halfWidth;
+progress.y = -this.progress_length / 2;
+
+
+progress.visible = false;
+
+    // the container
 var container = new createjs.Container();
 
 var position = Map.getPosition( this.column, this.line );
@@ -156,6 +166,7 @@ var position = Map.getPosition( this.column, this.line );
 container.addChild( base );
 container.addChild( shape );
 container.addChild( range );
+container.addChild( progress );
 container.x = position.x + halfWidth;
 container.y = position.y + halfHeight;
 
@@ -164,6 +175,7 @@ G.STAGE.addChild( container );
 this.container = container;
 this.rangeElement = range;
 this.baseElement = base;
+this.progressElement = progress;
 this.shape = shape;
 };
 
@@ -175,19 +187,12 @@ this.rangeElement.visible = true;
     // show the game menu
 $( SELECTION_MENU.container ).css( 'display', 'flex' );
 
-if ( this.maxUpgrade() )
-    {
-    $( SELECTION_MENU.upgrade ).css( 'display', 'none' );
-    }
 
-else
-    {
-    $( SELECTION_MENU.upgrade ).css( 'display', 'block' );
-    }
+this.updateMenuControls();
+
 
     // update the info that won't change during the selection
 $( SELECTION_MENU.name ).text( this.name );
-
 };
 
 Tower.prototype.unselected = function()
@@ -198,8 +203,36 @@ this.rangeElement.visible = false;
 $( SELECTION_MENU.container ).css( 'display', 'none' );
 };
 
+
+Tower.prototype.updateMenuControls = function()
+{
+if ( this.is_upgrading )
+    {
+    $( SELECTION_MENU.upgrade ).css( 'display', 'none' );
+    $( SELECTION_MENU.upgradeMessage ).css( 'display', 'block' );
+    }
+
+else
+    {
+    $( SELECTION_MENU.upgradeMessage ).css( 'display', 'none' );
+
+    if ( this.maxUpgrade() )
+        {
+        $( SELECTION_MENU.upgrade ).css( 'display', 'none' );
+        }
+
+    else
+        {
+        $( SELECTION_MENU.upgrade ).css( 'display', 'block' );
+        }
+    }
+};
+
+
 Tower.prototype.updateSelection = function()
 {
+this.updateMenuControls();
+
 var damage = this.damage;
 var attack_speed = this.attack_speed;
 var range = this.range;
@@ -221,6 +254,35 @@ $( SELECTION_MENU.attack_speed ).text( attack_speed );
 $( SELECTION_MENU.range ).text( range );
 $( SELECTION_MENU.health ).text( health );
 };
+
+
+Tower.prototype.startUpgrading = function()
+{
+    // no more upgrades
+if ( this.upgrade_level + 1 >= this.stats_level.length )
+    {
+    console.log('no more tower upgrades');
+    return;
+    }
+
+this.is_upgrading = true;
+
+
+var currentLevel = this.stats_level[ this.upgrade_level ];
+var intervalSeconds = createjs.Ticker.getInterval() / 1000;
+
+Game.updateGold( -currentLevel.upgrade_cost );
+
+this.upgrade_count = 0;
+this.upgrade_limit = currentLevel.upgrade_time / intervalSeconds;
+
+this.progressElement.graphics.clear();
+this.progressElement.visible = true;
+this.shape.visible = false;
+
+this.tick = this.tick_upgrade;
+};
+
 
 
 Tower.prototype.upgrade = function()
@@ -293,6 +355,15 @@ return this.container.y;
 };
 
 
+Tower.prototype.sell = function()
+{
+    // recover half the cost
+Game.updateGold( this.cost / 2 );
+
+this.remove();
+};
+
+
 Tower.prototype.remove = function()
 {
 if ( this.removed )
@@ -347,8 +418,7 @@ return false;
 };
 
 
-
-Tower.prototype.tick = function()
+Tower.prototype.tick_attack = function()
 {
 var _this = this;
 
@@ -377,7 +447,6 @@ if ( this.damage > 0 )
                                 // deal damage, and see if the unit died from this attack or not
                             if ( target.tookDamage( _this ) )
                                 {
-                                Game.updateGold( target.gold );
                                 _this.targetUnit = null;
                                 }
                             }
@@ -404,8 +473,11 @@ if ( this.damage > 0 )
         this.attack_count--;
         }
     }
+};
 
 
+Tower.prototype.tick_regeneration = function()
+{
     // deal with the health regeneration
 if ( this.regeneration_count <= 0 )
     {
@@ -420,6 +492,53 @@ else
     {
     this.regeneration_count--;
     }
+};
+
+
+Tower.prototype.tick_normal = function()
+{
+this.tick_attack();
+this.tick_regeneration();
+};
+
+Tower.prototype.tick_upgrade = function()
+{
+this.upgrade_count++;
+
+var ratio = this.upgrade_count / this.upgrade_limit;
+
+var g = this.progressElement.graphics;
+
+g.beginFill( 'gray' );
+g.drawRect( 0, 0, this.width * ratio, this.progress_length );
+g.endFill();
+
+
+    // upgrade finish, improve the stats and return to normal tick
+if ( this.upgrade_count >= this.upgrade_limit )
+    {
+    this.progressElement.visible = false;
+    this.shape.visible = true;
+
+    this.upgrade();
+    this.tick = this.tick_normal;
+    this.is_upgrading = false;
+    }
+
+this.tick_regeneration();
+};
+
+
+Tower.prototype.tick_sell = function()
+{
+
+};
+
+
+
+Tower.prototype.tick = function()
+{
+    // this will be overridden to either tick_normal(), tick_upgrade() or tick_sell() depending on the tower's current state
 };
 
 

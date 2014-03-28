@@ -201,11 +201,10 @@ if ( button == 0 )
             // reset the position
         Map.clearPosition( column, line );
 
-        var tower = new Tower({
+        new Tower({
                 column: column,
                 line: line
             });
-        Game.updateGold( -tower.cost );
         }
     }
 
@@ -222,10 +221,7 @@ else if ( button == 2 )
 
     if ( tower )
         {
-        tower.remove();
-
-            // recover half the cost
-        Game.updateGold( tower.cost / 2 );
+        tower.sell();
         }
     }
 };

@@ -269,6 +269,9 @@ this.updateHealthBar();
 
 if ( this.health <= 0 )
     {
+        // add the gold earn from killing this unit
+    Game.updateGold( this.gold );
+
     this.remove();
     return true;
     }
