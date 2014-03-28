@@ -18,8 +18,6 @@ this.width = squareSize;
 this.height = squareSize;
 
 this.damage = 2;
-this.max_health = 20;
-this.health = this.max_health;
 this.range = 50;
 this.movement_speed = 60;    // pixels per second
 this.movement_per_tick = intervalSeconds * this.movement_speed; // pixels per tick
@@ -28,6 +26,12 @@ this.gold = 5;
 this.attack_speed = 1;
 this.attack_limit = 1 / (intervalSeconds * this.attack_speed);
 this.attack_count = 0;
+
+this.max_health = 20;
+this.health = this.max_health;
+this.health_regeneration = 2;
+this.regeneration_count = 0;
+this.regeneration_limit = 1 / (intervalSeconds * this.health_regeneration);
 
 this.targetUnit = null;
 this.removed = false;   // so that we don't try to remove the unit multiple times (this may happen if several towers have the .targetUnit pointing at the same unit)
@@ -260,7 +264,21 @@ if ( this.health < 0 )
     this.health = 0;
     }
 
-    // update the health bar
+
+this.updateHealthBar();
+
+if ( this.health <= 0 )
+    {
+    this.remove();
+    return true;
+    }
+
+return false;
+};
+
+
+Unit.prototype.updateHealthBar = function()
+{
 var ratio = this.health / this.max_health;
 var currentHealth = ratio * this.width;
 var missingHealth = (1 - ratio) * this.width;
@@ -273,14 +291,6 @@ g.drawRoundRect( 0, 0, missingHealth, 2, 1 );
 g.beginFill( 'green' );
 g.drawRoundRect( missingHealth, 0, currentHealth, 2, 1 );
 g.endFill();
-
-if ( this.health <= 0 )
-    {
-    this.remove();
-    return true;
-    }
-
-return false;
 };
 
 
@@ -360,6 +370,22 @@ if ( this.damage > 0 )
         {
         this.attack_count--;
         }
+    }
+
+    // deal with the health regeneration
+if ( this.regeneration_count <= 0 )
+    {
+    if ( this.health < this.max_health )
+        {
+        this.regeneration_count = this.regeneration_limit;
+        this.health++;
+        this.updateHealthBar();
+        }
+    }
+
+else
+    {
+    this.regeneration_count--;
     }
 };
 

@@ -3,6 +3,7 @@
 function Tower( args )
 {
 var squareSize = Map.getSquareSize();
+var intervalSeconds = createjs.Ticker.getInterval() / 1000;
 
 if ( !this.name )
     {
@@ -25,13 +26,18 @@ this.stats_level = [
 var currentLevel = this.stats_level[ this.upgrade_level ];
 
 this.damage = currentLevel.damage;
-this.health = currentLevel.health;
 this.range = currentLevel.range;
 this.cost = Tower.cost;
 
 this.attack_speed = currentLevel.attack_speed;
-this.attack_limit = 1 / (createjs.Ticker.getInterval() / 1000 * this.attack_speed);
+this.attack_limit = 1 / (intervalSeconds * this.attack_speed);
 this.attack_count = 0;
+
+this.max_health = currentLevel.health;
+this.health = this.max_health;
+this.health_regeneration = 2;
+this.regeneration_count = 0;
+this.regeneration_limit = 1 / (intervalSeconds * this.health_regeneration);
 
 this.targetUnit = null;
 this.removed = false;
@@ -234,8 +240,13 @@ this.upgrade_level++;
 
 var currentLevel = this.stats_level[ this.upgrade_level ];
 
+    // add the increase in health from the upgrade to the current health
+    // for example going from 20hp to 30hp (max_health) with current health of 5hp, after upgrade it ends up with 15hp
+var prevMaxHealth = this.max_health;
+
+this.health += currentLevel.health - prevMaxHealth;
+this.max_health = currentLevel.health;
 this.damage = currentLevel.damage;
-this.health = currentLevel.health;
 this.range = currentLevel.range;
 this.attack_speed = currentLevel.attack_speed;
 
@@ -336,6 +347,7 @@ return false;
 };
 
 
+
 Tower.prototype.tick = function()
 {
 var _this = this;
@@ -391,6 +403,22 @@ if ( this.damage > 0 )
         {
         this.attack_count--;
         }
+    }
+
+
+    // deal with the health regeneration
+if ( this.regeneration_count <= 0 )
+    {
+    if ( this.health < this.max_health )
+        {
+        this.regeneration_count = this.regeneration_limit;
+        this.health++;
+        }
+    }
+
+else
+    {
+    this.regeneration_count--;
     }
 };
 
