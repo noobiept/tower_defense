@@ -221,7 +221,7 @@ else if ( button == 2 )
 
     if ( tower )
         {
-        tower.sell();
+        tower.startSelling();
         }
     }
 };

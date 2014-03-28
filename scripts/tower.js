@@ -18,10 +18,16 @@ this.height = squareSize * 2;
 
 this.upgrade_level = 0;
 this.is_upgrading = false;
+this.upgrade_count = 0;
+this.upgrade_limit = 0;
+this.is_selling = false;
+this.sell_count = 0;
+this.sell_limit = 0;
+
 this.stats_level = [
-        { damage: 10, health: 20, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1 },
-        { damage: 15, health: 30, range: 55, attack_speed: 4, upgrade_cost: 10, upgrade_time: 2, filter: { red: 0, green: 0, blue: 150 } },
-        { damage: 20, health: 40, range: 60, attack_speed: 6, filter: { red: 150, green: 0, blue: 0 } }
+        { damage: 10, health: 20, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1 },
+        { damage: 15, health: 30, range: 55, attack_speed: 4, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
+        { damage: 20, health: 40, range: 60, attack_speed: 6, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
     ];
 
 var currentLevel = this.stats_level[ this.upgrade_level ];
@@ -77,6 +83,7 @@ var attack_speed = container.querySelector( '.attack_speed span' );
 var range = container.querySelector( '.range span' );
 var upgrade = container.querySelector( '.upgrade' );
 var upgradeMessage = container.querySelector( '.upgradeMessage' );
+var sellMessage = container.querySelector( '.sellMessage' );
 
 upgrade.onclick = function()
     {
@@ -113,6 +120,7 @@ SELECTION_MENU = {
         range: range,
         upgrade: upgrade,
         upgradeMessage: upgradeMessage,
+        sellMessage: sellMessage,
         showNextUpgrade: false
     };
 };
@@ -209,12 +217,21 @@ Tower.prototype.updateMenuControls = function()
 if ( this.is_upgrading )
     {
     $( SELECTION_MENU.upgrade ).css( 'display', 'none' );
+    $( SELECTION_MENU.sellMessage ).css( 'display', 'none' );
     $( SELECTION_MENU.upgradeMessage ).css( 'display', 'block' );
+    }
+
+else if ( this.is_selling )
+    {
+    $( SELECTION_MENU.upgrade ).css( 'display', 'none' );
+    $( SELECTION_MENU.upgradeMessage ).css( 'display', 'none' );
+    $( SELECTION_MENU.sellMessage ).css( 'display', 'block' );
     }
 
 else
     {
     $( SELECTION_MENU.upgradeMessage ).css( 'display', 'none' );
+    $( SELECTION_MENU.sellMessage ).css( 'display', 'none' );
 
     if ( this.maxUpgrade() )
         {
@@ -295,7 +312,7 @@ if ( this.upgrade_level + 1 >= this.stats_level.length )
     }
 
     // update the overall cost of the tower
-this.cost = this.stats_level[ this.upgrade_level ].upgrade_cost;
+this.cost += this.stats_level[ this.upgrade_level ].upgrade_cost;
 
     // upgrade a level
 this.upgrade_level++;
@@ -352,6 +369,24 @@ return this.container.x;
 Tower.prototype.getY = function()
 {
 return this.container.y;
+};
+
+
+Tower.prototype.startSelling = function()
+{
+this.is_selling = true;
+
+var currentLevel = this.stats_level[ this.upgrade_level ];
+var intervalSeconds = createjs.Ticker.getInterval() / 1000;
+
+this.sell_count = 0;
+this.sell_limit = currentLevel.sell_time / intervalSeconds;
+
+this.progressElement.graphics.clear();
+this.progressElement.visible = true;
+this.shape.visible = false;
+
+this.tick = this.tick_sell;
 };
 
 
@@ -531,7 +566,28 @@ this.tick_regeneration();
 
 Tower.prototype.tick_sell = function()
 {
+if ( !this.is_selling )
+    {
+    return;
+    }
 
+this.sell_count++;
+
+var ratio = this.sell_count / this.sell_limit;
+
+var g = this.progressElement.graphics;
+
+g.beginFill( 'rgb(200,0,0)' );
+g.drawRect( 0, 0, this.width * ratio, this.progress_length );
+g.endFill();
+
+if ( this.sell_count >= this.sell_limit )
+    {
+    this.sell();
+    this.is_selling = false;
+    }
+
+this.tick_regeneration();
 };
 
 
