@@ -11,25 +11,50 @@ if ( !this.name )
     this.name = 'unit';
     }
 
+if ( !this.stats )
+    {
+    this.stats = {
+            damage: 2,
+            range: 50,
+            movement_speed: 60,
+            gold: 5,
+            attack_speed: 1,
+            max_health: 20,
+            health_regeneration: 2
+        };
+    }
+
+if ( !this.image )
+    {
+    this.image = 'creep';
+    }
+
+if ( !this.width )
+    {
+    this.width = squareSize;
+    }
+
+if ( !this.height )
+    {
+    this.height = squareSize;
+    }
+
 this.column = args.column;
 this.line = args.line;
 
-this.width = squareSize;
-this.height = squareSize;
-
-this.damage = 2;
-this.range = 50;
-this.movement_speed = 60;    // pixels per second
+this.damage = this.stats.damage;
+this.range = this.stats.range;
+this.movement_speed = this.stats.movement_speed;    // pixels per second
 this.movement_per_tick = intervalSeconds * this.movement_speed; // pixels per tick
-this.gold = 5;
+this.gold = this.stats.gold;
 
-this.attack_speed = 1;
+this.attack_speed = this.stats.attack_speed;
 this.attack_limit = 1 / (intervalSeconds * this.attack_speed);
 this.attack_count = 0;
 
-this.max_health = 20;
+this.max_health = this.stats.max_health;
 this.health = this.max_health;
-this.health_regeneration = 2;
+this.health_regeneration = this.stats.health_regeneration;
 this.regeneration_count = 0;
 this.regeneration_limit = 1 / (intervalSeconds * this.health_regeneration);
 
@@ -93,7 +118,7 @@ var halfWidth = width / 2;
 var halfHeight = height / 2;
 
     // the unit
-var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'creep' ) );
+var shape = new createjs.Bitmap( G.PRELOAD.getResult( this.image ) );
 
 shape.regX = halfWidth;
 shape.regY = halfHeight;

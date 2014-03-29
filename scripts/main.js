@@ -14,6 +14,9 @@
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - add armor (damage reduction)
         - try not to add towers on top of a unit
+        - start showing the units a bit before entering the map
+            - need to increase the map
+            - and add 'obstacles' (set the position to 1) so that the units enter through the correct way into the playable map
 
 
         types of units:
@@ -24,7 +27,6 @@
             - flying
             - spawn
             - boss (a bigger version of the other types)
-            - group
             - immune
 
         types of towers:
@@ -116,6 +118,8 @@ G.PRELOAD = new createjs.LoadQueue();
 var manifest = [
         { id: 'map1', src: G.BASE_URL + 'maps/first.json' },
         { id: 'creep', src: G.BASE_URL + 'images/creep.png' },
+        { id: 'creep_group', src: G.BASE_URL + 'images/creep_group.png' },
+        { id: 'creep_fast', src: G.BASE_URL + 'images/creep_fast.png' },
         { id: 'tower_base', src: G.BASE_URL + 'images/tower_base.png' },
         { id: 'tower1', src: G.BASE_URL + 'images/tower1.png' }
     ];

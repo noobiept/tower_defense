@@ -11,9 +11,9 @@
         ],
     "waves": [
             {
-                "type": "Unit",
+                "type": "UnitFast",
                 "howMany": 10,
-                "spawnInterval": 0.9
+                "spawnInterval": 2
             }
         ]
 }

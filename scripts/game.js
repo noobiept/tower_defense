@@ -321,7 +321,8 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
                     column: startColumn,
                     line: startLine,
                     destination_column: lane.end.column,
-                    destination_line: lane.end.line
+                    destination_line: lane.end.line,
+                    lane: lane
                 });
             }
 
