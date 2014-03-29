@@ -186,7 +186,7 @@ if ( button == 0 )
             {
             var lane = CREEP_LANES[ b ];
 
-            var path = Map.getPath( [ lane.start.line, lane.start.column ], [ lane.end.line, lane.end.column ] );
+            var path = Map.getPath( lane.start.column, lane.start.line, lane.end.column, lane.end.line );
 
             if ( path.length <= 0 )
                 {
@@ -211,17 +211,16 @@ if ( button == 0 )
     // right click
 else if ( button == 2 )
     {
-        // check if there's a tower in that position
-    var position = Map.calculatePosition( x, y );
-
-    var column = position[ 1 ];
-    var line = position[ 0 ];
-
-    var tower = Map.getTower( column, line );
-
-    if ( tower )
+        // see if we're selecting a tower
+    for (var a = 0 ; a < Tower.ALL.length ; a++)
         {
-        tower.startSelling();
+        var tower = Tower.ALL[ a ];
+        var point = tower.baseElement.globalToLocal( x, y );
+
+        if ( tower.baseElement.hitTest( point.x, point.y ) )
+            {
+            tower.startSelling();
+            }
         }
     }
 };

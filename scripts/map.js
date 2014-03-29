@@ -16,11 +16,7 @@ var NUMBER_OF_LINES = 0;
 var STARTING_X = 0;
 var STARTING_Y = 0;
 
-    // 2 dimensional array, with all the positions of the map
-    // 0 -> passable square
-    // 1 -> impassable square
-    // main array represents the columns (MAP[ 0 ], first column, MAP[ 0 ][ 1 ], first column and second line)
-var MAP = [];
+var GRAPH = null;       // for the AStar path finding
 var SQUARE_SIZE = 10;   // in pixels
 
 var GRID_HIGHLIGHT = {
@@ -30,22 +26,29 @@ var GRID_HIGHLIGHT = {
     };
 
 
-
 Map.init = function( numberOfColumns, numberOfLines, creepLanes )
 {
 var squareSize = Map.getSquareSize();
 var width = numberOfColumns * squareSize;
 var height = numberOfLines * squareSize;
 
+    // 2 dimensional array, with all the positions of the map
+    // 0 -> wall (impassable square)
+    // 1 -> passable square
+    // main array represents the columns (map[ 0 ], first column, map[ 0 ][ 1 ], first column and second line)
+var map = [];
+
 for (var column = 0 ; column < numberOfColumns ; column++)
     {
-    MAP[ column ] = [];
+    map[ column ] = [];
 
     for (var line = 0 ; line < numberOfLines ; line++)
         {
-        MAP[ column ][ line ] = null;
+        map[ column ][ line ] = 1;
         }
     }
+
+GRAPH = new Graph( map );
 
 
 STARTING_X = $( window ).width() / 2 - numberOfColumns * SQUARE_SIZE / 2;
@@ -118,43 +121,38 @@ NUMBER_OF_LINES = numberOfLines;
 
 Map.addTower = function( tower )
 {
-MAP[ tower.column ][ tower.line ] = tower;
-MAP[ tower.column + 1 ][ tower.line ] = tower;
-MAP[ tower.column ][ tower.line + 1 ] = tower;
-MAP[ tower.column + 1 ][ tower.line + 1 ] = tower;
+GRAPH.nodes[ tower.column ][ tower.line ].type = 0;
+GRAPH.nodes[ tower.column + 1 ][ tower.line ].type = 0;
+GRAPH.nodes[ tower.column ][ tower.line + 1 ].type = 0;
+GRAPH.nodes[ tower.column + 1 ][ tower.line + 1 ].type = 0;
 };
 
 
 Map.removeTower = function( tower )
 {
-MAP[ tower.column ][ tower.line ] = null;
-MAP[ tower.column + 1 ][ tower.line ] = null;
-MAP[ tower.column ][ tower.line + 1 ] = null;
-MAP[ tower.column + 1 ][ tower.line + 1 ] = null;
+GRAPH.nodes[ tower.column ][ tower.line ].type = 1;
+GRAPH.nodes[ tower.column + 1 ][ tower.line ].type = 1;
+GRAPH.nodes[ tower.column ][ tower.line + 1 ].type = 1;
+GRAPH.nodes[ tower.column + 1 ][ tower.line + 1 ].type = 1;
 };
 
 
 Map.addDummy = function( column, line )
 {
-MAP[ column ][ line ] = 1;
-MAP[ column + 1 ][ line ] = 1;
-MAP[ column ][ line + 1 ] = 1;
-MAP[ column + 1 ][ line + 1 ] = 1;
+GRAPH.nodes[ column ][ line ].type = 0;
+GRAPH.nodes[ column + 1 ][ line ].type = 0;
+GRAPH.nodes[ column ][ line + 1 ].type = 0;
+GRAPH.nodes[ column + 1 ][ line + 1 ].type = 0;
 };
 
 Map.clearPosition = function( column, line )
 {
-MAP[ column ][ line ] = null;
-MAP[ column + 1 ][ line ] = null;
-MAP[ column ][ line + 1 ] = null;
-MAP[ column + 1 ][ line + 1 ] = null;
+GRAPH.nodes[ column ][ line ].type = 1;
+GRAPH.nodes[ column + 1 ][ line ].type = 1;
+GRAPH.nodes[ column ][ line + 1 ].type = 1;
+GRAPH.nodes[ column + 1 ][ line + 1 ].type = 1;
 };
 
-
-Map.getTower = function( column, line )
-{
-return MAP[ column ][ line ];
-};
 
 
 
@@ -192,7 +190,7 @@ for (var a = 0 ; a < WALLS.length ; a++)
 
 WALLS.length = 0;
 
-MAP.length = 0;
+GRAPH = null;
 };
 
 Map.getSquareSize = function()
@@ -229,7 +227,7 @@ for (var y = SQUARE_SIZE ; y < MAP_HEIGHT ; y += SQUARE_SIZE)
     line++;
     }
 
-return [ line, column ];
+return [ column, line ];
 };
 
 
@@ -237,8 +235,8 @@ Map.mouseMoveEvents = function( event )
 {
 var position = Map.calculatePosition( event.stageX, event.stageY );
 
-var column = position[ 1 ];
-var line = position[ 0 ];
+var column = position[ 0 ];
+var line = position[ 1 ];
 
     // highlight is same size as a tower (2x2), so can't let it go to last position
 if ( column + 1 >= NUMBER_OF_COLUMNS )
@@ -278,8 +276,10 @@ if ( column < 0 || column + 1 >= NUMBER_OF_COLUMNS ||
     }
 
     // check if there's already a tower in this position
-if ( MAP[ column ][ line ] || MAP[ column + 1 ][ line ] ||
-     MAP[ column ][ line + 1 ] || MAP[ column + 1 ][ line + 1 ] )
+if ( !GRAPH.nodes[ column ][ line ].type ||
+     !GRAPH.nodes[ column + 1 ][ line ].type ||
+     !GRAPH.nodes[ column ][ line + 1 ].type ||
+     !GRAPH.nodes[ column + 1 ][ line + 1 ].type )
     {
     return false;
     }
@@ -300,17 +300,12 @@ return {
 
 
 
-
-
-/*
-    startPosition/endPosition is an array with the line/column
-
-    startPosition = [ line, column ]
- */
-
-Map.getPath = function( startPosition, endPosition )
+Map.getPath = function( startColumn, startLine, endColumn, endLine )
 {
-return AStar( MAP, startPosition, endPosition );
+var start = GRAPH.nodes[ startColumn ][ startLine ];
+var end = GRAPH.nodes[ endColumn ][ endLine ];
+
+return astar.search( GRAPH.nodes, start, end );
 };
 
 

@@ -203,9 +203,8 @@ $( SELECTION_MENU.health ).text( this.health );
 Unit.prototype.setMoveDestination = function( column, line )
 {
 var startPosition = Map.calculatePosition( this.getX(), this.getY() );
-var endPosition = [ line, column ];
 
-this.path = Map.getPath( startPosition, endPosition );
+this.path = Map.getPath( startPosition[ 0 ], startPosition[ 1 ], column, line );
 
 if ( this.path.length <= 1 )
     {
@@ -230,7 +229,7 @@ Unit.prototype.move = function( next )
 var unitX = this.getX();
 var unitY = this.getY();
 
-var position = Map.getPosition( next[ 1 ], next[ 0 ] );
+var position = Map.getPosition( next.x, next.y );
 
 var destX = position.x + this.width / 2;
 var destY = position.y + this.height / 2;

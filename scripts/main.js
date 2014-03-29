@@ -7,7 +7,7 @@
         - createjs
             - easeljs : 0.7
             - preloadjs: 0.4
-        - AStar ( http://devpro.it/javascript_id_137.html )
+        - AStar ( https://github.com/bgrins/javascript-astar )
 
     to doo:
 

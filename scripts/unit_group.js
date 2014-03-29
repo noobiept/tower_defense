@@ -34,7 +34,7 @@ function UnitGroup1( args)
 this.name = 'group unit';
 this.image = 'creep_group';
 this.stats = {
-        damage: 2,
+        damage: 0,
         range: 50,
         movement_speed: 50,
         gold: 5,
