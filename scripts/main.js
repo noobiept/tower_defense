@@ -7,7 +7,7 @@
         - createjs
             - easeljs : 0.7
             - preloadjs: 0.4
-        - AStar ( https://github.com/bgrins/javascript-astar )
+        - AStar: 0.2.0 ( https://github.com/bgrins/javascript-astar )
 
     to doo:
 
@@ -120,6 +120,7 @@ var manifest = [
         { id: 'creep', src: G.BASE_URL + 'images/creep.png' },
         { id: 'creep_group', src: G.BASE_URL + 'images/creep_group.png' },
         { id: 'creep_fast', src: G.BASE_URL + 'images/creep_fast.png' },
+        { id: 'creep_fly', src: G.BASE_URL + 'images/creep_fly.png' },
         { id: 'tower_base', src: G.BASE_URL + 'images/tower_base.png' },
         { id: 'tower1', src: G.BASE_URL + 'images/tower1.png' }
     ];

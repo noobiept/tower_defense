@@ -51,6 +51,8 @@ INHERIT_PROTOTYPE( UnitGroup1, Unit );
 
 
 
+
+
 window.UnitGroup = UnitGroup;
 
 }(window));
