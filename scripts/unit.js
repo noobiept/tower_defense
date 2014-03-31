@@ -279,6 +279,9 @@ if ( Game.checkIfSelected( this ) )
 };
 
 
+
+
+
 Unit.prototype.tookDamage = function( attacker )
 {
 this.health -= attacker.damage;
@@ -308,6 +311,17 @@ return false;
 };
 
 
+
+Unit.prototype.onBulletHit = function( target )
+{
+    // deal damage, and see if the unit died from this attack or not
+if ( target.tookDamage( this ) )
+    {
+    this.targetUnit = null;
+    }
+};
+
+
 Unit.prototype.updateHealthBar = function()
 {
 var ratio = this.health / this.max_health;
@@ -328,8 +342,6 @@ g.endFill();
 
 Unit.prototype.tick = function()
 {
-var _this = this;
-
     // deal with the unit's movement
 this.container.x += this.move_x;
 this.container.y += this.move_y;
@@ -342,7 +354,7 @@ if( circlePointCollision( this.getX(), this.getY(), this.width / 8, this.next_x,
 
     if ( this.path.length == 0 )
         {
-        this.remove();  //HERE
+        this.remove();
         Game.updateLife( -1 );
         return;
         }
@@ -370,15 +382,7 @@ if ( this.damage > 0 )
                 this.attack_count = this.attack_limit;
                 new Bullet({
                         shooter: this,
-                        target: target,
-                        onCollision: function()
-                            {
-                                // deal damage, and see if the unit died from this attack or not
-                            if ( target.tookDamage( _this ) )
-                                {
-                                _this.targetUnit = null;
-                                }
-                            }
+                        target: target
                     });
                 }
 

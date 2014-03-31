@@ -309,6 +309,24 @@ return astar.search( GRAPH.nodes, start, end );
 };
 
 
+Map.getUnits = function( x, y, radius )
+{
+var unitsInRange = [];
+
+for (var a = 0 ; a < Unit.ALL.length ; a++)
+    {
+    var unit = Unit.ALL[ a ];
+
+    if ( circlePointCollision( x, y, radius, unit.getX(), unit.getY() ) )
+        {
+        unitsInRange.push( unit );
+        }
+    }
+
+return unitsInRange;
+};
+
+
 Map.getUnitInRange = function( tower )
 {
 var x = tower.getX();

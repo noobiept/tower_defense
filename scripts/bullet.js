@@ -6,7 +6,6 @@ var intervalSeconds = createjs.Ticker.getInterval() / 1000;
 
 this.shooter = args.shooter;
 this.target = args.target;
-this.onCollision = args.onCollision;
 
 this.width = 4;
 this.height = 4;
@@ -68,7 +67,7 @@ this.shape.rotation = toDegrees( angle );
 
 if ( circleCircleCollision( this.shape.x, this.shape.y, this.radius, targetX, targetY, targetRadius ) )
     {
-    this.onCollision();
+    this.shooter.onBulletHit( target );
 
     this.remove();
     }

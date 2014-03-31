@@ -15,6 +15,15 @@ if ( !this.image )
     this.image = 'tower_basic';
     }
 
+if ( !this.stats_level )
+    {
+    this.stats_level = [
+            { damage: 1, health: 40, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1 },
+            { damage: 15, health: 50, range: 55, attack_speed: 4, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
+            { damage: 20, health: 60, range: 60, attack_speed: 6, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
+        ];
+    }
+
 this.column = parseInt( args.column, 10 );
 this.line = parseInt( args.line, 10 );
 
@@ -28,12 +37,6 @@ this.upgrade_limit = 0;
 this.is_selling = false;
 this.sell_count = 0;
 this.sell_limit = 0;
-
-this.stats_level = [
-        { damage: 1, health: 40, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1 },
-        { damage: 15, health: 50, range: 55, attack_speed: 4, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
-        { damage: 20, health: 60, range: 60, attack_speed: 6, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
-    ];
 
 var currentLevel = this.stats_level[ this.upgrade_level ];
 
@@ -457,11 +460,18 @@ if ( this.health <= 0 )
 return false;
 };
 
+Tower.prototype.onBulletHit = function( target )
+{
+    // deal damage, and see if the unit died from this attack or not
+if ( target.tookDamage( this ) )
+    {
+    this.targetUnit = null;
+    }
+};
+
 
 Tower.prototype.tick_attack = function()
 {
-var _this = this;
-
 if ( this.damage > 0 )
     {
         // see if we can attack right now
@@ -481,15 +491,7 @@ if ( this.damage > 0 )
                 this.attack_count = this.attack_limit;
                 new Bullet({
                         shooter: this,
-                        target: target,
-                        onCollision: function()
-                            {
-                                // deal damage, and see if the unit died from this attack or not
-                            if ( target.tookDamage( _this ) )
-                                {
-                                _this.targetUnit = null;
-                                }
-                            }
+                        target: target
                     });
                 }
 
