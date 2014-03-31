@@ -15,13 +15,6 @@ var WAVE_COUNT = WAVE_LIMIT;    // start the first wave immediately
 
 var ELEMENT_SELECTED = null;
 
-var ELEMENTS = {
-            // game menu
-        currentWave: null,
-        currentGold: null,
-        currentLife: null
-    };
-
 var GOLD = 0;
 var LIFE = 0;
 
@@ -64,13 +57,8 @@ for (a = 0 ; a < mapInfo.creepLanes.length ; a++)
     }
 
 
-    // game menu html elements
-ELEMENTS.currentWave = document.querySelector( '.currentWave span' );
-ELEMENTS.currentGold = document.querySelector( '.currentGold span' );
-ELEMENTS.currentLife = document.querySelector( '.currentLife span' );
-
-
     // init the game
+GameMenu.init();
 Map.init( columns, lines, CREEP_LANES );
 
 Game.updateGold( 100 );
@@ -89,7 +77,7 @@ Game.updateGold = function( gold )
 {
 GOLD += gold;
 
-$( ELEMENTS.currentGold ).text( GOLD );
+GameMenu.updateGold( GOLD );
 };
 
 
@@ -113,7 +101,7 @@ if ( LIFE <= 0 )
     Game.end();
     }
 
-$( ELEMENTS.currentLife ).text( LIFE );
+GameMenu.updateLife( LIFE );
 };
 
 
@@ -201,7 +189,8 @@ if ( button == 0 )
             // reset the position
         Map.clearPosition( column, line );
 
-        new Tower({
+        var towerClass = GameMenu.getSelectedTower();
+        new towerClass({
                 column: column,
                 line: line
             });
@@ -273,7 +262,7 @@ if ( !NO_MORE_WAVES && WAVE_COUNT >= WAVE_LIMIT )
 
     ACTIVE_WAVES.push( ALL_WAVES[ CURRENT_WAVE ] );
 
-    $( ELEMENTS.currentWave ).text( CURRENT_WAVE + 1 );
+    GameMenu.updateWave( CURRENT_WAVE + 1 );
 
     CURRENT_WAVE++;
 

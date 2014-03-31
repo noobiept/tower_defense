@@ -11,14 +11,16 @@
 
 
     <script type="text/javascript" src="scripts/utilities.js"></script>
-    <script type="text/javascript" src="scripts/game.js"></script>
-    <script type="text/javascript" src="scripts/map.js"></script>
     <script type="text/javascript" src="scripts/bullet.js"></script>
     <script type="text/javascript" src="scripts/tower.js"></script>
+    <script type="text/javascript" src="scripts/tower_rocket.js"></script>
     <script type="text/javascript" src="scripts/unit.js"></script>
     <script type="text/javascript" src="scripts/unit_group.js"></script>
     <script type="text/javascript" src="scripts/unit_fly.js"></script>
     <script type="text/javascript" src="scripts/unit_fast.js"></script>
+    <script type="text/javascript" src="scripts/game.js"></script>
+    <script type="text/javascript" src="scripts/game_menu.js"></script>
+    <script type="text/javascript" src="scripts/map.js"></script>
     <script type="text/javascript" src="scripts/main.js"></script>
 
     <link rel="stylesheet" href="css/style.css" />
@@ -28,11 +30,16 @@
     <canvas id="MainCanvas"></canvas>
 
     <div id="GameMenu">
-        <div id="GameMenu-waves">
+        <div id="GameMenu-info" class="MenuBlock">
             <div class="currentWave">Wave: <span>1</span></div>
             <div class="currentGold">Gold: <span></span></div>
             <div class="currentLife">Lives: <span></span></div>
         </div>
+        <div id="GameMenu-controls" class="MenuBlock">
+            <div id="basicTower">Basic</div>
+            <div id="rocketTower">Rocket</div>
+        </div>
+
 
         <div id="GameMenu-unit">
             <div class="MenuBlock">

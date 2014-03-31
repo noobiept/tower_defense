@@ -349,18 +349,6 @@ return null;
 };
 
 
-Map.getNumberOfLines = function()
-{
-return NUMBER_OF_LINES;
-};
-
-
-Map.getNumberOfColumns = function()
-{
-return NUMBER_OF_COLUMNS;
-};
-
-
 window.Map = Map;
 
 }(window));

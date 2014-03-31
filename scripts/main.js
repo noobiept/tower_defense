@@ -12,7 +12,6 @@
     to doo:
 
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
-        - add armor (damage reduction)
         - try not to add towers on top of a unit
         - start showing the units a bit before entering the map
             - need to increase the map
@@ -122,7 +121,8 @@ var manifest = [
         { id: 'creep_fast', src: G.BASE_URL + 'images/creep_fast.png' },
         { id: 'creep_fly', src: G.BASE_URL + 'images/creep_fly.png' },
         { id: 'tower_base', src: G.BASE_URL + 'images/tower_base.png' },
-        { id: 'tower1', src: G.BASE_URL + 'images/tower1.png' }
+        { id: 'tower_basic', src: G.BASE_URL + 'images/tower_basic.png' },
+        { id: 'tower_rocket', src: G.BASE_URL + 'images/tower_rocket.png' }
     ];
 
 G.PRELOAD.addEventListener( 'progress', function( event )

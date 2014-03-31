@@ -10,6 +10,11 @@ if ( !this.name )
     this.name = 'tower';
     }
 
+if ( !this.image )
+    {
+    this.image = 'tower_basic';
+    }
+
 this.column = parseInt( args.column, 10 );
 this.line = parseInt( args.line, 10 );
 
@@ -140,7 +145,7 @@ base.regX = halfWidth;
 base.regY = halfHeight;
 
     // the tower
-var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'tower1' ) );
+var shape = new createjs.Bitmap( G.PRELOAD.getResult( this.image ) );
 
 shape.regX = halfWidth;
 shape.regY = halfHeight;
