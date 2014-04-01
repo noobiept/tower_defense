@@ -4,6 +4,7 @@ function UnitFast( args )
 {
 this.name = 'fast unit';
 this.image = 'creep_fast';
+this.slowImage = 'creep_fast_slow';
 this.width = 20;
 this.height = 10;
 this.stats = {

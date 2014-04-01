@@ -11,7 +11,7 @@ var CURRENT_GOLD = null;
 var CURRENT_LIFE = null;
 
 var SELECTED_TOWER = 0;
-var TOWERS = [ Tower, TowerRocket ];
+var TOWERS = [ Tower, TowerRocket, TowerFrost ];
 
 GameMenu.init = function()
 {
@@ -22,6 +22,7 @@ CURRENT_LIFE = document.querySelector( '.currentLife span' );
 
 var basicTower = document.querySelector( '#basicTower' );
 var rocketTower = document.querySelector( '#rocketTower' );
+var frostTower = document.querySelector( '#frostTower' );
 
 basicTower.onclick = function()
     {
@@ -31,6 +32,11 @@ basicTower.onclick = function()
 rocketTower.onclick = function()
     {
     SELECTED_TOWER = 1;
+    };
+
+frostTower.onclick = function()
+    {
+    SELECTED_TOWER = 2;
     };
 };
 

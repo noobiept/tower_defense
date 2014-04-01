@@ -15,7 +15,7 @@
    version="1.1"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="creep.svg"
-   inkscape:export-filename="C:\Users\drk\Dropbox\projects\tower_defense\images\creep.png"
+   inkscape:export-filename="C:\Users\drk\Dropbox\projects\tower_defense\images\creep_slow.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -28,10 +28,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="64"
-     inkscape:cx="3.1593371"
-     inkscape:cy="4.1129263"
+     inkscape:cx="-0.5549204"
+     inkscape:cy="5.3629263"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1005"
@@ -45,8 +45,8 @@
        visible="true"
        enabled="true"
        snapvisiblegridlinesonly="true"
-       spacingx="0.5px"
-       spacingy="0.5px" />
+       spacingx="0.25px"
+       spacingy="0.25px" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -56,25 +56,26 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
+     inkscape:label="creep"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-1042.3622)">
+     transform="translate(0,-1042.3622)"
+     style="display:inline">
     <path
        sodipodi:type="arc"
-       style="fill:#ebb6b9;fill-opacity:1;stroke:#000000;stroke-width:0.84896099999999985;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#ebb6b9;fill-opacity:1;stroke:#000000;stroke-width:0.848961;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="path4101"
        sodipodi:cx="5"
        sodipodi:cy="5"
        sodipodi:rx="5"
        sodipodi:ry="5"
        d="M 10,5 A 5,5 0 1 1 0,5 5,5 0 1 1 10,5 z"
-       transform="matrix(0.92174725,0,0,0.92174725,0.39126373,1042.7534)"
+       transform="matrix(0.87565989,0,0,0.87565989,0.62170054,1042.9839)"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <path
@@ -86,9 +87,9 @@
        sodipodi:rx="1"
        sodipodi:ry="1"
        d="m 8,3.5 a 1,1 0 1 1 -2,0 1,1 0 1 1 2,0 z"
-       transform="translate(0,1042.3622)" />
+       transform="matrix(0.95,0,0,0.95,0.25,1042.6123)" />
     <path
-       transform="translate(0,1045.3622)"
+       transform="matrix(0.95,0,0,0.95,0.25,1045.4623)"
        d="m 8,3.5 a 1,1 0 1 1 -2,0 1,1 0 1 1 2,0 z"
        sodipodi:ry="1"
        sodipodi:rx="1"
@@ -97,5 +98,21 @@
        id="path4885"
        style="fill:#000000;fill-opacity:1;stroke:none"
        sodipodi:type="arc" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="slow"
+     style="display:inline">
+    <path
+       sodipodi:type="arc"
+       style="fill:none;stroke:#1cd3f1;stroke-width:1.11052632;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path2987"
+       sodipodi:cx="5"
+       sodipodi:cy="5"
+       sodipodi:rx="5"
+       sodipodi:ry="5"
+       d="M 10,5 A 5,5 0 1 1 0,5 5,5 0 1 1 10,5 z"
+       transform="matrix(0.90004737,0,0,0.90004737,0.49976314,0.49976319)" />
   </g>
 </svg>

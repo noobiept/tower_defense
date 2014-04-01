@@ -29,6 +29,11 @@ if ( !this.image )
     this.image = 'creep';
     }
 
+if ( !this.slowImage )
+    {
+    this.slowImage = 'creep_slow';
+    }
+
 if ( !this.width )
     {
     this.width = squareSize;
@@ -44,9 +49,14 @@ this.line = args.line;
 
 this.damage = this.stats.damage;
 this.range = this.stats.range;
+this.gold = this.stats.gold;
 this.movement_speed = this.stats.movement_speed;    // pixels per second
 this.movement_per_tick = intervalSeconds * this.movement_speed; // pixels per tick
-this.gold = this.stats.gold;
+this.is_slow_down = false;
+this.slow_duration = 2;
+this.slow_count = 0;
+this.slow_limit = 0;
+
 
 this.attack_speed = this.stats.attack_speed;
 this.attack_limit = 1 / (intervalSeconds * this.attack_speed);
@@ -69,9 +79,10 @@ this.move_y = 0;
 this.next_x = 0;
 this.next_y = 0;
 
-
 this.container = null;
 this.rangeElement = null;
+this.slowElement = null;
+this.healthBar = null;
 this.shape = null;
 
 this.setupShape();
@@ -116,6 +127,7 @@ var width = this.width;
 var height = this.height;
 var halfWidth = width / 2;
 var halfHeight = height / 2;
+var g;
 
     // the unit
 var shape = new createjs.Bitmap( G.PRELOAD.getResult( this.image ) );
@@ -132,7 +144,7 @@ healthBar.y = -2;
 healthBar.regX = halfWidth;
 healthBar.regY = halfHeight;
 
-var g = healthBar.graphics;
+g = healthBar.graphics;
 
 g.beginFill( 'green' );
 g.drawRoundRect( 0, 0, width, 2, 1 );
@@ -141,8 +153,7 @@ g.endFill();
     // the range circle
 var range = new createjs.Shape();
 
-
-var g = range.graphics;
+g = range.graphics;
 
 g.beginStroke( 'gray' );
 g.drawCircle( 0, 0, this.range );
@@ -150,6 +161,15 @@ g.endStroke();
 
 range.visible = false;
 
+    // the slow circle (is added when the unit is being slowed down)
+var slow = new createjs.Bitmap( G.PRELOAD.getResult( this.slowImage ) );
+
+slow.regX = halfWidth;
+slow.regY = halfHeight;
+
+slow.visible = false;
+
+    // container of all the elements
 var container = new createjs.Container();
 
 var position = Map.getPosition( this.column, this.line );
@@ -157,6 +177,7 @@ var position = Map.getPosition( this.column, this.line );
 container.addChild( shape );
 container.addChild( healthBar );
 container.addChild( range );
+container.addChild( slow );
 container.x = position.x + halfWidth;
 container.y = position.y + halfHeight;
 
@@ -165,6 +186,7 @@ G.STAGE.addChild( container );
 this.container = container;
 this.healthBar = healthBar;
 this.rangeElement = range;
+this.slowElement = slow;
 this.shape = shape;
 };
 
@@ -279,6 +301,46 @@ if ( Game.checkIfSelected( this ) )
 };
 
 
+/*
+    Slows down the unit for a certain time (subtract the argument to the current .movement_speed)
+ */
+
+Unit.prototype.slowDown = function( minusMovementSpeed )
+{
+this.is_slow_down = true;
+
+this.slowElement.visible = true;
+
+var intervalSeconds = createjs.Ticker.getInterval() / 1000;
+
+var slowMovementSpeed = this.movement_speed - minusMovementSpeed;
+
+this.movement_per_tick = intervalSeconds * slowMovementSpeed;
+this.slow_count = 0;
+this.slow_limit = this.slow_duration / intervalSeconds;
+
+var angleRads = calculateAngle( this.getX(), this.getY() * -1, this.next_x, this.next_y * -1 );
+
+this.move_x = Math.cos( angleRads ) * this.movement_per_tick;
+this.move_y = Math.sin( angleRads ) * this.movement_per_tick;
+};
+
+
+Unit.prototype.returnNormalSpeed = function()
+{
+this.is_slow_down = false;
+
+this.slowElement.visible = false;
+
+var intervalSeconds = createjs.Ticker.getInterval() / 1000;
+
+this.movement_per_tick = intervalSeconds * this.movement_speed;
+
+var angleRads = calculateAngle( this.getX(), this.getY() * -1, this.next_x, this.next_y * -1 );
+
+this.move_x = Math.cos( angleRads ) * this.movement_per_tick;
+this.move_y = Math.sin( angleRads ) * this.movement_per_tick;
+};
 
 
 
@@ -342,6 +404,16 @@ g.endFill();
 
 Unit.prototype.tick = function()
 {
+if ( this.is_slow_down )
+    {
+    this.slow_count++;
+
+    if ( this.slow_count >= this.slow_limit )
+        {
+        this.returnNormalSpeed();
+        }
+    }
+
     // deal with the unit's movement
 this.container.x += this.move_x;
 this.container.y += this.move_y;

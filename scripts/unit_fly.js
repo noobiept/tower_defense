@@ -4,6 +4,7 @@ function UnitFly( args )
 {
 this.name = 'flying unit';
 this.image = 'creep_fly';
+this.slowImage = 'creep_fly_slow';
 this.width = 20;
 this.height = 10;
 this.stats = {

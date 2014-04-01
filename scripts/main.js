@@ -63,7 +63,7 @@
                 - mid range
 
             - frost tower
-                - single target. slows down unit
+                - single target. slows down unit (are of damage as well?... //HERE )
                 - ground/air
                 - low fire rate
                 - high cost
@@ -117,12 +117,16 @@ G.PRELOAD = new createjs.LoadQueue();
 var manifest = [
         { id: 'map1', src: G.BASE_URL + 'maps/first.json' },
         { id: 'creep', src: G.BASE_URL + 'images/creep.png' },
+        { id: 'creep_slow', src: G.BASE_URL + 'images/creep_slow.png' },
         { id: 'creep_group', src: G.BASE_URL + 'images/creep_group.png' },
         { id: 'creep_fast', src: G.BASE_URL + 'images/creep_fast.png' },
+        { id: 'creep_fast_slow', src: G.BASE_URL + 'images/creep_fast_slow.png' },
         { id: 'creep_fly', src: G.BASE_URL + 'images/creep_fly.png' },
+        { id: 'creep_fly_slow', src: G.BASE_URL + 'images/creep_fly_slow.png' },
         { id: 'tower_base', src: G.BASE_URL + 'images/tower_base.png' },
         { id: 'tower_basic', src: G.BASE_URL + 'images/tower_basic.png' },
-        { id: 'tower_rocket', src: G.BASE_URL + 'images/tower_rocket.png' }
+        { id: 'tower_rocket', src: G.BASE_URL + 'images/tower_rocket.png' },
+        { id: 'tower_frost', src: G.BASE_URL + 'images/tower_frost.png' }
     ];
 
 G.PRELOAD.addEventListener( 'progress', function( event )

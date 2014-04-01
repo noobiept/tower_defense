@@ -11,12 +11,12 @@
         ],
     "waves": [
             {
-                "type": "UnitGroup",
+                "type": "UnitFast",
                 "howMany": 2,
                 "spawnInterval": 1
             },
             {
-                "type": "Unit",
+                "type": "UnitFly",
                 "howMany": 2,
                 "spawnInterval": 1
             }
