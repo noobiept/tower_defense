@@ -6,12 +6,12 @@ var squareSize = Map.getSquareSize();
 var interval = createjs.Ticker.getInterval();
 var intervalSeconds = interval / 1000;
 
-if ( !this.name )
+if ( typeof this.name === 'undefined' )
     {
     this.name = 'unit';
     }
 
-if ( !this.stats )
+if ( typeof this.stats === 'undefined' )
     {
     this.stats = {
             damage: 2,
@@ -24,24 +24,29 @@ if ( !this.stats )
         };
     }
 
-if ( !this.image )
+if ( typeof this.image === 'undefined' )
     {
     this.image = 'creep';
     }
 
-if ( !this.slowImage )
+if ( typeof this.slowImage === 'undefined' )
     {
     this.slowImage = 'creep_slow';
     }
 
-if ( !this.width )
+if ( typeof this.width === 'undefined' )
     {
     this.width = squareSize;
     }
 
-if ( !this.height )
+if ( typeof this.height === 'undefined' )
     {
     this.height = squareSize;
+    }
+
+if ( typeof this.is_ground_unit === 'undefined' )
+    {
+    this.is_ground_unit = true;
     }
 
 this.column = args.column;
@@ -89,10 +94,22 @@ this.setupShape();
 
 Unit.ALL.push( this );
 
+if ( this.is_ground_unit )
+    {
+    Unit.ALL_GROUND.push( this );
+    }
+
+else
+    {
+    Unit.ALL_AIR.push( this );
+    }
+
 this.setMoveDestination( this.destination_column, this.destination_line );
 }
 
 Unit.ALL = [];
+Unit.ALL_GROUND = [];
+Unit.ALL_AIR = [];
 
 var SELECTION_MENU;
 
@@ -290,9 +307,25 @@ this.removed = true;
 
 G.STAGE.removeChild( this.container );
 
+    // remove from 'all' array and 'ground' or 'air' array
 var index = Unit.ALL.indexOf( this );
 
 Unit.ALL.splice( index, 1 );
+
+if ( this.is_ground_unit )
+    {
+    index = Unit.ALL_GROUND.indexOf( this );
+
+    Unit.ALL_GROUND.splice( index, 1 );
+    }
+
+else
+    {
+    index = Unit.ALL_AIR.indexOf( this );
+
+    Unit.ALL_AIR.splice( index, 1 );
+    }
+
 
 if ( Game.checkIfSelected( this ) )
     {

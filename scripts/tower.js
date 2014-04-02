@@ -5,17 +5,17 @@ function Tower( args )
 var squareSize = Map.getSquareSize();
 var intervalSeconds = createjs.Ticker.getInterval() / 1000;
 
-if ( !this.name )
+if ( typeof this.name === 'undefined' )
     {
     this.name = 'tower';
     }
 
-if ( !this.image )
+if ( typeof this.image === 'undefined' )
     {
     this.image = 'tower_basic';
     }
 
-if ( !this.stats_level )
+if ( typeof this.stats_level === 'undefined' )
     {
     this.stats_level = [
             { damage: 1, health: 40, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1 },
@@ -23,6 +23,17 @@ if ( !this.stats_level )
             { damage: 20, health: 60, range: 60, attack_speed: 6, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
         ];
     }
+
+if ( typeof this.can_target_ground === 'undefined' )
+    {
+    this.can_target_ground = true;
+    }
+
+if ( typeof this.can_target_air === 'undefined' )
+    {
+    this.can_target_air = true;
+    }
+
 
 this.column = parseInt( args.column, 10 );
 this.line = parseInt( args.line, 10 );

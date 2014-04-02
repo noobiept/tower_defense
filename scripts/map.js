@@ -308,14 +308,38 @@ var end = GRAPH.nodes[ endColumn ][ endLine ];
 return astar.search( GRAPH.nodes, start, end );
 };
 
+/*
+    Gets all units in an area (only ground / only air / both, depending on the tower)
+ */
 
-Map.getUnits = function( x, y, radius )
+Map.getUnits = function( x, y, radius, tower )
 {
 var unitsInRange = [];
+var array;
 
-for (var a = 0 ; a < Unit.ALL.length ; a++)
+if ( tower.can_target_ground )
     {
-    var unit = Unit.ALL[ a ];
+    if ( tower.can_target_air )
+        {
+        array = Unit.ALL;
+        }
+
+    else
+        {
+        array = Unit.ALL_GROUND;
+        }
+    }
+
+    // assumes .can_target_air == true
+else
+    {
+    array = Unit.ALL_AIR;
+    }
+
+
+for (var a = 0 ; a < array.length ; a++)
+    {
+    var unit = array[ a ];
 
     if ( circlePointCollision( x, y, radius, unit.getX(), unit.getY() ) )
         {
@@ -332,10 +356,30 @@ Map.getUnitInRange = function( tower )
 var x = tower.getX();
 var y = tower.getY();
 var rangeRadius = tower.range;
+var array;
 
-for (var a = 0 ; a < Unit.ALL.length ; a++)
+if ( tower.can_target_ground )
     {
-    var unit = Unit.ALL[ a ];
+    if ( tower.can_target_air )
+        {
+        array = Unit.ALL;
+        }
+
+    else
+        {
+        array = Unit.ALL_GROUND;
+        }
+    }
+
+    // assumes .can_target_air == true
+else
+    {
+    array = Unit.ALL_AIR;
+    }
+
+for (var a = 0 ; a < array.length ; a++)
+    {
+    var unit = array[ a ];
 
     if ( circlePointCollision( x, y, rangeRadius, unit.getX(), unit.getY() ) )
         {

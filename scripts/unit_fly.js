@@ -7,6 +7,7 @@ this.image = 'creep_fly';
 this.slowImage = 'creep_fly_slow';
 this.width = 20;
 this.height = 10;
+this.is_ground_unit = false;
 this.stats = {
         damage: 1,
         range: 50,
