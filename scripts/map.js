@@ -287,6 +287,59 @@ if ( !GRAPH.nodes[ column ][ line ].type ||
 return true;
 };
 
+
+Map.getAvailablePositions = function( centerColumn, centerLine, length )
+{
+var halfLength = parseInt( length / 2, 10 );
+var leftColumn = centerColumn - halfLength;
+
+if ( leftColumn < 0 )
+    {
+    leftColumn = 0;
+    }
+
+var rightColumn = centerColumn + halfLength;
+
+if ( rightColumn >= NUMBER_OF_COLUMNS )
+    {
+    rightColumn = NUMBER_OF_COLUMNS - 1;
+    }
+
+var topLine = centerLine - halfLength;
+
+if ( topLine < 0 )
+    {
+    topLine = 0;
+    }
+
+var bottomLine = centerLine + halfLength;
+
+if ( bottomLine >= NUMBER_OF_LINES )
+    {
+    bottomLine = NUMBER_OF_LINES - 1;
+    }
+
+
+var availablePositions = [];
+
+for (var column = leftColumn ; column < rightColumn ; column++)
+    {
+    for (var line = topLine ; line < bottomLine ; line++)
+        {
+        var position = GRAPH.nodes[ column ][ line ];
+
+        if ( position.type === 1 )
+            {
+            availablePositions.push( [ column, line ] );
+            }
+        }
+    }
+
+return availablePositions;
+};
+
+
+
 Map.getPosition = function( column, line )
 {
 var x = STARTING_X + column * SQUARE_SIZE;

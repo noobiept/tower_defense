@@ -280,7 +280,10 @@ this.move_y = Math.sin( angleRads ) * this.movement_per_tick;
 this.next_x = destX;
 this.next_y = destY;
 
-this.shape.rotation = toDegrees( angleRads );
+var rotation = toDegrees( angleRads );
+
+this.shape.rotation = rotation;
+this.slowElement.rotation = rotation;
 };
 
 

@@ -16,6 +16,7 @@
         - start showing the units a bit before entering the map
             - need to increase the map
             - and add 'obstacles' (set the position to 1) so that the units enter through the correct way into the playable map
+        - show the gold earned on top of the killed unit (like +5 with yellow color)
 
 
         types of units:
@@ -123,6 +124,10 @@ var manifest = [
         { id: 'creep_fast_slow', src: G.BASE_URL + 'images/creep_fast_slow.png' },
         { id: 'creep_fly', src: G.BASE_URL + 'images/creep_fly.png' },
         { id: 'creep_fly_slow', src: G.BASE_URL + 'images/creep_fly_slow.png' },
+        { id: 'creep_spawn', src: G.BASE_URL + 'images/creep_spawn.png' },
+        { id: 'creep_spawn_slow', src: G.BASE_URL + 'images/creep_spawn_slow.png' },
+        { id: 'creep_spawned', src: G.BASE_URL + 'images/creep_spawned.png' },
+        { id: 'creep_spawned_slow', src: G.BASE_URL + 'images/creep_spawned_slow.png' },
         { id: 'tower_base', src: G.BASE_URL + 'images/tower_base.png' },
         { id: 'tower_basic', src: G.BASE_URL + 'images/tower_basic.png' },
         { id: 'tower_rocket', src: G.BASE_URL + 'images/tower_rocket.png' },

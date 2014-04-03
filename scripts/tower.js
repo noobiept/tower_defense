@@ -18,7 +18,7 @@ if ( typeof this.image === 'undefined' )
 if ( typeof this.stats_level === 'undefined' )
     {
     this.stats_level = [
-            { damage: 1, health: 40, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1 },
+            { damage: 2, health: 40, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1 },
             { damage: 15, health: 50, range: 55, attack_speed: 4, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
             { damage: 20, health: 60, range: 60, attack_speed: 6, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
         ];

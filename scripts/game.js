@@ -61,7 +61,7 @@ for (a = 0 ; a < mapInfo.creepLanes.length ; a++)
 GameMenu.init();
 Map.init( columns, lines, CREEP_LANES );
 
-Game.updateGold( 100 );
+Game.updateGold( 200 );
 Game.updateLife( 20 );
 
 createjs.Ticker.on( 'tick', Game.tick );
