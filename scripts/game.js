@@ -154,7 +154,7 @@ if ( button == 0 )
         // see if we can afford a tower
     if ( !Game.haveEnoughGold( Tower.cost ) )
         {
-        console.log('not enough gold');
+        GameMenu.showMessage( 'Not enough gold.' );
         return;
         }
 
@@ -178,7 +178,7 @@ if ( button == 0 )
 
             if ( path.length <= 0 )
                 {
-                console.log( "Can't block the unit's path." );
+                GameMenu.showMessage( "Can't block the unit's path." );
 
                     // reset the position
                 Map.clearPosition( column, line );

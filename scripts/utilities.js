@@ -1,3 +1,37 @@
+function Timeout()
+{
+this.is_active = false;
+this.id = -1;
+}
+
+Timeout.prototype.start = function( functionToCall, interval )
+{
+var _this = this;
+
+if ( this.is_active )
+    {
+    this.clear();
+    }
+
+this.is_active = true;
+
+this.id = window.setTimeout( function()
+    {
+    _this.is_active = false;
+    console.log('timeout');
+    functionToCall();
+
+    }, interval );
+};
+
+Timeout.prototype.clear = function()
+{
+this.is_active = false;
+window.clearTimeout( this.id );
+};
+
+
+
 function getRandomInt( min, max )
 {
 return Math.floor(Math.random() * (max - min + 1)) + min;

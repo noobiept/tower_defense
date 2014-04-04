@@ -9,6 +9,8 @@ function GameMenu()
 var CURRENT_WAVE = null;
 var CURRENT_GOLD = null;
 var CURRENT_LIFE = null;
+var MESSAGE = null;
+var MESSAGE_TIMEOUT = null;
 
 var SELECTED_TOWER = 0;
 var TOWERS = [ Tower, TowerRocket, TowerFrost, TowerAntiAir ];
@@ -18,7 +20,8 @@ GameMenu.init = function()
 CURRENT_WAVE = document.querySelector( '.currentWave span' );
 CURRENT_GOLD = document.querySelector( '.currentGold span' );
 CURRENT_LIFE = document.querySelector( '.currentLife span' );
-
+MESSAGE = document.querySelector( '#Message' );
+MESSAGE_TIMEOUT = new Timeout();
 
 var basicTower = document.querySelector( '#basicTower' );
 var rocketTower = document.querySelector( '#rocketTower' );
@@ -45,6 +48,19 @@ antiAirTower.onclick = function()
     SELECTED_TOWER = 3;
     }
 };
+
+
+GameMenu.showMessage = function( message )
+{
+$( MESSAGE ).css( 'display', 'block' );
+$( MESSAGE ).text( message );
+
+MESSAGE_TIMEOUT.start( function()
+    {
+    $( MESSAGE ).css( 'display', 'none' );
+    }, 1000 );
+};
+
 
 GameMenu.updateGold = function( gold )
 {

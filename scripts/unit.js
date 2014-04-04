@@ -396,6 +396,13 @@ if ( this.health <= 0 )
     {
     if ( !this.removed )
         {
+        new Message({
+                text: '+' + this.gold,
+                color: 'rgb(187, 186, 81)',
+                x: this.getX(),
+                y: this.getY() - this.height
+            });
+
             // add the gold earn from killing this unit
         Game.updateGold( this.gold );
 

@@ -116,7 +116,7 @@ upgrade.onclick = function()
 
     else
         {
-        console.log('not enough gold to upgrade');
+        GameMenu.showMessage( 'Not enough gold to upgrade.' );
         }
     };
 
@@ -297,7 +297,7 @@ Tower.prototype.startUpgrading = function()
     // no more upgrades
 if ( this.upgrade_level + 1 >= this.stats_level.length )
     {
-    console.log('no more tower upgrades');
+    GameMenu.showMessage( 'No more tower upgrades.' );
     return;
     }
 
@@ -326,7 +326,7 @@ Tower.prototype.upgrade = function()
     // no more upgrades
 if ( this.upgrade_level + 1 >= this.stats_level.length )
     {
-    console.log('no more tower upgrades');
+    GameMenu.showMessage( 'No more tower upgrades' );
     return;
     }
 
