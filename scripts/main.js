@@ -129,9 +129,11 @@ var manifest = [
         { id: 'creep_spawned_slow', src: G.BASE_URL + 'images/creep_spawned_slow.png' },
         { id: 'tower_base', src: G.BASE_URL + 'images/tower_base.png' },
         { id: 'tower_basic', src: G.BASE_URL + 'images/tower_basic.png' },
+        { id: 'tower_fast', src: G.BASE_URL + 'images/tower_fast.png' },
         { id: 'tower_rocket', src: G.BASE_URL + 'images/tower_rocket.png' },
         { id: 'tower_frost', src: G.BASE_URL + 'images/tower_frost.png' },
-        { id: 'tower_anti_air', src: G.BASE_URL + 'images/tower_anti_air.png' }
+        { id: 'tower_anti_air', src: G.BASE_URL + 'images/tower_anti_air.png' },
+        { id: 'tower_bash', src: G.BASE_URL + 'images/tower_bash.png' }
     ];
 
 G.PRELOAD.addEventListener( 'progress', function( event )
