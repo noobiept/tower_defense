@@ -16,7 +16,6 @@
         - start showing the units a bit before entering the map
             - need to increase the map
             - and add 'obstacles' (set the position to 1) so that the units enter through the correct way into the playable map
-        - show the gold earned on top of the killed unit (like +5 with yellow color)
 
 
         types of units:

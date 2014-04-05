@@ -330,6 +330,8 @@ if ( this.upgrade_level + 1 >= this.stats_level.length )
     return;
     }
 
+var intervalSeconds = createjs.Ticker.getInterval() / 1000;
+
     // update the overall cost of the tower
 this.cost += this.stats_level[ this.upgrade_level ].upgrade_cost;
 
@@ -347,7 +349,8 @@ this.max_health = currentLevel.health;
 this.damage = currentLevel.damage;
 this.range = currentLevel.range;
 this.attack_speed = currentLevel.attack_speed;
-
+this.attack_limit = 1 / (intervalSeconds * this.attack_speed);
+this.attack_count = 0;
 
     // re-draw the range element (since we may have increased the range in the upgrade)
 var g = this.rangeElement.graphics;

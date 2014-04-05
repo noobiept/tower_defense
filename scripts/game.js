@@ -68,6 +68,7 @@ createjs.Ticker.on( 'tick', Game.tick );
 
     // disable the context menu (when right-clicking)
 window.oncontextmenu = function( event ) { return false; };
+window.addEventListener( 'keyup', Game.keyUpEvents );
 G.CANVAS.addEventListener( 'mouseup', Game.mouseEvents );
 G.STAGE.on( 'stagemousemove', Map.mouseMoveEvents );
 };
@@ -102,6 +103,42 @@ if ( LIFE <= 0 )
     }
 
 GameMenu.updateLife( LIFE );
+};
+
+
+Game.keyUpEvents = function( event )
+{
+var key = event.keyCode;
+
+if ( key == EVENT_KEY[ '1' ] )
+    {
+    GameMenu.selectTower( 0 );
+    }
+
+else if ( key == EVENT_KEY[ '2' ] )
+    {
+    GameMenu.selectTower( 1 );
+    }
+
+else if ( key == EVENT_KEY[ '3' ] )
+    {
+    GameMenu.selectTower( 2 );
+    }
+
+else if ( key == EVENT_KEY[ '4' ] )
+    {
+    GameMenu.selectTower( 3 );
+    }
+
+else if ( key == EVENT_KEY[ '5' ] )
+    {
+    GameMenu.selectTower( 4 );
+    }
+
+else if ( key == EVENT_KEY[ '6' ] )
+    {
+    GameMenu.selectTower( 5 );
+    }
 };
 
 

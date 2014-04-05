@@ -38,7 +38,19 @@
     cursor: pointer;
     }
 
+.button:hover
+    {
+    background-color: beige;
+    }
+
 #Message
     {
     display: none;
+    }
+
+
+
+.selectedTower, .selectedTower:hover
+    {
+    background-color: burlywood;
     }

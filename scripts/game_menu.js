@@ -12,8 +12,15 @@ var CURRENT_LIFE = null;
 var MESSAGE = null;
 var MESSAGE_TIMEOUT = null;
 
-var SELECTED_TOWER = 0;
-var TOWERS = [ Tower, TowerRocket, TowerFrost, TowerAntiAir ];
+var SELECTED_TOWER = null;
+var TOWERS = [
+        { tower: Tower, htmlElement: null, position: 0 },
+        { tower: TowerFast, htmlElement: null, position: 1 },
+        { tower: TowerRocket, htmlElement: null, position: 2 },
+        { tower: TowerFrost, htmlElement: null, position: 3 },
+        { tower: TowerAntiAir, htmlElement: null, position: 4 },
+        { tower: TowerBash, htmlElement: null, position: 5 }
+    ];
 
 GameMenu.init = function()
 {
@@ -24,29 +31,54 @@ MESSAGE = document.querySelector( '#Message' );
 MESSAGE_TIMEOUT = new Timeout();
 
 var basicTower = document.querySelector( '#basicTower' );
+var fastTower = document.querySelector( '#fastTower' );
 var rocketTower = document.querySelector( '#rocketTower' );
 var frostTower = document.querySelector( '#frostTower' );
 var antiAirTower = document.querySelector( '#antiAirTower' );
+var bashTower = document.querySelector( '#bashTower' );
 
-basicTower.onclick = function()
-    {
-    SELECTED_TOWER = 0;
-    };
+var elements = [ basicTower, fastTower, rocketTower, frostTower, antiAirTower, bashTower ]; // same order as in the TOWERS array
 
-rocketTower.onclick = function()
+for (var a = 0 ; a < elements.length ; a++)
     {
-    SELECTED_TOWER = 1;
-    };
+    var htmlElement = elements[ a ];
 
-frostTower.onclick = function()
-    {
-    SELECTED_TOWER = 2;
-    };
+    TOWERS[ a ].htmlElement = htmlElement;
 
-antiAirTower.onclick = function()
-    {
-    SELECTED_TOWER = 3;
+    htmlElement.onclick = (function( position )
+        {
+        return function()
+            {
+            GameMenu.selectTower( position );
+            }
+        })( a );
     }
+
+
+GameMenu.selectTower( 0 );
+};
+
+
+GameMenu.selectTower = function( position )
+{
+if ( SELECTED_TOWER )
+    {
+        // trying to select the same tower
+    if ( position == SELECTED_TOWER.position )
+        {
+        return;
+        }
+
+        // remove the css class from the previous selection
+    else
+        {
+        $( SELECTED_TOWER.htmlElement ).removeClass( 'selectedTower' );
+        }
+    }
+
+SELECTED_TOWER = TOWERS[ position ];
+
+$( SELECTED_TOWER.htmlElement ).addClass( 'selectedTower' );
 };
 
 
@@ -82,7 +114,7 @@ $( CURRENT_WAVE ).text( wave );
 
 GameMenu.getSelectedTower = function()
 {
-return TOWERS[ SELECTED_TOWER ];
+return SELECTED_TOWER.tower;
 };
 
 
