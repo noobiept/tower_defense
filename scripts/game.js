@@ -328,7 +328,7 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
             var halfLength = parseInt( lane.length / 2, 10 );
 
                 // add units randomly in the start zone
-            if ( lane.orientation == 'vertical' )
+            if ( lane.orientation == 'horizontal' )
                 {
                 startColumn = lane.start.column;
                 startLine = getRandomInt( lane.start.line - halfLength, lane.start.line + halfLength - 1 );

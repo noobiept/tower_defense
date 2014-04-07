@@ -6,13 +6,13 @@
                 "start": { "column": 0, "line": 15 },
                 "end": { "column": 79, "line": 15 },
                 "length": 4,
-                "orientation": "vertical"
+                "orientation": "horizontal"
             }
         ],
     "waves": [
             {
                 "type": "UnitSpawn",
-                "howMany": 10,
+                "howMany": 50,
                 "spawnInterval": 0.5
             }
         ]

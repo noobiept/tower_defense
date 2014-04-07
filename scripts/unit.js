@@ -271,6 +271,8 @@ Unit.prototype.move = function( next )
 var unitX = this.getX();
 var unitY = this.getY();
 
+    // next.x is column, and next.y is line
+    // is only called x/y because of the AStar library
 var position = Map.getPosition( next.x, next.y );
 
 var destX = position.x + this.width / 2;

@@ -7,7 +7,7 @@ var lane = args.lane;
 var halfLength = parseInt( lane.length / 2, 10 );
 
     // add units randomly in the start zone
-if ( lane.orientation == 'vertical' )
+if ( lane.orientation == 'horizontal' )
     {
     for (a = 0 ; a < 5 ; a++)
         {

@@ -68,7 +68,7 @@ for (var a = 0 ; a < creepLanes.length ; a++)
     var endX, endY, endWidth, endHeight;
     var halfLength = lane.length / 2;
 
-    if ( lane.orientation == 'vertical' )
+    if ( lane.orientation == 'horizontal' )
         {
         startX = lane.start.column * squareSize - WALL_THICKNESS;
         startY = (lane.start.line - halfLength) * squareSize;

@@ -18,7 +18,7 @@ this.is_active = true;
 this.id = window.setTimeout( function()
     {
     _this.is_active = false;
-    console.log('timeout');
+
     functionToCall();
 
     }, interval );
