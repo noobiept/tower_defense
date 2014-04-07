@@ -13,9 +13,8 @@
 
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
-        - start showing the units a bit before entering the map
-            - need to increase the map
-            - and add 'obstacles' (set the position to 1) so that the units enter through the correct way into the playable map
+        - remove the attack from units (and health from towers)
+            - doesn't really work in this type of game, since you're defining the creeps path, its no fun if the path gets constantly destroyed
 
 
         types of units:

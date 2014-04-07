@@ -6,7 +6,6 @@ function Map()
 }
 
 var WALLS = [];
-var WALL_THICKNESS = 3;
 
 var MAP_WIDTH = 0;
 var MAP_HEIGHT = 0;
@@ -55,48 +54,78 @@ STARTING_X = $( window ).width() / 2 - numberOfColumns * SQUARE_SIZE / 2;
 STARTING_Y = $( window ).height() / 2 - numberOfLines * SQUARE_SIZE / 2;
 
     // add walls around the map
-Map.addWall( -WALL_THICKNESS, 0, WALL_THICKNESS, height + WALL_THICKNESS );        // left
-Map.addWall( width, 0, WALL_THICKNESS, height + WALL_THICKNESS );    // right
-Map.addWall( 0, 0, width, WALL_THICKNESS );         // top
-Map.addWall( 0, height, width, WALL_THICKNESS );    // bottom
+Map.addWall({
+        startColumn: 0,
+        startLine: 0,
+        length: numberOfLines,
+        orientation: 'vertical'
+    });     // left
+Map.addWall({
+        startColumn: numberOfColumns - 1,
+        startLine: 0,
+        length: numberOfLines,
+        orientation: 'vertical'
+    });     // right
+Map.addWall({
+        startColumn: 0,
+        startLine: 0,
+        length: numberOfColumns,
+        orientation: 'horizontal'
+    });     // top
+Map.addWall({
+        startColumn: 0,
+        startLine: numberOfLines - 1,
+        length: numberOfColumns,
+        orientation: 'horizontal'
+    });     // bottom
 
     // add the part of the wall where the creeps start/end (new wall with different color)
 for (var a = 0 ; a < creepLanes.length ; a++)
     {
     var lane = creepLanes[ a ];
-    var startX, startY, startWidth, startHeight;
-    var endX, endY, endWidth, endHeight;
-    var halfLength = lane.length / 2;
+    var halfLength = parseInt( lane.length / 2, 10 );
+    var startColumn, startLine, orientation;
+    var endColumn, endLine;
+    var length = lane.length;
 
     if ( lane.orientation == 'horizontal' )
         {
-        startX = lane.start.column * squareSize - WALL_THICKNESS;
-        startY = (lane.start.line - halfLength) * squareSize;
+        startColumn = lane.start.column;
+        startLine = lane.start.line - halfLength;
+        orientation = 'vertical';   // the wall orientation
 
-        endX = (lane.end.column + 1) * squareSize;
-        endY = (lane.end.line - halfLength) * squareSize;
-
-        startWidth = endWidth = WALL_THICKNESS;
-        startHeight = endHeight = lane.length * squareSize;
+        endColumn = lane.end.column;
+        endLine = startLine;
         }
 
     else
         {
-        startX = (lane.start.column - halfLength) * squareSize;
-        startY = lane.start.line * squareSize;
+        startColumn = lane.start.column - halfLength;
+        startLine = lane.start.line;
+        orientation = 'horizontal';
 
-        endX = (lane.end.column - halfLength) * squareSize;
-        endY = (lane.end.line + 1) * squareSize;
-
-        startWidth = endWidth = lane.length * squareSize;
-        startHeight = endHeight = WALL_THICKNESS;
+        endColumn = startColumn;
+        endLine = lane.end.line;
         }
 
 
-    Map.addWall( startX, startY, startWidth, startHeight, 'rgb(0,200,0)' );
-    Map.addWall( endX, endY, endWidth, endHeight, 'rgb(0,200,0)' );
+    Map.addWall({
+            startColumn: startColumn,
+            startLine: startLine,
+            length: length,
+            orientation: orientation,
+            fillColor: 'rgb(0,200,0)',
+            passable: true
+        });
+    Map.addWall({
+            startColumn: endColumn,
+            startLine: endLine,
+            length: length,
+            orientation: orientation,
+            fillColor: 'rgb(0,200,0)',
+            passable: true
+        });
     }
-
 
 
 var highlight = new createjs.Shape();
@@ -119,60 +148,119 @@ NUMBER_OF_LINES = numberOfLines;
 
 
 
-Map.addTower = function( tower )
+Map.setImpassableBox = function( startColumn, startLine, length )
 {
-GRAPH.nodes[ tower.column ][ tower.line ].type = 0;
-GRAPH.nodes[ tower.column + 1 ][ tower.line ].type = 0;
-GRAPH.nodes[ tower.column ][ tower.line + 1 ].type = 0;
-GRAPH.nodes[ tower.column + 1 ][ tower.line + 1 ].type = 0;
+for (var column = startColumn ; column < startColumn + length ; column++)
+    {
+    for (var line = startLine ; line < startLine + length ; line++)
+        {
+        GRAPH.nodes[ column ][ line ].type = 0;
+        }
+    }
+};
+
+Map.setPassableBox = function( startColumn, startLine, length )
+{
+for (var column = startColumn ; column < startColumn + length ; column++)
+    {
+    for (var line = startLine ; line < startLine + length ; line++)
+        {
+        GRAPH.nodes[ column ][ line ].type = 1;
+        }
+    }
 };
 
 
-Map.removeTower = function( tower )
-{
-GRAPH.nodes[ tower.column ][ tower.line ].type = 1;
-GRAPH.nodes[ tower.column + 1 ][ tower.line ].type = 1;
-GRAPH.nodes[ tower.column ][ tower.line + 1 ].type = 1;
-GRAPH.nodes[ tower.column + 1 ][ tower.line + 1 ].type = 1;
-};
+/*
+    Sets a single square
+ */
 
-
-Map.addDummy = function( column, line )
+Map.setImpassable = function( column, line )
 {
 GRAPH.nodes[ column ][ line ].type = 0;
-GRAPH.nodes[ column + 1 ][ line ].type = 0;
-GRAPH.nodes[ column ][ line + 1 ].type = 0;
-GRAPH.nodes[ column + 1 ][ line + 1 ].type = 0;
 };
 
-Map.clearPosition = function( column, line )
+Map.setPassable = function( column, line )
 {
 GRAPH.nodes[ column ][ line ].type = 1;
-GRAPH.nodes[ column + 1 ][ line ].type = 1;
-GRAPH.nodes[ column ][ line + 1 ].type = 1;
-GRAPH.nodes[ column + 1 ][ line + 1 ].type = 1;
 };
 
 
 
-
-Map.addWall = function( x, y, width, height, fillColor )
-{
-if ( typeof fillColor == 'undefined' )
-    {
-    fillColor = 'black';
+/*
+    args = {
+        startColumn: Number,
+        startLine: Number,
+        length: Number,
+        orientation: String,
+        fillColor: String (optional -- default: 'black'),
+        passable: Boolean (optional -- default: false)
     }
+ */
+
+Map.addWall = function( args )
+{
+if ( typeof args.fillColor == 'undefined' )
+    {
+    args.fillColor = 'black';
+    }
+
+if ( typeof args.passable == 'undefined' )
+    {
+    args.passable = false;
+    }
+
+var width, height;
+
+if ( args.orientation == 'horizontal' )
+    {
+    width = args.length * SQUARE_SIZE;
+    height = SQUARE_SIZE;
+
+    for (var column = args.startColumn ; column < args.startColumn + args.length ; column++)
+        {
+        if ( args.passable )
+            {
+            Map.setPassable( column, args.startLine );
+            }
+
+        else
+            {
+            Map.setImpassable( column, args.startLine );
+            }
+        }
+    }
+
+else
+    {
+    width = SQUARE_SIZE;
+    height = args.length * SQUARE_SIZE;
+
+    for (var line = args.startLine ; line < args.startLine + args.length ; line++)
+        {
+        if ( args.passable )
+            {
+            Map.setPassable( args.startColumn, line );
+            }
+
+        else
+            {
+            Map.setImpassable( args.startColumn, line );
+            }
+        }
+    }
+
 
 var wall = new createjs.Shape();
 
 var g = wall.graphics;
 
-g.beginFill( fillColor );
+g.beginFill( args.fillColor );
 g.drawRect( 0, 0, width, height );
 g.endFill();
 
-wall.x = STARTING_X + x;
-wall.y = STARTING_Y + y;
+wall.x = STARTING_X + args.startColumn * SQUARE_SIZE;
+wall.y = STARTING_Y + args.startLine * SQUARE_SIZE;
 
 G.STAGE.addChild( wall );
 

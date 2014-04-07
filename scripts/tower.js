@@ -81,7 +81,9 @@ Tower.ALL.push( this );
 
 Game.updateGold( -this.cost );
 
-Map.addTower( this );
+    // tower occupies 2x2 squares
+Map.setImpassableBox( this.column, this.line, 2 );
+
 Unit.redoMoveDestination();
 }
 
@@ -428,7 +430,7 @@ this.removed = true;
 
 G.STAGE.removeChild( this.container );
 
-Map.removeTower( this );
+Map.setPassableBox( this.column, this.line, 2 );
 
 var index = Tower.ALL.indexOf( this );
 
@@ -490,7 +492,7 @@ if ( this.damage > 0 )
         var target = this.targetUnit;
 
             // check if its currently attacking a unit
-        if ( target )
+        if ( target && !target.removed )
             {
             this.rotateTower( target );
 

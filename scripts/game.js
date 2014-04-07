@@ -202,7 +202,7 @@ if ( button == 0 )
     if ( Map.isAvailable( column, line ) )
         {
             // check if by filling this position, we're not blocking the units (they need to be always be able to reach the destination)
-        Map.addDummy( column, line );
+        Map.setImpassableBox( column, line, 2 );
 
             // check if there is a possible path (if its not going to block a lane)
         for (var b = 0 ; b < CREEP_LANES.length ; b++)
@@ -216,13 +216,13 @@ if ( button == 0 )
                 GameMenu.showMessage( "Can't block the unit's path." );
 
                     // reset the position
-                Map.clearPosition( column, line );
+                Map.setPassableBox( column, line, 2 );
                 return;
                 }
             }
 
             // reset the position
-        Map.clearPosition( column, line );
+        Map.setPassableBox( column, line, 2 );
 
         var towerClass = GameMenu.getSelectedTower();
         new towerClass({

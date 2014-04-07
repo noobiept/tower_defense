@@ -17,7 +17,7 @@ if ( typeof this.stats === 'undefined' )
             range: 50,
             movement_speed: 60,
             gold: 5,
-            attack_speed: 1,
+            attack_speed: 0.5,
             max_health: 20,
             health_regeneration: 2
         };
@@ -247,18 +247,17 @@ var startPosition = Map.calculatePosition( this.getX(), this.getY() );
 
 this.path = Map.getPath( startPosition[ 0 ], startPosition[ 1 ], column, line );
 
-if ( this.path.length <= 1 )
+    // happens when the unit is at the destination
+if ( this.path.length <= 0 )
     {
-    console.log( "shouldn't happen, units have to always have a path" );
     return;
     }
 
 
     // the first element is the current position of the unit, so we remove it
     // also since if the unit is already moving somewhere, and you give another command, the shape will sometimes move a bit back and then proceeds with the path (this is due to the shape being in a position between the squares)
-if ( this.path.length > 3 )
+if ( this.path.length > 2 )
     {
-    this.path.shift();
     this.path.shift();
     }
 

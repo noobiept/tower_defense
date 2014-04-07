@@ -16,7 +16,7 @@ this.stats = {
         range: 50,
         movement_speed: 50,
         gold: 10,
-        attack_speed: 1,
+        attack_speed: 0.1,
         max_health: 100,
         health_regeneration: 2
     };

@@ -7,12 +7,18 @@
                 "end": { "column": 79, "line": 15 },
                 "length": 4,
                 "orientation": "horizontal"
+            },
+            {
+                "start": { "column": 10, "line": 0 },
+                "end": { "column": 10, "line": 19 },
+                "length": 4,
+                "orientation": "vertical"
             }
         ],
     "waves": [
             {
                 "type": "UnitSpawn",
-                "howMany": 50,
+                "howMany": 10,
                 "spawnInterval": 0.5
             }
         ]
