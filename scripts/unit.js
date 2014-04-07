@@ -3,8 +3,7 @@
 function Unit( args )
 {
 var squareSize = Map.getSquareSize();
-var interval = createjs.Ticker.getInterval();
-var intervalSeconds = interval / 1000;
+var intervalSeconds = G.INTERVAL_SECONDS;
 
 if ( typeof this.name === 'undefined' )
     {
@@ -61,7 +60,9 @@ this.is_slow_down = false;
 this.slow_duration = 2;
 this.slow_count = 0;
 this.slow_limit = 0;
-
+this.is_stunned = false;
+this.stun_count = 0;
+this.stun_limit = 0;
 
 this.attack_speed = this.stats.attack_speed;
 this.attack_limit = 1 / (intervalSeconds * this.attack_speed);
@@ -91,6 +92,7 @@ this.healthBar = null;
 this.shape = null;
 
 this.setupShape();
+this.tick = this.tick_normal;
 
 Unit.ALL.push( this );
 
@@ -247,7 +249,8 @@ this.path = Map.getPath( startPosition[ 0 ], startPosition[ 1 ], column, line );
 
 if ( this.path.length <= 1 )
     {
-    return; //HERE shouldn't happen, units have to always have a path
+    console.log( "shouldn't happen, units have to always have a path" );
+    return;
     }
 
 
@@ -347,7 +350,7 @@ this.is_slow_down = true;
 
 this.slowElement.visible = true;
 
-var intervalSeconds = createjs.Ticker.getInterval() / 1000;
+var intervalSeconds = G.INTERVAL_SECONDS;
 
 var slowMovementSpeed = this.movement_speed - minusMovementSpeed;
 
@@ -368,14 +371,23 @@ this.is_slow_down = false;
 
 this.slowElement.visible = false;
 
-var intervalSeconds = createjs.Ticker.getInterval() / 1000;
-
-this.movement_per_tick = intervalSeconds * this.movement_speed;
+this.movement_per_tick = G.INTERVAL_SECONDS * this.movement_speed;
 
 var angleRads = calculateAngle( this.getX(), this.getY() * -1, this.next_x, this.next_y * -1 );
 
 this.move_x = Math.cos( angleRads ) * this.movement_per_tick;
 this.move_y = Math.sin( angleRads ) * this.movement_per_tick;
+};
+
+
+Unit.prototype.stun = function( time )
+{
+this.is_stunned = true;
+
+this.stun_count = 0;
+this.stun_limit = time / G.INTERVAL_SECONDS;
+
+this.tick = this.tick_stunned;
 };
 
 
@@ -445,7 +457,7 @@ g.endFill();
 
 
 
-Unit.prototype.tick = function()
+Unit.prototype.tick_move = function()
 {
 if ( this.is_slow_down )
     {
@@ -479,7 +491,11 @@ if( circlePointCollision( this.getX(), this.getY(), this.width / 8, this.next_x,
         this.move( this.path.shift() );
         }
     }
+};
 
+
+Unit.prototype.tick_attack = function()
+{
     // deal with the unit's attack
 if ( this.damage > 0 )
     {
@@ -521,7 +537,10 @@ if ( this.damage > 0 )
         this.attack_count--;
         }
     }
+};
 
+Unit.prototype.tick_regeneration = function()
+{
     // deal with the health regeneration
 if ( this.regeneration_count <= 0 )
     {
@@ -537,6 +556,40 @@ else
     {
     this.regeneration_count--;
     }
+};
+
+
+Unit.prototype.tick_normal = function()
+{
+this.tick_move();
+this.tick_attack();
+this.tick_regeneration();
+};
+
+
+Unit.prototype.tick_stunned = function()
+{
+if ( !this.is_stunned )
+    {
+    return;
+    }
+
+this.stun_count++;
+
+if ( this.stun_count >= this.stun_limit )
+    {
+    this.is_stunned = false;
+    this.tick = this.tick_normal;
+    }
+
+this.tick_regeneration();
+};
+
+
+
+Unit.prototype.tick = function()
+{
+    // this will be overridden by tick_normal(), or tick_stunned()
 };
 
 

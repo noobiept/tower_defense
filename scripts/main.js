@@ -63,7 +63,7 @@
                 - mid range
 
             - frost tower
-                - single target. slows down unit (are of damage as well?... //HERE )
+                - slows down the units in an area
                 - ground/air
                 - low fire rate
                 - high cost
@@ -85,7 +85,8 @@ var G = {
     PRELOAD: null,
     BASE_URL: '',
     FPS: 60,
-    GAME_MENU_HEIGHT: 100
+    GAME_MENU_HEIGHT: 100,
+    INTERVAL_SECONDS: 0     // the tick interval in seconds (time between ticks)
 };
 
 
@@ -107,6 +108,8 @@ $( gameMenu ).css( 'top', (availableHeight - G.GAME_MENU_HEIGHT) + 'px' );
 G.STAGE = new createjs.Stage( G.CANVAS );
 
 createjs.Ticker.setFPS( G.FPS );
+
+G.INTERVAL_SECONDS = createjs.Ticker.getInterval() / 1000;
 
 Tower.init();
 Unit.init();

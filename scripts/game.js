@@ -28,8 +28,6 @@ var lines = mapInfo.numberOfLines;
 var a;
 
     // read from the map info and update the appropriate variables
-var intervalSeconds = createjs.Ticker.getInterval() / 1000;
-
 for (a = 0 ; a < mapInfo.waves.length ; a++)
     {
     var wave = mapInfo.waves[ a ];
@@ -39,7 +37,7 @@ for (a = 0 ; a < mapInfo.waves.length ; a++)
             howMany: wave.howMany,
             spawnInterval: wave.spawnInterval,
             count: 0,
-            countLimit: wave.spawnInterval / intervalSeconds
+            countLimit: wave.spawnInterval / G.INTERVAL_SECONDS
         });
     }
 

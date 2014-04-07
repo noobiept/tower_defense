@@ -6,7 +6,9 @@ this.name = 'bash tower';
 this.image = 'tower_bash';
 this.can_target_ground = true;
 this.can_target_air = false;
-this.stun_chance = 25;
+this.stun_chance = 30;
+this.slow_chance = 30;
+this.stun = 1;
 this.stats_level = [
         { damage: 10, health: 40, range: 20, attack_speed: 2, attack_radius: 20, slow: 20, upgrade_cost: 10, upgrade_time: 1, sell_time: 1 },
         { damage: 15, health: 50, range: 22, attack_speed: 4, attack_radius: 22, slow: 30, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
@@ -65,7 +67,7 @@ if ( this.damage > 0 )
 };
 
 /*
-    Deals damage in an area around the tower, and has a chance to slow/stun?.. //HERE
+    Deals damage in an area around the tower, and has a chance to slow/stun
  */
 
 TowerBash.prototype.attack = function()
@@ -82,11 +84,18 @@ for (var a = 0 ; a < units.length ; a++)
 
     unit.tookDamage( this );
 
-    var chance = getRandomInt( 0, 100 );
+    var slowChance = getRandomInt( 0, 100 );
 
-    if ( chance <= this.stun_chance )
+    if ( slowChance <= this.slow_chance )
         {
         unit.slowDown( slow );
+        }
+
+    var stunChance = getRandomInt( 0, 100 );
+
+    if ( stunChance <= this.stun_chance )
+        {
+        unit.stun( this.stun );
         }
     }
 

@@ -3,7 +3,6 @@
 function Tower( args )
 {
 var squareSize = Map.getSquareSize();
-var intervalSeconds = createjs.Ticker.getInterval() / 1000;
 
 if ( typeof this.name === 'undefined' )
     {
@@ -56,14 +55,14 @@ this.range = currentLevel.range;
 this.cost = Tower.cost;
 
 this.attack_speed = currentLevel.attack_speed;
-this.attack_limit = 1 / (intervalSeconds * this.attack_speed);
+this.attack_limit = 1 / (G.INTERVAL_SECONDS * this.attack_speed);
 this.attack_count = 0;
 
 this.max_health = currentLevel.health;
 this.health = this.max_health;
 this.health_regeneration = 2;
 this.regeneration_count = 0;
-this.regeneration_limit = 1 / (intervalSeconds * this.health_regeneration);
+this.regeneration_limit = 1 / (G.INTERVAL_SECONDS * this.health_regeneration);
 
 
 this.targetUnit = null;
@@ -305,12 +304,11 @@ this.is_upgrading = true;
 
 
 var currentLevel = this.stats_level[ this.upgrade_level ];
-var intervalSeconds = createjs.Ticker.getInterval() / 1000;
 
 Game.updateGold( -currentLevel.upgrade_cost );
 
 this.upgrade_count = 0;
-this.upgrade_limit = currentLevel.upgrade_time / intervalSeconds;
+this.upgrade_limit = currentLevel.upgrade_time / G.INTERVAL_SECONDS;
 
 this.progressElement.graphics.clear();
 this.progressElement.visible = true;
@@ -330,7 +328,6 @@ if ( this.upgrade_level + 1 >= this.stats_level.length )
     return;
     }
 
-var intervalSeconds = createjs.Ticker.getInterval() / 1000;
 
     // update the overall cost of the tower
 this.cost += this.stats_level[ this.upgrade_level ].upgrade_cost;
@@ -349,7 +346,7 @@ this.max_health = currentLevel.health;
 this.damage = currentLevel.damage;
 this.range = currentLevel.range;
 this.attack_speed = currentLevel.attack_speed;
-this.attack_limit = 1 / (intervalSeconds * this.attack_speed);
+this.attack_limit = 1 / (G.INTERVAL_SECONDS * this.attack_speed);
 this.attack_count = 0;
 
     // re-draw the range element (since we may have increased the range in the upgrade)
@@ -399,10 +396,9 @@ Tower.prototype.startSelling = function()
 this.is_selling = true;
 
 var currentLevel = this.stats_level[ this.upgrade_level ];
-var intervalSeconds = createjs.Ticker.getInterval() / 1000;
 
 this.sell_count = 0;
-this.sell_limit = currentLevel.sell_time / intervalSeconds;
+this.sell_limit = currentLevel.sell_time / G.INTERVAL_SECONDS;
 
 this.progressElement.graphics.clear();
 this.progressElement.visible = true;
