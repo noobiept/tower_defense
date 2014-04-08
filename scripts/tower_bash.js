@@ -15,17 +15,78 @@ this.stats_level = [
         { damage: 20, range: 25, attack_speed: 6, attack_radius: 25, slow: 40, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
     ];
 
+this.attack_animation_length = 40;  // the image is 40x40 px
 
 Tower.call( this, args );
+
+    // have the attack animation depend on the attack speed
+this.attack_animation_limit = parseInt( this.attack_limit / 4, 10 );
+this.attack_animation_alpha_step = 1 / this.attack_animation_limit;
 }
 
 INHERIT_PROTOTYPE( TowerBash, Tower );
+
+
+TowerBash.prototype.setupShape = function()
+{
+Tower.prototype.setupShape.call( this );
+
+    // add the attack animation
+var halfLength = 20;    // the attack image is 40x40 px
+
+var attackAnimation = new createjs.Bitmap( G.PRELOAD.getResult( 'tower_bash_attack' ) );
+
+var scale = (this.width + this.range) / this.attack_animation_length; // scale the image according to the tower's range
+
+attackAnimation.regX = halfLength;
+attackAnimation.regY = halfLength;
+attackAnimation.scaleX = scale;
+attackAnimation.scaleY = scale;
+
+attackAnimation.visible = false;
+
+this.container.addChild( attackAnimation );
+
+this.attack_animation = attackAnimation;
+};
+
+
+TowerBash.prototype.startUpgrading = function()
+{
+Tower.prototype.startUpgrading.call( this );
+
+this.attack_animation.visible = false;
+};
+
+
+TowerBash.prototype.upgrade = function()
+{
+Tower.prototype.upgrade.call( this );
+
+    // the attack speed may have changed in the upgrade, so need to update this as well
+this.attack_animation_limit = parseInt( this.attack_limit / 4, 10 );
+
+var scale = (this.width + this.range) / this.attack_animation_length; // scale the image according to the tower's range
+
+this.attack_animation.scaleX = scale;
+this.attack_animation.scaleY = scale;
+};
 
 
 TowerBash.prototype.tick_attack = function()
 {
 if ( this.damage > 0 )
     {
+    if ( this.attack_count <= this.attack_animation_limit )
+        {
+        this.attack_animation.visible = false;
+        }
+
+    else
+        {
+        this.attack_animation.alpha -= this.attack_animation_alpha_step;
+        }
+
         // see if we can attack right now
     if ( this.attack_count <= 0 )
         {
@@ -41,6 +102,9 @@ if ( this.damage > 0 )
             if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
                 {
                 this.attack_count = this.attack_limit;
+                this.attack_animation.visible = true;
+                this.attack_animation.alpha = 1;
+
                 this.attack();
                 }
 

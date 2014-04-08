@@ -13,6 +13,7 @@
 
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
+        - add immune unit
 
         types of units:
 
@@ -132,7 +133,8 @@ var manifest = [
         { id: 'tower_rocket', src: G.BASE_URL + 'images/tower_rocket.png' },
         { id: 'tower_frost', src: G.BASE_URL + 'images/tower_frost.png' },
         { id: 'tower_anti_air', src: G.BASE_URL + 'images/tower_anti_air.png' },
-        { id: 'tower_bash', src: G.BASE_URL + 'images/tower_bash.png' }
+        { id: 'tower_bash', src: G.BASE_URL + 'images/tower_bash.png' },
+        { id: 'tower_bash_attack', src: G.BASE_URL + 'images/tower_bash_attack.png' }
     ];
 
 G.PRELOAD.addEventListener( 'progress', function( event )
