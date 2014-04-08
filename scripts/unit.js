@@ -45,6 +45,11 @@ if ( typeof this.is_ground_unit === 'undefined' )
     this.is_ground_unit = true;
     }
 
+if ( typeof this.is_immune == 'undefined' )
+    {
+    this.is_immune = false;
+    }
+
 this.column = args.column;
 this.line = args.line;
 
@@ -310,6 +315,11 @@ if ( Game.checkIfSelected( this ) )
 
 Unit.prototype.slowDown = function( minusMovementSpeed )
 {
+if ( this.is_immune )
+    {
+    return;
+    }
+
 this.is_slow_down = true;
 
 this.slowElement.visible = true;
@@ -346,6 +356,11 @@ this.move_y = Math.sin( angleRads ) * this.movement_per_tick;
 
 Unit.prototype.stun = function( time )
 {
+if ( this.is_immune )
+    {
+    return;
+    }
+
 this.is_stunned = true;
 
 this.stun_count = 0;

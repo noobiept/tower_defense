@@ -13,7 +13,6 @@
 
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
-        - add immune unit
 
         types of units:
 
@@ -127,6 +126,7 @@ var manifest = [
         { id: 'creep_spawn_slow', src: G.BASE_URL + 'images/creep_spawn_slow.png' },
         { id: 'creep_spawned', src: G.BASE_URL + 'images/creep_spawned.png' },
         { id: 'creep_spawned_slow', src: G.BASE_URL + 'images/creep_spawned_slow.png' },
+        { id: 'creep_immune', src: G.BASE_URL + 'images/creep_immune.png' },
         { id: 'tower_base', src: G.BASE_URL + 'images/tower_base.png' },
         { id: 'tower_basic', src: G.BASE_URL + 'images/tower_basic.png' },
         { id: 'tower_fast', src: G.BASE_URL + 'images/tower_fast.png' },

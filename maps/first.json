@@ -17,9 +17,14 @@
         ],
     "waves": [
             {
-                "type": "UnitSpawn",
-                "howMany": 50,
+                "type": "UnitImmune",
+                "howMany": 10,
                 "spawnInterval": 0.5
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "spawnInterval": 1
             }
         ]
 }
