@@ -9,11 +9,8 @@ this.width = 20;
 this.height = 10;
 this.is_ground_unit = false;
 this.stats = {
-        damage: 1,
-        range: 50,
         movement_speed: 40,
         gold: 5,
-        attack_speed: 1,
         max_health: 20,
         health_regeneration: 1
     };

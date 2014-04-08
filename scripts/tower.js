@@ -17,9 +17,9 @@ if ( typeof this.image === 'undefined' )
 if ( typeof this.stats_level === 'undefined' )
     {
     this.stats_level = [
-            { damage: 2, health: 40, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1 },
-            { damage: 15, health: 50, range: 55, attack_speed: 4, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
-            { damage: 20, health: 60, range: 60, attack_speed: 6, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
+            { damage: 2, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1 },
+            { damage: 15, range: 55, attack_speed: 4, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
+            { damage: 20, range: 60, attack_speed: 6, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
         ];
     }
 
@@ -58,13 +58,6 @@ this.attack_speed = currentLevel.attack_speed;
 this.attack_limit = 1 / (G.INTERVAL_SECONDS * this.attack_speed);
 this.attack_count = 0;
 
-this.max_health = currentLevel.health;
-this.health = this.max_health;
-this.health_regeneration = 2;
-this.regeneration_count = 0;
-this.regeneration_limit = 1 / (G.INTERVAL_SECONDS * this.health_regeneration);
-
-
 this.targetUnit = null;
 this.removed = false;
 
@@ -97,7 +90,6 @@ Tower.init = function()
 var container = document.querySelector( '#GameMenu-tower' );
 
 var name = container.querySelector( '.name span' );
-var health = container.querySelector( '.health span' );
 var damage = container.querySelector( '.damage span' );
 var attack_speed = container.querySelector( '.attack_speed span' );
 var range = container.querySelector( '.range span' );
@@ -134,7 +126,6 @@ upgrade.onmouseout = function()
 SELECTION_MENU = {
         container: container,
         name: name,
-        health: health,
         damage: damage,
         attack_speed: attack_speed,
         range: range,
@@ -273,7 +264,6 @@ this.updateMenuControls();
 var damage = this.damage;
 var attack_speed = this.attack_speed;
 var range = this.range;
-var health = this.health;
 
 if ( SELECTION_MENU.showNextUpgrade )
     {
@@ -282,14 +272,12 @@ if ( SELECTION_MENU.showNextUpgrade )
     damage       += ' (' + next.damage       + ')';
     attack_speed += ' (' + next.attack_speed + ')';
     range        += ' (' + next.range        + ')';
-    health       += ' (' + next.health       + ')';
     }
 
 
 $( SELECTION_MENU.damage ).text( damage );
 $( SELECTION_MENU.attack_speed ).text( attack_speed );
 $( SELECTION_MENU.range ).text( range );
-$( SELECTION_MENU.health ).text( health );
 };
 
 
@@ -339,12 +327,6 @@ this.upgrade_level++;
 
 var currentLevel = this.stats_level[ this.upgrade_level ];
 
-    // add the increase in health from the upgrade to the current health
-    // for example going from 20hp to 30hp (max_health) with current health of 5hp, after upgrade it ends up with 15hp
-var prevMaxHealth = this.max_health;
-
-this.health += currentLevel.health - prevMaxHealth;
-this.max_health = currentLevel.health;
 this.damage = currentLevel.damage;
 this.range = currentLevel.range;
 this.attack_speed = currentLevel.attack_speed;
@@ -459,19 +441,6 @@ this.shape.rotation = angleDegrees;
 };
 
 
-Tower.prototype.tookDamage = function( attacker )
-{
-this.health -= attacker.damage;
-
-if ( this.health <= 0 )
-    {
-    this.remove();
-    return true;
-    }
-
-return false;
-};
-
 Tower.prototype.onBulletHit = function( target )
 {
     // deal damage, and see if the unit died from this attack or not
@@ -530,29 +499,10 @@ if ( this.damage > 0 )
 };
 
 
-Tower.prototype.tick_regeneration = function()
-{
-    // deal with the health regeneration
-if ( this.regeneration_count <= 0 )
-    {
-    if ( this.health < this.max_health )
-        {
-        this.regeneration_count = this.regeneration_limit;
-        this.health++;
-        }
-    }
-
-else
-    {
-    this.regeneration_count--;
-    }
-};
-
 
 Tower.prototype.tick_normal = function()
 {
 this.tick_attack();
-this.tick_regeneration();
 };
 
 Tower.prototype.tick_upgrade = function()
@@ -578,8 +528,6 @@ if ( this.upgrade_count >= this.upgrade_limit )
     this.tick = this.tick_normal;
     this.is_upgrading = false;
     }
-
-this.tick_regeneration();
 };
 
 
@@ -605,8 +553,6 @@ if ( this.sell_count >= this.sell_limit )
     this.sell();
     this.is_selling = false;
     }
-
-this.tick_regeneration();
 };
 
 

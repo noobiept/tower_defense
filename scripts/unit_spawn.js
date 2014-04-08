@@ -12,11 +12,8 @@ this.slowImage = 'creep_spawn_slow';
 this.number_spawned_units = 4;
 this.already_spawned = false;
 this.stats = {
-        damage: 1,
-        range: 50,
         movement_speed: 50,
         gold: 10,
-        attack_speed: 0.1,
         max_health: 100,
         health_regeneration: 2
     };
@@ -79,6 +76,12 @@ function UnitSpawned( args )
 this.name = 'spawned creep';
 this.image = 'creep_spawned';
 this.slowImage = 'creep_spawned_slow';
+this.stats = {
+        movement_speed: 50,
+        gold: 5,
+        max_health: 25,
+        health_regeneration: 2
+    };
 
 
 Unit.call( this, args );

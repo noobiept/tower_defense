@@ -34,11 +34,8 @@ function UnitGroup1( args)
 this.name = 'group unit';
 this.image = 'creep_group';
 this.stats = {
-        damage: 0,
-        range: 50,
         movement_speed: 50,
         gold: 5,
-        attack_speed: 1,
         max_health: 30,
         health_regeneration: 2
     };
@@ -48,9 +45,6 @@ Unit.call( this, args );
 }
 
 INHERIT_PROTOTYPE( UnitGroup1, Unit );
-
-
-
 
 
 window.UnitGroup = UnitGroup;

@@ -13,11 +13,8 @@ if ( typeof this.name === 'undefined' )
 if ( typeof this.stats === 'undefined' )
     {
     this.stats = {
-            damage: 2,
-            range: 50,
             movement_speed: 60,
             gold: 5,
-            attack_speed: 0.5,
             max_health: 20,
             health_regeneration: 2
         };
@@ -51,8 +48,6 @@ if ( typeof this.is_ground_unit === 'undefined' )
 this.column = args.column;
 this.line = args.line;
 
-this.damage = this.stats.damage;
-this.range = this.stats.range;
 this.gold = this.stats.gold;
 this.movement_speed = this.stats.movement_speed;    // pixels per second
 this.movement_per_tick = intervalSeconds * this.movement_speed; // pixels per tick
@@ -64,17 +59,12 @@ this.is_stunned = false;
 this.stun_count = 0;
 this.stun_limit = 0;
 
-this.attack_speed = this.stats.attack_speed;
-this.attack_limit = 1 / (intervalSeconds * this.attack_speed);
-this.attack_count = 0;
-
 this.max_health = this.stats.max_health;
 this.health = this.max_health;
 this.health_regeneration = this.stats.health_regeneration;
 this.regeneration_count = 0;
 this.regeneration_limit = 1 / (intervalSeconds * this.health_regeneration);
 
-this.targetUnit = null;
 this.removed = false;   // so that we don't try to remove the unit multiple times (this may happen if several towers have the .targetUnit pointing at the same unit)
 
 this.path = [];
@@ -86,7 +76,6 @@ this.next_x = 0;
 this.next_y = 0;
 
 this.container = null;
-this.rangeElement = null;
 this.slowElement = null;
 this.healthBar = null;
 this.shape = null;
@@ -122,18 +111,12 @@ var container = document.querySelector( '#GameMenu-unit' );
 
 var name = container.querySelector( '.name span' );
 var health = container.querySelector( '.health span' );
-var damage = container.querySelector( '.damage span' );
-var attack_speed = container.querySelector( '.attack_speed span' );
-var range = container.querySelector( '.range span' );
 var mov_speed = container.querySelector( '.mov_speed span' );
 
 SELECTION_MENU = {
         container: container,
         name: name,
         health: health,
-        damage: damage,
-        attack_speed: attack_speed,
-        range: range,
         mov_speed: mov_speed
     };
 };
@@ -169,17 +152,6 @@ g.beginFill( 'green' );
 g.drawRoundRect( 0, 0, width, 2, 1 );
 g.endFill();
 
-    // the range circle
-var range = new createjs.Shape();
-
-g = range.graphics;
-
-g.beginStroke( 'gray' );
-g.drawCircle( 0, 0, this.range );
-g.endStroke();
-
-range.visible = false;
-
     // the slow circle (is added when the unit is being slowed down)
 var slow = new createjs.Bitmap( G.PRELOAD.getResult( this.slowImage ) );
 
@@ -195,7 +167,6 @@ var position = Map.getPosition( this.column, this.line );
 
 container.addChild( shape );
 container.addChild( healthBar );
-container.addChild( range );
 container.addChild( slow );
 container.x = position.x + halfWidth;
 container.y = position.y + halfHeight;
@@ -204,31 +175,23 @@ G.STAGE.addChild( container );
 
 this.container = container;
 this.healthBar = healthBar;
-this.rangeElement = range;
 this.slowElement = slow;
 this.shape = shape;
 };
 
 Unit.prototype.selected = function()
 {
-this.rangeElement.visible = true;
-
     // show the game menu
 $( SELECTION_MENU.container ).css( 'display', 'flex' );
 
     // update the info that won't change during the selection
 $( SELECTION_MENU.name ).text( this.name );
-$( SELECTION_MENU.damage ).text( this.damage );
-$( SELECTION_MENU.attack_speed ).text( this.attack_speed );
-$( SELECTION_MENU.range ).text( this.range );
 $( SELECTION_MENU.mov_speed ).text( this.movement_speed );
 };
 
 
 Unit.prototype.unselected = function()
 {
-this.rangeElement.visible = false;
-
     // hide the game menu
 $( SELECTION_MENU.container ).css( 'display', 'none' );
 };
@@ -430,16 +393,6 @@ return false;
 
 
 
-Unit.prototype.onBulletHit = function( target )
-{
-    // deal damage, and see if the unit died from this attack or not
-if ( target.tookDamage( this ) )
-    {
-    this.targetUnit = null;
-    }
-};
-
-
 Unit.prototype.updateHealthBar = function()
 {
 var ratio = this.health / this.max_health;
@@ -495,51 +448,6 @@ if( circlePointCollision( this.getX(), this.getY(), this.width / 8, this.next_x,
 };
 
 
-Unit.prototype.tick_attack = function()
-{
-    // deal with the unit's attack
-if ( this.damage > 0 )
-    {
-            // see if we can attack right now
-    if ( this.attack_count <= 0 )
-        {
-        var target = this.targetUnit;
-
-            // check if its currently attacking a unit
-        if ( target )
-            {
-                // check if the unit is within the tower's range
-            if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
-                {
-                this.attack_count = this.attack_limit;
-                new Bullet({
-                        shooter: this,
-                        target: target
-                    });
-                }
-
-                // can't attack anymore, find other target
-            else
-                {
-                this.targetUnit = null;
-                }
-            }
-
-            // find a target
-        else
-            {
-            this.targetUnit = Map.getTowerInRange( this );
-            }
-        }
-
-        // we need to wait a bit
-    else
-        {
-        this.attack_count--;
-        }
-    }
-};
-
 Unit.prototype.tick_regeneration = function()
 {
     // deal with the health regeneration
@@ -563,7 +471,6 @@ else
 Unit.prototype.tick_normal = function()
 {
 this.tick_move();
-this.tick_attack();
 this.tick_regeneration();
 };
 

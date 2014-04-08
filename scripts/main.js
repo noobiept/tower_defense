@@ -13,9 +13,6 @@
 
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
-        - remove the attack from units (and health from towers)
-            - doesn't really work in this type of game, since you're defining the creeps path, its no fun if the path gets constantly destroyed
-
 
         types of units:
 
@@ -83,7 +80,7 @@ var G = {
     STAGE: null,
     PRELOAD: null,
     BASE_URL: '',
-    FPS: 60,
+    FPS: 40,
     GAME_MENU_HEIGHT: 100,
     INTERVAL_SECONDS: 0     // the tick interval in seconds (time between ticks)
 };
