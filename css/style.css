@@ -29,7 +29,7 @@
 
 .MenuBlock
     {
-    min-width: 200px;
+    min-width: 150px;
     margin: 0 20px;
     }
 
@@ -47,8 +47,6 @@
     {
     display: none;
     }
-
-
 
 .selectedTower, .selectedTower:hover
     {
@@ -100,4 +98,20 @@
 .UnitSpawn
     {
     background-color: rgb(16, 194, 71);
+    }
+
+.tooltip
+    {
+    display: none;
+    position: absolute;
+    min-width: 100px;
+    box-shadow: 0 0 5px #363636;
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+    }
+
+.tooltip-show
+    {
+    display: block;
     }

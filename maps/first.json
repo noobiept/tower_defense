@@ -1,25 +1,44 @@
 {
-    "numberOfColumns": 80,
-    "numberOfLines": 20,
+    "numberOfColumns": 60,
+    "numberOfLines": 30,
     "creepLanes": [
             {
                 "start": { "column": 0, "line": 15 },
-                "end": { "column": 79, "line": 15 },
-                "length": 4,
+                "end": { "column": 59, "line": 15 },
+                "length": 6,
                 "orientation": "horizontal"
-            },
-            {
-                "start": { "column": 10, "line": 0 },
-                "end": { "column": 10, "line": 19 },
-                "length": 4,
-                "orientation": "vertical"
             }
         ],
     "waves": [
             {
-                "type": "UnitImmune",
+                "type": "Unit",
                 "howMany": 10,
-                "spawnInterval": 0.5
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitGroup",
+                "howMany": 5,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitFast",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitSpawn",
+                "howMany": 10,
+                "spawnInterval": 1
             },
             {
                 "type": "Unit",
@@ -29,10 +48,65 @@
             {
                 "type": "UnitImmune",
                 "howMany": 10,
-                "spawnInterval": 0.5
+                "spawnInterval": 1
             },
             {
                 "type": "Unit",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitFly",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitGroup",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitFast",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitSpawn",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitImmune",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitFly",
                 "howMany": 10,
                 "spawnInterval": 1
             }

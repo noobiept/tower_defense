@@ -321,20 +321,36 @@ return [ column, line ];
 
 Map.mouseMoveEvents = function( event )
 {
+if ( Game.isPaused() )
+    {
+    return;
+    }
+
 var position = Map.calculatePosition( event.stageX, event.stageY );
 
 var column = position[ 0 ];
 var line = position[ 1 ];
 
     // highlight is same size as a tower (2x2), so can't let it go to last position
-if ( column + 1 >= NUMBER_OF_COLUMNS )
+    // also don't let it go to the walls or the creep start/end
+if ( column < 1 )
     {
-    column--;
+    column = 1;
     }
 
-if ( line + 1 >= NUMBER_OF_LINES )
+else if ( column + 2 >= NUMBER_OF_COLUMNS )
     {
-    line--;
+    column = NUMBER_OF_COLUMNS - 3;
+    }
+
+if ( line < 1 )
+    {
+    line = 1;
+    }
+
+else if ( line + 2 >= NUMBER_OF_LINES )
+    {
+    line = NUMBER_OF_LINES - 3;
     }
 
 GRID_HIGHLIGHT.column = column;

@@ -14,8 +14,8 @@ if ( typeof this.stats === 'undefined' )
     {
     this.stats = {
             movement_speed: 60,
-            gold: 5,
-            max_health: 20,
+            gold: 5 + args.waveNumber * 0.5,
+            max_health: 20 + args.waveNumber * 2,
             health_regeneration: 2
         };
     }

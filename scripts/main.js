@@ -4,9 +4,6 @@
     Libraries:
 
         - jquery : 2.1
-        - jqueryui : 1.10
-            - tooltip
-            - ui lightness theme
         - createjs
             - easeljs : 0.7
             - preloadjs: 0.4
@@ -17,6 +14,10 @@
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
         - make units stronger with each wave
+        - add button to force the start of the next wave
+        - add points
+            - earn when killing units, and starting waves early
+            - loose when letting creeps reach the destination
 
         types of units:
 
@@ -113,6 +114,7 @@ G.INTERVAL_SECONDS = createjs.Ticker.getInterval() / 1000;
 
 Tower.init();
 Unit.init();
+Tooltip.init();
 
 
 G.PRELOAD = new createjs.LoadQueue();

@@ -6,6 +6,7 @@ function GameMenu()
 }
 
     // html elements
+var START_PAUSED = null;
 var TIME_UNTIL_NEXT_WAVE = null;
 var CURRENT_GOLD = null;
 var CURRENT_LIFE = null;
@@ -27,6 +28,7 @@ var TOWERS = [
 GameMenu.init = function()
 {
     // game info stuff
+START_PAUSED = document.querySelector( '#startPause' );
 TIME_UNTIL_NEXT_WAVE = document.querySelector( '.timeUntilNextWave span' );
 CURRENT_GOLD = document.querySelector( '.currentGold span' );
 CURRENT_LIFE = document.querySelector( '.currentLife span' );
@@ -37,7 +39,7 @@ WAVE_LIST = document.querySelectorAll( '#GameMenu-waveList > div' );
 
 for (var a = 0 ; a < WAVE_LIST.length ; a++)
     {
-    $( WAVE_LIST[ a ] ).tooltip();
+    WAVE_LIST[ a ].tooltip = new Tooltip({ text: '', reference: WAVE_LIST[ a ] });
     }
 
 
@@ -67,7 +69,31 @@ for (var a = 0 ; a < elements.length ; a++)
     }
 
 
+    // force the start of the new wave
+TIME_UNTIL_NEXT_WAVE.onclick = GameMenu.forceNextWave;
+START_PAUSED.onclick = Game.pause;
+
+START_PAUSED.tooltip = new Tooltip({ text: 'Click to start', reference: START_PAUSED, enableEvents: false });
+START_PAUSED.tooltip.show();
+
 GameMenu.selectTower( 0 );
+};
+
+GameMenu.pause = function( isPaused )
+{
+if ( isPaused )
+    {
+    START_PAUSED.tooltip.show();
+
+    $( START_PAUSED ).text( 'Resume' );
+    }
+
+else
+    {
+    START_PAUSED.tooltip.hide();
+
+    $( START_PAUSED ).text( 'Pause' );
+    }
 };
 
 
@@ -141,7 +167,7 @@ for (var a = 0 ; a < WAVE_LIST.length ; a++)
             $( waveElement ).removeClass( waveElement.getAttribute( 'data-cssClass' ) );
             }
 
-        waveElement.title = wave.howMany + 'x';
+        waveElement.tooltip.updateText( wave.howMany + 'x' );
         waveElement.setAttribute( 'data-cssClass', type );
         $( waveElement ).addClass( type );
         $( waveElement ).html( text );
@@ -150,7 +176,7 @@ for (var a = 0 ; a < WAVE_LIST.length ; a++)
     else
         {
         $( waveElement ).text( '' );
-        waveElement.title = '';
+        waveElement.tooltip.updateText( '' );
 
         if ( waveElement.hasAttribute( 'data-cssClass' ) )
             {

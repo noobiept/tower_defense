@@ -4,7 +4,6 @@
     <title>Tower Defense</title>
 
     <script type="text/javascript" src="libraries/jquery-2.1.0.min.js"></script>
-    <script type="text/javascript" src="libraries/jquery-ui-1.10.4.custom.min.js"></script>
     <script type="text/javascript" src="libraries/underscore-min.js"></script>
     <script type="text/javascript" src="libraries/easeljs-0.7.1.min.js"></script>
     <script type="text/javascript" src="libraries/preloadjs-0.4.1.min.js"></script>
@@ -28,19 +27,23 @@
     <script type="text/javascript" src="scripts/game.js"></script>
     <script type="text/javascript" src="scripts/game_menu.js"></script>
     <script type="text/javascript" src="scripts/message.js"></script>
+    <script type="text/javascript" src="scripts/tooltip.js"></script>
     <script type="text/javascript" src="scripts/map.js"></script>
     <script type="text/javascript" src="scripts/main.js"></script>
 
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="libraries/ui-lightness/jquery-ui-1.10.4.custom.min.css" />
 </head>
 <body>
 
     <canvas id="MainCanvas"></canvas>
 
     <div id="GameMenu">
+        <div class="MenuBlock">
+            <div id="startPause" class="button">Resume</div>
+            <div class="timeUntilNextWave button">Next wave in: <span>0</span>s</div>
+        </div>
+
         <div id="GameMenu-info" class="MenuBlock">
-            <div class="timeUntilNextWave">Next wave in: <span></span>s</div>
             <div class="currentGold">Gold: <span></span></div>
             <div class="currentLife">Lives: <span></span></div>
         </div>

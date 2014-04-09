@@ -17,6 +17,7 @@ var ELEMENT_SELECTED = null;
 
 var GOLD = 0;
 var LIFE = 0;
+var IS_PAUSED = false;
 
 
 Game.start = function()
@@ -37,7 +38,8 @@ for (a = 0 ; a < mapInfo.waves.length ; a++)
             howMany: wave.howMany,
             spawnInterval: wave.spawnInterval,
             count: 0,
-            countLimit: wave.spawnInterval / G.INTERVAL_SECONDS
+            countLimit: wave.spawnInterval / G.INTERVAL_SECONDS,
+            waveNumber: a
         });
     }
 
@@ -61,14 +63,21 @@ Map.init( columns, lines, CREEP_LANES );
 
 Game.updateGold( 200 );
 Game.updateLife( 20 );
-
+Game.pause( true );
 createjs.Ticker.on( 'tick', Game.tick );
+G.STAGE.update();
 
     // disable the context menu (when right-clicking)
 window.oncontextmenu = function( event ) { return false; };
 window.addEventListener( 'keyup', Game.keyUpEvents );
 G.CANVAS.addEventListener( 'mouseup', Game.mouseEvents );
 G.STAGE.on( 'stagemousemove', Map.mouseMoveEvents );
+};
+
+
+Game.isPaused = function()
+{
+return IS_PAUSED;
 };
 
 
@@ -106,6 +115,11 @@ GameMenu.updateLife( LIFE );
 
 Game.keyUpEvents = function( event )
 {
+if ( IS_PAUSED )
+    {
+    return;
+    }
+
 var key = event.keyCode;
 
 if ( key == EVENT_KEY[ '1' ] )
@@ -143,6 +157,11 @@ else if ( key == EVENT_KEY[ '6' ] )
 
 Game.mouseEvents = function( event )
 {
+if ( IS_PAUSED )
+    {
+    return;
+    }
+
 var button = event.button;
 var x = event.clientX;
 var y = event.clientY;
@@ -280,9 +299,34 @@ Game.end = function()
 };
 
 
+Game.forceNextWave = function()
+{
+    // no more waves
+if ( CURRENT_WAVE >= ALL_WAVES.length )
+    {
+    return;
+    }
+    //HERE
+};
+
+Game.pause = function( paused )
+{
+    // if its not provided, just change to the opposite of the current one
+if ( typeof paused == 'undefined' || !_.isBoolean( paused ) )
+    {
+    paused = !IS_PAUSED;
+    }
+
+IS_PAUSED = paused;
+createjs.Ticker.setPaused( paused );
+GameMenu.pause( paused );
+};
+
+
+
 Game.tick = function( event )
 {
-if ( event.paused )
+if ( IS_PAUSED )
     {
     return;
     }
@@ -354,7 +398,8 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
                     line: startLine,
                     destination_column: lane.end.column,
                     destination_line: lane.end.line,
-                    lane: lane
+                    lane: lane,
+                    waveNumber: wave.waveNumber
                 });
             }
 
