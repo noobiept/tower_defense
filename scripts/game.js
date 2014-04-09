@@ -289,22 +289,31 @@ if ( event.paused )
 
 var a;
 
-WAVE_COUNT++;
-
-if ( !NO_MORE_WAVES && WAVE_COUNT >= WAVE_LIMIT )
+if ( !NO_MORE_WAVES )
     {
-    WAVE_COUNT = 0;
+    WAVE_COUNT++;
 
-    ACTIVE_WAVES.push( ALL_WAVES[ CURRENT_WAVE ] );
+    var timeUntilNextWave = (WAVE_LIMIT - WAVE_COUNT) * G.INTERVAL_SECONDS;
 
-    GameMenu.updateWave( CURRENT_WAVE + 1 );
-
-    CURRENT_WAVE++;
+    GameMenu.updateTimeUntilNextWave( round( timeUntilNextWave, 2 ).toFixed( 2 ) );
 
 
-    if ( CURRENT_WAVE >= ALL_WAVES.length )
+        // time to start a new wave
+    if ( WAVE_COUNT >= WAVE_LIMIT )
         {
-        NO_MORE_WAVES = true;
+        WAVE_COUNT = 0;
+
+        ACTIVE_WAVES.push( ALL_WAVES[ CURRENT_WAVE ] );
+
+        GameMenu.updateWave( CURRENT_WAVE, ALL_WAVES );
+
+        CURRENT_WAVE++;
+
+
+        if ( CURRENT_WAVE >= ALL_WAVES.length )
+            {
+            NO_MORE_WAVES = true;
+            }
         }
     }
 

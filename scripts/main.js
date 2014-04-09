@@ -4,6 +4,9 @@
     Libraries:
 
         - jquery : 2.1
+        - jqueryui : 1.10
+            - tooltip
+            - ui lightness theme
         - createjs
             - easeljs : 0.7
             - preloadjs: 0.4
@@ -13,6 +16,7 @@
 
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
+        - make units stronger with each wave
 
         types of units:
 

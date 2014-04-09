@@ -25,6 +25,16 @@
                 "type": "Unit",
                 "howMany": 10,
                 "spawnInterval": 1
+            },
+            {
+                "type": "UnitImmune",
+                "howMany": 10,
+                "spawnInterval": 0.5
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "spawnInterval": 1
             }
         ]
 }

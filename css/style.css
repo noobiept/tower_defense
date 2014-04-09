@@ -54,3 +54,50 @@
     {
     background-color: burlywood;
     }
+
+#GameMenu-waveList #current
+    {
+    border: 3px solid cadetblue;
+    }
+
+#GameMenu-waveList
+    {
+    display: flex;
+    flex-direction: row;
+    }
+
+#GameMenu-waveList .wave
+    {
+    min-width: 100px;
+    padding: 10px;
+    }
+
+.Unit
+    {
+    background-color: rgb(235, 182, 185);
+    }
+
+.UnitFast
+    {
+    background-color: rgb(235, 164, 47);
+    }
+
+.UnitFly
+    {
+    background-color: rgb(226, 243, 155);
+    }
+
+.UnitGroup
+    {
+    background-color: rgb(69, 205, 223);
+    }
+
+.UnitImmune
+    {
+    background-color: rgb(235, 222, 231);
+    }
+
+.UnitSpawn
+    {
+    background-color: rgb(16, 194, 71);
+    }

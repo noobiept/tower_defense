@@ -6,11 +6,13 @@ function GameMenu()
 }
 
     // html elements
-var CURRENT_WAVE = null;
+var TIME_UNTIL_NEXT_WAVE = null;
 var CURRENT_GOLD = null;
 var CURRENT_LIFE = null;
+var WAVE_LIST = [];
 var MESSAGE = null;
 var MESSAGE_TIMEOUT = null;
+
 
 var SELECTED_TOWER = null;
 var TOWERS = [
@@ -24,12 +26,22 @@ var TOWERS = [
 
 GameMenu.init = function()
 {
-CURRENT_WAVE = document.querySelector( '.currentWave span' );
+    // game info stuff
+TIME_UNTIL_NEXT_WAVE = document.querySelector( '.timeUntilNextWave span' );
 CURRENT_GOLD = document.querySelector( '.currentGold span' );
 CURRENT_LIFE = document.querySelector( '.currentLife span' );
 MESSAGE = document.querySelector( '#Message' );
 MESSAGE_TIMEOUT = new Timeout();
 
+WAVE_LIST = document.querySelectorAll( '#GameMenu-waveList > div' );
+
+for (var a = 0 ; a < WAVE_LIST.length ; a++)
+    {
+    $( WAVE_LIST[ a ] ).tooltip();
+    }
+
+
+    // tower selector
 var basicTower = document.querySelector( '#basicTower' );
 var fastTower = document.querySelector( '#fastTower' );
 var rocketTower = document.querySelector( '#rocketTower' );
@@ -105,10 +117,47 @@ GameMenu.updateLife = function( life )
 $( CURRENT_LIFE ).text( life );
 };
 
-
-GameMenu.updateWave = function( wave )
+GameMenu.updateTimeUntilNextWave = function( time )
 {
-$( CURRENT_WAVE ).text( wave );
+$( TIME_UNTIL_NEXT_WAVE ).text( time );
+};
+
+
+GameMenu.updateWave = function( currentWave, allWaves )
+{
+for (var a = 0 ; a < WAVE_LIST.length ; a++)
+    {
+    var waveNumber = currentWave + a;
+    var waveElement = WAVE_LIST[ a ];
+
+    if ( waveNumber < allWaves.length )
+        {
+        var wave = allWaves[ waveNumber ];
+        var type = wave.type;
+        var text = 'wave ' + (waveNumber + 1) + '<br/>' + type;
+
+        if ( waveElement.hasAttribute( 'data-cssClass' ) )
+            {
+            $( waveElement ).removeClass( waveElement.getAttribute( 'data-cssClass' ) );
+            }
+
+        waveElement.title = wave.howMany + 'x';
+        waveElement.setAttribute( 'data-cssClass', type );
+        $( waveElement ).addClass( type );
+        $( waveElement ).html( text );
+        }
+
+    else
+        {
+        $( waveElement ).text( '' );
+        waveElement.title = '';
+
+        if ( waveElement.hasAttribute( 'data-cssClass' ) )
+            {
+            $( waveElement ).removeClass( waveElement.getAttribute( 'data-cssClass' ) );
+            }
+        }
+    }
 };
 
 

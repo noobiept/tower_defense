@@ -32,6 +32,33 @@ window.clearTimeout( this.id );
 
 
 
+/*
+    Rounds a number to a specified decimal case
+ */
+
+function round( num, dec )
+{
+return Math.round( num * Math.pow(10,dec) ) / Math.pow( 10,dec );
+}
+
+/*
+    'SomethingLikeThis' into 'Something Like This'
+ */
+
+function separateWords( str )
+{
+    // add a space before a capitalized letter
+str = str.replace( /([A-Z])/g, ' $1' );
+
+    // remove spaces from the beginning of the string
+str = str.replace( /^s*/, '' );
+
+return str;
+}
+
+
+
+
 function getRandomInt( min, max )
 {
 return Math.floor(Math.random() * (max - min + 1)) + min;
