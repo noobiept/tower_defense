@@ -278,6 +278,8 @@ for (var a = 0 ; a < WALLS.length ; a++)
 
 WALLS.length = 0;
 
+G.STAGE.removeChild( GRID_HIGHLIGHT.shape );
+
 GRAPH = null;
 };
 

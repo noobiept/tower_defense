@@ -10,7 +10,7 @@ var font, color;
 
 if ( typeof args.font == 'undefined' )
     {
-    font = 'monospace 16px';
+    font = '16px monospace';
     }
 
 else
@@ -28,6 +28,22 @@ else
     color = args.color;
     }
 
+if ( typeof args.timeout == 'undefined' )
+    {
+    args.timeout = 1000;
+    }
+
+    // center in the middle of the canvas
+if ( typeof args.x == 'undefined' )
+    {
+    args.x = G.CANVAS.width / 2;
+    }
+
+if ( typeof args.y == 'undefined' )
+    {
+    args.y = G.CANVAS.height / 2;
+    }
+
 
 var textElement = new createjs.Text( args.text, font, color );
 
@@ -42,7 +58,12 @@ window.setTimeout( function()
     {
     G.STAGE.removeChild( textElement );
 
-    }, 1000 );
+    if ( typeof args.onEnd !== 'undefined' )
+        {
+        args.onEnd();
+        }
+
+    }, args.timeout );
 }
 
 

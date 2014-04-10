@@ -8,7 +8,7 @@ function Game()
 var CREEP_LANES = [];   // contains the start/end point of each lane
 var ALL_WAVES = [];
 var ACTIVE_WAVES = [];  // you may have more than 1 wave active (adding units)
-var CURRENT_WAVE = 0;
+var NEXT_WAVE = 0;
 var NO_MORE_WAVES = false;
 var WAVE_LIMIT = 400;
 var WAVE_COUNT = WAVE_LIMIT;    // start the first wave immediately
@@ -20,6 +20,12 @@ var LIFE = 0;
 var SCORE = 0;
 var IS_PAUSED = false;
 var BEFORE_FIRST_WAVE = false;  // before the first wave, the game is paused but we can add towers. once the game starts, pausing the game won't allow you to add/remove towers
+
+    // this will have the return when setting the events (need to save this so that later we can turn the event off (with createjs, doesn't work passing the function, like it does when setting a normal event)
+var EVENTS = {
+        tick: null,
+        mouseMove: null
+    };
 
 
 Game.start = function( map )
@@ -58,28 +64,37 @@ for (a = 0 ; a < mapInfo.creepLanes.length ; a++)
         });
     }
 
+    // reset the variables
+ELEMENT_SELECTED = null;
+GOLD = 0;
+LIFE = 0;
+SCORE = 0;
+IS_PAUSED = false;
+NO_MORE_WAVES = false;
+BEFORE_FIRST_WAVE = true;
+WAVE_COUNT = WAVE_LIMIT;    // start the first wave immediately
+NEXT_WAVE = 0;
 
     // init the game
 Map.init( columns, lines, CREEP_LANES );
 
-WAVE_COUNT = WAVE_LIMIT;    // start the first wave immediately
-BEFORE_FIRST_WAVE = true;
+
 
 $( '#MainCanvas' ).css( 'display', 'block' );
-$( '#GameMenu' ).css( 'display', 'flex' );
+GameMenu.show();
 
 Game.updateGold( 200 );
 Game.updateLife( 20 );
 Game.updateScore( 0 );
+Game.tick();    // run the tick once to initialize the timer and the wave list
 Game.pause( true );
-createjs.Ticker.on( 'tick', Game.tick );
 
+    // set the events
+EVENTS.tick = createjs.Ticker.on( 'tick', Game.tick );
+EVENTS.mouseMove = G.STAGE.on( 'stagemousemove', Map.mouseMoveEvents );
 
-    // disable the context menu (when right-clicking)
-window.oncontextmenu = function( event ) { return false; };
 window.addEventListener( 'keyup', Game.keyUpEvents );
 G.CANVAS.addEventListener( 'mouseup', Game.mouseEvents );
-G.STAGE.on( 'stagemousemove', Map.mouseMoveEvents );
 };
 
 
@@ -122,7 +137,7 @@ LIFE += life;
 
 if ( LIFE <= 0 )
     {
-    Game.end();
+    Game.end( false );
     }
 
 if ( life < 0 )
@@ -179,6 +194,11 @@ else if ( key == EVENT_KEY[ '5' ] )
 else if ( key == EVENT_KEY[ '6' ] )
     {
     GameMenu.selectTower( 5 );
+    }
+
+else if ( key == EVENT_KEY.n )
+    {
+    Game.forceNextWave();
     }
 };
 
@@ -321,10 +341,55 @@ return false;
 };
 
 
-Game.end = function()
+Game.clear = function()
 {
-//createjs.Ticker.setPaused( true );
-//console.log('game end');
+Unit.removeAll();
+Tower.removeAll();
+Map.clear();
+GameMenu.hide();
+Tooltip.hideAll();
+
+ALL_WAVES.length = 0;
+CREEP_LANES.length = 0;
+ACTIVE_WAVES.length = 0;
+
+createjs.Ticker.off( 'tick', EVENTS.tick );
+G.STAGE.off( 'stagemousemove', EVENTS.mouseMove );
+
+window.removeEventListener( 'keyup', Game.keyUpEvents );
+G.CANVAS.removeEventListener( 'mouseup', Game.mouseEvents );
+};
+
+
+Game.end = function( victory )
+{
+Game.clear();
+
+var message = '';
+
+if ( victory )
+    {
+    message += 'Victory!\nScore: ' + SCORE;
+    }
+
+else
+    {
+    message += 'Defeat!';
+    }
+
+new Message({
+        text: message,
+        font: '30px monospace',
+        onEnd: function()
+            {
+            G.STAGE.update();
+
+            MainMenu.open();
+            },
+        timeout: 2000
+    });
+
+G.STAGE.update();
 };
 
 
@@ -336,7 +401,7 @@ if ( IS_PAUSED )
     }
 
     // no more waves
-if ( CURRENT_WAVE >= ALL_WAVES.length )
+if ( NEXT_WAVE >= ALL_WAVES.length )
     {
     return;
     }
@@ -379,28 +444,27 @@ if ( !NO_MORE_WAVES )
     {
     WAVE_COUNT++;
 
-    var timeUntilNextWave = (WAVE_LIMIT - WAVE_COUNT) * G.INTERVAL_SECONDS;
-
-    GameMenu.updateTimeUntilNextWave( round( timeUntilNextWave, 2 ).toFixed( 2 ) );
-
-
         // time to start a new wave
     if ( WAVE_COUNT >= WAVE_LIMIT )
         {
         WAVE_COUNT = 0;
 
-        ACTIVE_WAVES.push( ALL_WAVES[ CURRENT_WAVE ] );
+        ACTIVE_WAVES.push( ALL_WAVES[ NEXT_WAVE ] );
 
-        GameMenu.updateWave( CURRENT_WAVE, ALL_WAVES );
+        GameMenu.updateWave( NEXT_WAVE, ALL_WAVES );
 
-        CURRENT_WAVE++;
+        NEXT_WAVE++;
 
 
-        if ( CURRENT_WAVE >= ALL_WAVES.length )
+        if ( NEXT_WAVE >= ALL_WAVES.length )
             {
             NO_MORE_WAVES = true;
             }
         }
+
+    var timeUntilNextWave = (WAVE_LIMIT - WAVE_COUNT) * G.INTERVAL_SECONDS;
+
+    GameMenu.updateTimeUntilNextWave( round( timeUntilNextWave, 2 ).toFixed( 2 ) );
     }
 
 
@@ -461,7 +525,7 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
 
 if ( NO_MORE_WAVES && ACTIVE_WAVES.length == 0 && Unit.ALL.length == 0 )
     {
-    Game.end();
+    Game.end( true );
     }
 
 

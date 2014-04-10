@@ -37,6 +37,7 @@ CURRENT_SCORE = document.querySelector( '.currentScore span' );
 MESSAGE = document.querySelector( '#Message' );
 MESSAGE_TIMEOUT = new Timeout();
 
+var quit = document.querySelector( '#quit' );
 var timeNextWave = document.querySelector( '.timeUntilNextWave' );
 TIME_UNTIL_NEXT_WAVE = timeNextWave.querySelector( 'span' );
 
@@ -76,14 +77,26 @@ for (var a = 0 ; a < elements.length ; a++)
     }
 
 
-    // force the start of the new wave
 timeNextWave.onclick = Game.forceNextWave;
 START_PAUSED.onclick = GameMenu.beforeWavePause;
+quit.onclick = function() { Game.end( false ); };
 
 START_PAUSED.tooltip = new Tooltip({ text: 'Click to start', reference: START_PAUSED, enableEvents: false });
 
 GameMenu.selectTower( 0 );
 };
+
+GameMenu.show = function()
+{
+$( '#GameMenu' ).css( 'display', 'flex' );
+};
+
+
+GameMenu.hide = function()
+{
+$( '#GameMenu' ).css( 'display', 'none' );
+};
+
 
 GameMenu.beforeWavePause = function()
 {
@@ -211,6 +224,8 @@ GameMenu.getSelectedTower = function()
 {
 return SELECTED_TOWER.tower;
 };
+
+
 
 
 window.GameMenu = GameMenu;

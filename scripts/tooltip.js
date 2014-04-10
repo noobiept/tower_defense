@@ -48,9 +48,18 @@ for (var a = Tooltip.ALL.length - 1 ; a >= 0 ; a--)
     tooltip.reference.onmouseover = null;
     tooltip.reference.onmouseout = null;
 
-    CONTAINER.removeChild( this.element );
+    CONTAINER.removeChild( tooltip.element );
 
     Tooltip.ALL.splice( a, 1 );
+    }
+};
+
+
+Tooltip.hideAll = function()
+{
+for (var a = 0 ; a < Tooltip.ALL.length ; a++)
+    {
+    Tooltip.ALL[ a ].hide();
     }
 };
 

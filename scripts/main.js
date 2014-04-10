@@ -14,9 +14,6 @@
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
         - make units stronger with each wave
-        - add points
-            - earn when killing units, and starting waves early
-            - loose when letting creeps reach the destination
 
         types of units:
 
@@ -117,6 +114,8 @@ Tooltip.init();
 GameMenu.init();
 MainMenu.init();
 
+    // disable the context menu (when right-clicking)
+window.oncontextmenu = function( event ) { return false; };
 
 G.PRELOAD = new createjs.LoadQueue();
 
