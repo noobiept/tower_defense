@@ -14,6 +14,7 @@ this.already_spawned = false;
 this.stats = {
         movement_speed: 50,
         gold: 10,
+        score: 5,
         max_health: 100,
         health_regeneration: 2
     };
@@ -79,6 +80,7 @@ this.slowImage = 'creep_spawned_slow';
 this.stats = {
         movement_speed: 50,
         gold: 5,
+        score: 1,
         max_health: 25,
         health_regeneration: 2
     };

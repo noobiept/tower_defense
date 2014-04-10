@@ -11,6 +11,7 @@ this.is_ground_unit = false;
 this.stats = {
         movement_speed: 40,
         gold: 5,
+        score: 4,
         max_health: 20,
         health_regeneration: 1
     };

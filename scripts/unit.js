@@ -15,6 +15,7 @@ if ( typeof this.stats === 'undefined' )
     this.stats = {
             movement_speed: 60,
             gold: 5 + args.waveNumber * 0.5,
+            score: 1,
             max_health: 20 + args.waveNumber * 2,
             health_regeneration: 2
         };
@@ -50,9 +51,13 @@ if ( typeof this.is_immune == 'undefined' )
     this.is_immune = false;
     }
 
+
+
+
 this.column = args.column;
 this.line = args.line;
 
+this.score = this.stats.score;
 this.gold = this.stats.gold;
 this.movement_speed = this.stats.movement_speed;    // pixels per second
 this.movement_per_tick = intervalSeconds * this.movement_speed; // pixels per tick
@@ -396,6 +401,7 @@ if ( this.health <= 0 )
 
             // add the gold earn from killing this unit
         Game.updateGold( this.gold );
+        Game.updateScore( this.score );
 
         this.remove();
         }

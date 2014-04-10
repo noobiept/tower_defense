@@ -10,6 +10,7 @@ this.height = 10;
 this.stats = {
         movement_speed: 80,
         gold: 5,
+        score: 3,
         max_health: 25,
         health_regeneration: 4
     };

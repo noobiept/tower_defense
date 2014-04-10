@@ -17,6 +17,7 @@ var ELEMENT_SELECTED = null;
 
 var GOLD = 0;
 var LIFE = 0;
+var SCORE = 0;
 var IS_PAUSED = false;
 var BEFORE_FIRST_WAVE = false;  // before the first wave, the game is paused but we can add towers. once the game starts, pausing the game won't allow you to add/remove towers
 
@@ -69,6 +70,7 @@ $( '#GameMenu' ).css( 'display', 'flex' );
 
 Game.updateGold( 200 );
 Game.updateLife( 20 );
+Game.updateScore( 0 );
 Game.pause( true );
 createjs.Ticker.on( 'tick', Game.tick );
 
@@ -123,8 +125,21 @@ if ( LIFE <= 0 )
     Game.end();
     }
 
+if ( life < 0 )
+    {
+    Game.updateScore( -50 );
+    }
+
 GameMenu.updateLife( LIFE );
 };
+
+Game.updateScore = function( score )
+{
+SCORE += score;
+
+GameMenu.updateScore( SCORE );
+};
+
 
 
 Game.keyUpEvents = function( event )
@@ -325,6 +340,13 @@ if ( CURRENT_WAVE >= ALL_WAVES.length )
     {
     return;
     }
+
+var scorePerSecond = 10;
+var waveTimeLeft = (WAVE_LIMIT - WAVE_COUNT) * G.INTERVAL_SECONDS;
+
+var score = parseInt( waveTimeLeft * scorePerSecond, 10 );
+
+Game.updateScore( score );
 
 WAVE_COUNT = WAVE_LIMIT;
 };

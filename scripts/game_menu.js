@@ -10,6 +10,7 @@ var START_PAUSED = null;
 var TIME_UNTIL_NEXT_WAVE = null;
 var CURRENT_GOLD = null;
 var CURRENT_LIFE = null;
+var CURRENT_SCORE = null;
 var WAVE_LIST = [];
 var MESSAGE = null;
 var MESSAGE_TIMEOUT = null;
@@ -31,6 +32,7 @@ GameMenu.init = function()
 START_PAUSED = document.querySelector( '#startPause' );
 CURRENT_GOLD = document.querySelector( '.currentGold span' );
 CURRENT_LIFE = document.querySelector( '.currentLife span' );
+CURRENT_SCORE = document.querySelector( '.currentScore span' );
 
 MESSAGE = document.querySelector( '#Message' );
 MESSAGE_TIMEOUT = new Timeout();
@@ -154,6 +156,12 @@ GameMenu.updateLife = function( life )
 {
 $( CURRENT_LIFE ).text( life );
 };
+
+GameMenu.updateScore = function( score )
+{
+$( CURRENT_SCORE ).text( score );
+};
+
 
 GameMenu.updateTimeUntilNextWave = function( time )
 {
