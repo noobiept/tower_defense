@@ -29,11 +29,16 @@ GameMenu.init = function()
 {
     // game info stuff
 START_PAUSED = document.querySelector( '#startPause' );
-TIME_UNTIL_NEXT_WAVE = document.querySelector( '.timeUntilNextWave span' );
 CURRENT_GOLD = document.querySelector( '.currentGold span' );
 CURRENT_LIFE = document.querySelector( '.currentLife span' );
+
 MESSAGE = document.querySelector( '#Message' );
 MESSAGE_TIMEOUT = new Timeout();
+
+var timeNextWave = document.querySelector( '.timeUntilNextWave' );
+TIME_UNTIL_NEXT_WAVE = timeNextWave.querySelector( 'span' );
+
+
 
 WAVE_LIST = document.querySelectorAll( '#GameMenu-waveList > div' );
 
@@ -70,14 +75,21 @@ for (var a = 0 ; a < elements.length ; a++)
 
 
     // force the start of the new wave
-TIME_UNTIL_NEXT_WAVE.onclick = GameMenu.forceNextWave;
-START_PAUSED.onclick = Game.pause;
+timeNextWave.onclick = Game.forceNextWave;
+START_PAUSED.onclick = GameMenu.beforeWavePause;
 
 START_PAUSED.tooltip = new Tooltip({ text: 'Click to start', reference: START_PAUSED, enableEvents: false });
-START_PAUSED.tooltip.show();
 
 GameMenu.selectTower( 0 );
 };
+
+GameMenu.beforeWavePause = function()
+{
+Game.sendFirstWave();
+
+START_PAUSED.onclick = Game.pause;
+};
+
 
 GameMenu.pause = function( isPaused )
 {

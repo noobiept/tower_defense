@@ -1,5 +1,19 @@
+    /* Main Menu */
+
+#MainMenu
+    {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    }
+
+    /* Game Menu */
+
 #MainCanvas, #GameMenu
     {
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -8,7 +22,7 @@
 
 #GameMenu
     {
-    display: flex;
+    /*display: flex;*/
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
@@ -115,3 +129,5 @@
     {
     display: block;
     }
+
+

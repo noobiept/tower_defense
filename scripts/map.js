@@ -321,11 +321,6 @@ return [ column, line ];
 
 Map.mouseMoveEvents = function( event )
 {
-if ( Game.isPaused() )
-    {
-    return;
-    }
-
 var position = Map.calculatePosition( event.stageX, event.stageY );
 
 var column = position[ 0 ];

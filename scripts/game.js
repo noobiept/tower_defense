@@ -18,11 +18,12 @@ var ELEMENT_SELECTED = null;
 var GOLD = 0;
 var LIFE = 0;
 var IS_PAUSED = false;
+var BEFORE_FIRST_WAVE = false;  // before the first wave, the game is paused but we can add towers. once the game starts, pausing the game won't allow you to add/remove towers
 
 
-Game.start = function()
+Game.start = function( map )
 {
-var mapInfo = G.PRELOAD.getResult( 'map1' );
+var mapInfo = G.PRELOAD.getResult( map );
 
 var columns = mapInfo.numberOfColumns;
 var lines = mapInfo.numberOfLines;
@@ -58,20 +59,33 @@ for (a = 0 ; a < mapInfo.creepLanes.length ; a++)
 
 
     // init the game
-GameMenu.init();
 Map.init( columns, lines, CREEP_LANES );
+
+WAVE_COUNT = WAVE_LIMIT;    // start the first wave immediately
+BEFORE_FIRST_WAVE = true;
+
+$( '#MainCanvas' ).css( 'display', 'block' );
+$( '#GameMenu' ).css( 'display', 'flex' );
 
 Game.updateGold( 200 );
 Game.updateLife( 20 );
 Game.pause( true );
 createjs.Ticker.on( 'tick', Game.tick );
-G.STAGE.update();
+
 
     // disable the context menu (when right-clicking)
 window.oncontextmenu = function( event ) { return false; };
 window.addEventListener( 'keyup', Game.keyUpEvents );
 G.CANVAS.addEventListener( 'mouseup', Game.mouseEvents );
 G.STAGE.on( 'stagemousemove', Map.mouseMoveEvents );
+};
+
+
+Game.sendFirstWave = function()
+{
+BEFORE_FIRST_WAVE = false;
+
+Game.pause( false );
 };
 
 
@@ -157,7 +171,7 @@ else if ( key == EVENT_KEY[ '6' ] )
 
 Game.mouseEvents = function( event )
 {
-if ( IS_PAUSED )
+if ( IS_PAUSED && !BEFORE_FIRST_WAVE )
     {
     return;
     }
@@ -301,12 +315,18 @@ Game.end = function()
 
 Game.forceNextWave = function()
 {
+if ( IS_PAUSED )
+    {
+    return;
+    }
+
     // no more waves
 if ( CURRENT_WAVE >= ALL_WAVES.length )
     {
     return;
     }
-    //HERE
+
+WAVE_COUNT = WAVE_LIMIT;
 };
 
 Game.pause = function( paused )
@@ -318,7 +338,6 @@ if ( typeof paused == 'undefined' || !_.isBoolean( paused ) )
     }
 
 IS_PAUSED = paused;
-createjs.Ticker.setPaused( paused );
 GameMenu.pause( paused );
 };
 
@@ -328,6 +347,7 @@ Game.tick = function( event )
 {
 if ( IS_PAUSED )
     {
+    G.STAGE.update();
     return;
     }
 

@@ -14,7 +14,6 @@
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
         - make units stronger with each wave
-        - add button to force the start of the next wave
         - add points
             - earn when killing units, and starting waves early
             - loose when letting creeps reach the destination
@@ -115,12 +114,14 @@ G.INTERVAL_SECONDS = createjs.Ticker.getInterval() / 1000;
 Tower.init();
 Unit.init();
 Tooltip.init();
+GameMenu.init();
+MainMenu.init();
 
 
 G.PRELOAD = new createjs.LoadQueue();
 
 var manifest = [
-        { id: 'map1', src: G.BASE_URL + 'maps/first.json' },
+        { id: 'easy', src: G.BASE_URL + 'maps/easy.json' },
         { id: 'creep', src: G.BASE_URL + 'images/creep.png' },
         { id: 'creep_slow', src: G.BASE_URL + 'images/creep_slow.png' },
         { id: 'creep_group', src: G.BASE_URL + 'images/creep_group.png' },
@@ -147,6 +148,6 @@ G.PRELOAD.addEventListener( 'progress', function( event )
     {
         // "Loading " + ( event.progress*100 | 0 ) + "%"
     });
-G.PRELOAD.addEventListener( 'complete', Game.start );
+G.PRELOAD.addEventListener( 'complete', MainMenu.open );
 G.PRELOAD.loadManifest( manifest, true );
 };

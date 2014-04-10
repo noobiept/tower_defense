@@ -26,6 +26,7 @@
     <script type="text/javascript" src="scripts/unit_immune.js"></script>
     <script type="text/javascript" src="scripts/game.js"></script>
     <script type="text/javascript" src="scripts/game_menu.js"></script>
+    <script type="text/javascript" src="scripts/main_menu.js"></script>
     <script type="text/javascript" src="scripts/message.js"></script>
     <script type="text/javascript" src="scripts/tooltip.js"></script>
     <script type="text/javascript" src="scripts/map.js"></script>
@@ -37,6 +38,13 @@
 
     <canvas id="MainCanvas"></canvas>
 
+    <div id="MainMenu">
+        <div id="MainMenu-easy" class="button">Easy</div>
+        <div id="MainMenu-medium" class="button">Medium</div>
+        <div id="MainMenu-hard" class="button">Hard</div>
+        <div id="MainMenu-highScores" class="button">High-scores</div>
+    </div>
+
     <div id="GameMenu">
         <div class="MenuBlock">
             <div id="startPause" class="button">Resume</div>
@@ -46,6 +54,7 @@
         <div id="GameMenu-info" class="MenuBlock">
             <div class="currentGold">Gold: <span></span></div>
             <div class="currentLife">Lives: <span></span></div>
+            <div class="currentScore">Score: <span></span></div>
         </div>
         <div id="GameMenu-waveList" class="MenuBlock">
             <div id="current" class="wave"></div>
