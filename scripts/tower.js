@@ -126,10 +126,14 @@ upgrade.onclick = function()
 upgrade.onmouseover = function()
     {
     SELECTION_MENU.showNextUpgrade = true;
+
+    Game.getSelection().updateSelection();
     };
 upgrade.onmouseout = function()
     {
     SELECTION_MENU.showNextUpgrade = false;
+
+    Game.getSelection().updateSelection();
     };
 
 
@@ -217,9 +221,7 @@ this.rangeElement.visible = true;
     // show the game menu
 $( SELECTION_MENU.container ).css( 'display', 'flex' );
 
-
-this.updateMenuControls();
-
+this.updateSelection();
 
     // update the info that won't change during the selection
 $( SELECTION_MENU.name ).text( this.name );
@@ -276,7 +278,7 @@ var damage = this.damage;
 var attack_speed = this.attack_speed;
 var range = this.range;
 
-if ( SELECTION_MENU.showNextUpgrade )
+if ( SELECTION_MENU.showNextUpgrade && !this.maxUpgrade() )
     {
     var next = this.stats[ this.upgrade_level + 1 ];
 
@@ -314,6 +316,8 @@ this.upgrade_limit = currentLevel.upgrade_time / G.INTERVAL_SECONDS;
 this.progressElement.graphics.clear();
 this.progressElement.visible = true;
 this.shape.visible = false;
+
+this.updateMenuControls();
 
 this.tick = this.tick_upgrade;
 };
@@ -360,6 +364,12 @@ this.baseElement.filters = [
     ];
 
 this.baseElement.cache( 0, 0, this.width, this.height );
+
+
+if ( Game.checkIfSelected( this ) )
+    {
+    this.updateSelection();
+    }
 };
 
 
@@ -543,9 +553,9 @@ if ( this.upgrade_count >= this.upgrade_limit )
     this.progressElement.visible = false;
     this.shape.visible = true;
 
-    this.upgrade();
     this.tick = this.tick_normal;
     this.is_upgrading = false;
+    this.upgrade();
     }
 };
 

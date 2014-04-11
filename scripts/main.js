@@ -14,7 +14,7 @@
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
         - make units stronger with each wave
-        - selecting a tower in the time before the first wave doesn't show the stats
+        - finish high-score in main menu (save to localStorage)
 
         types of units:
 
@@ -110,7 +110,6 @@ createjs.Ticker.setFPS( G.FPS );
 G.INTERVAL_SECONDS = createjs.Ticker.getInterval() / 1000;
 
 Tower.init();
-Unit.init();
 Tooltip.init();
 GameMenu.init();
 MainMenu.init();

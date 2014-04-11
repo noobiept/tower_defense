@@ -86,7 +86,15 @@ G.STAGE.removeChild( this.shape );
 var index = Bullet.ALL.indexOf( this );
 
 Bullet.ALL.splice( index, 1 );
+};
 
+
+Bullet.removeAll = function()
+{
+for (var a = Bullet.ALL.length - 1 ; a >= 0 ; a--)
+    {
+    Bullet.ALL[ a ].remove();
+    }
 };
 
 

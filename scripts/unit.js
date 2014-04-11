@@ -16,7 +16,6 @@ if ( typeof this.stats === 'undefined' )
             movement_speed: 60,
             gold: 5 + args.waveNumber * 0.5,
             score: 1,
-            max_health: 20 + args.waveNumber * 2,
             health_regeneration: 2
         };
     }
@@ -52,8 +51,6 @@ if ( typeof this.is_immune == 'undefined' )
     }
 
 
-
-
 this.column = args.column;
 this.line = args.line;
 
@@ -69,7 +66,7 @@ this.is_stunned = false;
 this.stun_count = 0;
 this.stun_limit = 0;
 
-this.max_health = this.stats.max_health;
+this.max_health = args.health;
 this.health = this.max_health;
 this.health_regeneration = this.stats.health_regeneration;
 this.regeneration_count = 0;
@@ -111,26 +108,6 @@ this.setMoveDestination( this.destination_column, this.destination_line );
 Unit.ALL = [];
 Unit.ALL_GROUND = [];
 Unit.ALL_AIR = [];
-
-var SELECTION_MENU;
-
-
-Unit.init = function()
-{
-var container = document.querySelector( '#GameMenu-unit' );
-
-var name = container.querySelector( '.name span' );
-var health = container.querySelector( '.health span' );
-var mov_speed = container.querySelector( '.mov_speed span' );
-
-SELECTION_MENU = {
-        container: container,
-        name: name,
-        health: health,
-        mov_speed: mov_speed
-    };
-};
-
 
 
 Unit.prototype.setupShape = function()
@@ -188,29 +165,6 @@ this.healthBar = healthBar;
 this.slowElement = slow;
 this.shape = shape;
 };
-
-Unit.prototype.selected = function()
-{
-    // show the game menu
-$( SELECTION_MENU.container ).css( 'display', 'flex' );
-
-    // update the info that won't change during the selection
-$( SELECTION_MENU.name ).text( this.name );
-$( SELECTION_MENU.mov_speed ).text( this.movement_speed );
-};
-
-
-Unit.prototype.unselected = function()
-{
-    // hide the game menu
-$( SELECTION_MENU.container ).css( 'display', 'none' );
-};
-
-Unit.prototype.updateSelection = function()
-{
-$( SELECTION_MENU.health ).text( this.health );
-};
-
 
 
 

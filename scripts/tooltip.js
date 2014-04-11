@@ -7,7 +7,7 @@ var reference = args.reference;
 var element = document.createElement( 'div' );
 
 element.className = 'tooltip';
-$( element ).text( args.text );
+$( element ).html( args.text );
 
 CONTAINER.appendChild( element );
 
@@ -106,7 +106,7 @@ Tooltip.prototype.updateText = function( text )
 {
 this.text = text;
 
-$( this.element ).text( text );
+$( this.element ).html( text );
 };
 
 

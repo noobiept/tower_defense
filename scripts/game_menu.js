@@ -202,7 +202,7 @@ for (var a = 0 ; a < WAVE_LIST.length ; a++)
             $( waveElement ).removeClass( waveElement.getAttribute( 'data-cssClass' ) );
             }
 
-        waveElement.tooltip.updateText( wave.howMany + 'x' );
+        waveElement.tooltip.updateText( wave.howMany + 'x<br/>health: ' + wave.health );
         waveElement.setAttribute( 'data-cssClass', type );
         $( waveElement ).addClass( type );
         $( waveElement ).html( text );

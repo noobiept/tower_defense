@@ -44,6 +44,7 @@ for (a = 0 ; a < mapInfo.waves.length ; a++)
     ALL_WAVES.push({
             type: wave.type,
             howMany: wave.howMany,
+            health: wave.health,
             spawnInterval: wave.spawnInterval,
             count: 0,
             countLimit: wave.spawnInterval / G.INTERVAL_SECONDS,
@@ -229,21 +230,6 @@ if ( ELEMENT_SELECTED )
     // left click
 if ( button == 0 )
     {
-        // see if we're selecting an unit
-    for (var a = 0 ; a < Unit.ALL.length ; a++)
-        {
-        var unit = Unit.ALL[ a ];
-        var point = unit.shape.globalToLocal( x, y );
-
-        if ( unit.shape.hitTest( point.x, point.y ) )
-            {
-            unit.selected();
-
-            ELEMENT_SELECTED = unit;
-            return;
-            }
-        }
-
         // see if we're selecting a tower
     for (var a = 0 ; a < Tower.ALL.length ; a++)
         {
@@ -358,21 +344,22 @@ return false;
 
 Game.clear = function()
 {
-Unit.removeAll();
-Tower.removeAll();
-Map.clear();
-GameMenu.hide();
-Tooltip.hideAll();
-
-ALL_WAVES.length = 0;
-CREEP_LANES.length = 0;
-ACTIVE_WAVES.length = 0;
-
 createjs.Ticker.off( 'tick', EVENTS.tick );
 G.STAGE.off( 'stagemousemove', EVENTS.mouseMove );
 
 window.removeEventListener( 'keyup', Game.keyUpEvents );
 G.CANVAS.removeEventListener( 'mouseup', Game.mouseEvents );
+
+Unit.removeAll();
+Tower.removeAll();
+Map.clear();
+GameMenu.hide();
+Tooltip.hideAll();
+Bullet.removeAll();
+
+ALL_WAVES.length = 0;
+CREEP_LANES.length = 0;
+ACTIVE_WAVES.length = 0;
 };
 
 
@@ -520,7 +507,8 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
                     destination_column: lane.end.column,
                     destination_line: lane.end.line,
                     lane: lane,
-                    waveNumber: wave.waveNumber
+                    waveNumber: wave.waveNumber,
+                    health: wave.health
                 });
             }
 
@@ -558,11 +546,6 @@ for (a = Tower.ALL.length - 1 ; a >= 0 ; a--)
 for (a = Bullet.ALL.length - 1 ; a >= 0 ; a--)
     {
     Bullet.ALL[ a ].tick();
-    }
-
-if ( ELEMENT_SELECTED )
-    {
-    ELEMENT_SELECTED.updateSelection();
     }
 
 G.STAGE.update();
