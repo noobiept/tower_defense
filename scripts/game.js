@@ -159,7 +159,7 @@ GameMenu.updateScore( SCORE );
 
 Game.keyUpEvents = function( event )
 {
-if ( IS_PAUSED )
+if ( IS_PAUSED && !BEFORE_FIRST_WAVE )
     {
     return;
     }
@@ -200,6 +200,12 @@ else if ( key == EVENT_KEY.n )
     {
     Game.forceNextWave();
     }
+};
+
+
+Game.beforeFirstWave = function()
+{
+return BEFORE_FIRST_WAVE;
 };
 
 
@@ -253,9 +259,10 @@ if ( button == 0 )
             }
         }
 
+    var towerClass = GameMenu.getSelectedTower();
 
         // see if we can afford a tower
-    if ( !Game.haveEnoughGold( Tower.cost ) )
+    if ( !Game.haveEnoughGold( towerClass.stats[ 0 ].initial_cost ) )
         {
         GameMenu.showMessage( 'Not enough gold.' );
         return;
@@ -292,7 +299,7 @@ if ( button == 0 )
             // reset the position
         Map.setPassableBox( column, line, 2 );
 
-        var towerClass = GameMenu.getSelectedTower();
+
         new towerClass({
                 column: column,
                 line: line
@@ -311,7 +318,15 @@ else if ( button == 2 )
 
         if ( tower.baseElement.hitTest( point.x, point.y ) )
             {
-            tower.startSelling();
+            if ( BEFORE_FIRST_WAVE )
+                {
+                tower.sell( true );
+                }
+
+            else
+                {
+                tower.startSelling();
+                }
             }
         }
     }

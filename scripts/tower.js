@@ -14,13 +14,9 @@ if ( typeof this.image === 'undefined' )
     this.image = 'tower_basic';
     }
 
-if ( typeof this.stats_level === 'undefined' )
+if ( typeof this.stats === 'undefined' )
     {
-    this.stats_level = [
-            { damage: 2, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1 },
-            { damage: 15, range: 55, attack_speed: 4, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
-            { damage: 20, range: 60, attack_speed: 6, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
-        ];
+    this.stats = Tower.stats;
     }
 
 if ( typeof this.can_target_ground === 'undefined' )
@@ -48,11 +44,11 @@ this.is_selling = false;
 this.sell_count = 0;
 this.sell_limit = 0;
 
-var currentLevel = this.stats_level[ this.upgrade_level ];
+var currentLevel = this.stats[ this.upgrade_level ];
 
 this.damage = currentLevel.damage;
 this.range = currentLevel.range;
-this.cost = Tower.cost;
+this.cost = currentLevel.initial_cost;
 
 this.attack_speed = currentLevel.attack_speed;
 this.attack_limit = 1 / (G.INTERVAL_SECONDS * this.attack_speed);
@@ -81,7 +77,13 @@ Unit.redoMoveDestination();
 }
 
 Tower.ALL = [];
-Tower.cost = 10;
+
+    // each array position corresponds to the upgrade level of the tower
+Tower.stats = [
+        { damage: 10, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1, initial_cost: 10 },
+        { damage: 15, range: 55, attack_speed: 4, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
+        { damage: 20, range: 60, attack_speed: 6, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
+    ];
 
 var SELECTION_MENU;
 
@@ -101,10 +103,18 @@ upgrade.onclick = function()
     {
         // if we can click on this element, it means we have a tower selected, so we can assume that what we get is a tower object
     var tower = Game.getSelection();
-    var upgradeCost = tower.stats_level[ tower.upgrade_level ].upgrade_cost;
+    var upgradeCost = tower.stats[ tower.upgrade_level ].upgrade_cost;
     if ( Game.haveEnoughGold( upgradeCost ) )
         {
-        tower.startUpgrading();
+        if ( Game.beforeFirstWave() )
+            {
+            tower.upgrade();
+            }
+
+        else
+            {
+            tower.startUpgrading();
+            }
         }
 
     else
@@ -135,6 +145,7 @@ SELECTION_MENU = {
         showNextUpgrade: false
     };
 };
+
 
 
 Tower.prototype.setupShape = function()
@@ -267,7 +278,7 @@ var range = this.range;
 
 if ( SELECTION_MENU.showNextUpgrade )
     {
-    var next = this.stats_level[ this.upgrade_level + 1 ];
+    var next = this.stats[ this.upgrade_level + 1 ];
 
     damage       += ' (' + next.damage       + ')';
     attack_speed += ' (' + next.attack_speed + ')';
@@ -284,7 +295,7 @@ $( SELECTION_MENU.range ).text( range );
 Tower.prototype.startUpgrading = function()
 {
     // no more upgrades
-if ( this.upgrade_level + 1 >= this.stats_level.length )
+if ( this.upgrade_level + 1 >= this.stats.length )
     {
     GameMenu.showMessage( 'No more tower upgrades.' );
     return;
@@ -293,7 +304,7 @@ if ( this.upgrade_level + 1 >= this.stats_level.length )
 this.is_upgrading = true;
 
 
-var currentLevel = this.stats_level[ this.upgrade_level ];
+var currentLevel = this.stats[ this.upgrade_level ];
 
 Game.updateGold( -currentLevel.upgrade_cost );
 
@@ -312,7 +323,7 @@ this.tick = this.tick_upgrade;
 Tower.prototype.upgrade = function()
 {
     // no more upgrades
-if ( this.upgrade_level + 1 >= this.stats_level.length )
+if ( this.upgrade_level + 1 >= this.stats.length )
     {
     GameMenu.showMessage( 'No more tower upgrades' );
     return;
@@ -320,12 +331,12 @@ if ( this.upgrade_level + 1 >= this.stats_level.length )
 
 
     // update the overall cost of the tower
-this.cost += this.stats_level[ this.upgrade_level ].upgrade_cost;
+this.cost += this.stats[ this.upgrade_level ].upgrade_cost;
 
     // upgrade a level
 this.upgrade_level++;
 
-var currentLevel = this.stats_level[ this.upgrade_level ];
+var currentLevel = this.stats[ this.upgrade_level ];
 
 this.damage = currentLevel.damage;
 this.range = currentLevel.range;
@@ -354,7 +365,7 @@ this.baseElement.cache( 0, 0, this.width, this.height );
 
 Tower.prototype.maxUpgrade = function()
 {
-if ( this.upgrade_level + 1 >= this.stats_level.length )
+if ( this.upgrade_level + 1 >= this.stats.length )
     {
     return true;
     }
@@ -379,7 +390,7 @@ Tower.prototype.startSelling = function()
 {
 this.is_selling = true;
 
-var currentLevel = this.stats_level[ this.upgrade_level ];
+var currentLevel = this.stats[ this.upgrade_level ];
 
 this.sell_count = 0;
 this.sell_limit = currentLevel.sell_time / G.INTERVAL_SECONDS;
@@ -392,10 +403,18 @@ this.tick = this.tick_sell;
 };
 
 
-Tower.prototype.sell = function()
+Tower.prototype.sell = function( recoverFullCost )
 {
+var recover = this.cost;
+
+if ( typeof recoverFullCost == 'undefined' )
+    {
+    recover /= 2;
+    }
+
+
     // recover half the cost
-Game.updateGold( this.cost / 2 );
+Game.updateGold( recover );
 
 this.remove();
 };

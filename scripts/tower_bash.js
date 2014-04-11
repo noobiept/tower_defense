@@ -9,11 +9,7 @@ this.can_target_air = false;
 this.stun_chance = 30;
 this.slow_chance = 30;
 this.stun = 1;
-this.stats_level = [
-        { damage: 10, range: 20, attack_speed: 2, attack_radius: 20, slow: 20, upgrade_cost: 10, upgrade_time: 1, sell_time: 1 },
-        { damage: 15, range: 22, attack_speed: 4, attack_radius: 22, slow: 30, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
-        { damage: 20, range: 25, attack_speed: 6, attack_radius: 25, slow: 40, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
-    ];
+this.stats = TowerBash.stats;
 
 this.attack_animation_length = 40;  // the image is 40x40 px
 
@@ -25,6 +21,14 @@ this.attack_animation_alpha_step = 1 / this.attack_animation_limit;
 }
 
 INHERIT_PROTOTYPE( TowerBash, Tower );
+
+
+TowerBash.stats = [
+        { damage: 10, range: 20, attack_speed: 2, attack_radius: 20, slow: 20, upgrade_cost: 10, upgrade_time: 1, sell_time: 1, initial_cost: 50 },
+        { damage: 15, range: 22, attack_speed: 4, attack_radius: 22, slow: 30, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
+        { damage: 20, range: 25, attack_speed: 6, attack_radius: 25, slow: 40, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
+    ];
+
 
 
 TowerBash.prototype.setupShape = function()
@@ -136,7 +140,7 @@ if ( this.damage > 0 )
 
 TowerBash.prototype.attack = function()
 {
-var currentLevel = this.stats_level[ this.upgrade_level ];
+var currentLevel = this.stats[ this.upgrade_level ];
 var radius = currentLevel.attack_radius;
 var slow = currentLevel.slow;
 

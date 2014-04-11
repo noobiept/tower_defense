@@ -66,7 +66,9 @@ for (var a = 0 ; a < elements.length ; a++)
     var htmlElement = elements[ a ];
 
     TOWERS[ a ].htmlElement = htmlElement;
+    var towerInitialCost = TOWERS[ a ].tower.stats[ 0 ].initial_cost;
 
+    $( htmlElement ).text( $( htmlElement ).text() + ' - ' + towerInitialCost );
     htmlElement.onclick = (function( position )
         {
         return function()

@@ -14,6 +14,7 @@
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
         - make units stronger with each wave
+        - selecting a tower in the time before the first wave doesn't show the stats
 
         types of units:
 
