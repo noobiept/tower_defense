@@ -15,7 +15,6 @@ this.stats = {
         movement_speed: 50,
         gold: 10,
         score: 5,
-        max_health: 100,
         health_regeneration: 2
     };
 
@@ -58,7 +57,8 @@ if ( was_killed && !this.already_spawned )
                 column: spawnedPosition[ 0 ],
                 line: spawnedPosition[ 1 ],
                 destination_column: this.destination_column,
-                destination_line: this.destination_line
+                destination_line: this.destination_line,
+                health: this.health / 2
             });
         }
     }
@@ -81,7 +81,6 @@ this.stats = {
         movement_speed: 50,
         gold: 5,
         score: 1,
-        max_health: 25,
         health_regeneration: 2
     };
 

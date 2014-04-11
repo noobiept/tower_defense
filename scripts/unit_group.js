@@ -37,7 +37,6 @@ this.stats = {
         movement_speed: 50,
         gold: 5,
         score: 2,
-        max_health: 30,
         health_regeneration: 2
     };
 

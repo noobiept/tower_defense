@@ -5,6 +5,7 @@ function Game()
 
 }
 
+var MAP_NAME;
 var CREEP_LANES = [];   // contains the start/end point of each lane
 var ALL_WAVES = [];
 var ACTIVE_WAVES = [];  // you may have more than 1 wave active (adding units)
@@ -30,6 +31,8 @@ var EVENTS = {
 
 Game.start = function( map )
 {
+MAP_NAME = map;
+
 var mapInfo = G.PRELOAD.getResult( map );
 
 var columns = mapInfo.numberOfColumns;
@@ -372,6 +375,8 @@ var message = '';
 if ( victory )
     {
     message += 'Victory!\nScore: ' + SCORE;
+
+    HighScore.add( MAP_NAME, SCORE );
     }
 
 else

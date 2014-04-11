@@ -14,7 +14,6 @@
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
         - make units stronger with each wave
-        - finish high-score in main menu (save to localStorage)
 
         types of units:
 
@@ -113,6 +112,7 @@ Tower.init();
 Tooltip.init();
 GameMenu.init();
 MainMenu.init();
+HighScore.load();
 
     // disable the context menu (when right-clicking)
 window.oncontextmenu = function( event ) { return false; };
