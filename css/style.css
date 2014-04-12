@@ -1,6 +1,7 @@
 body
     {
     background-color: rgb(250, 250, 250);
+    margin: 0;
     }
 
     /* Main Menu */
@@ -19,9 +20,6 @@ body
 #MainCanvas, #GameMenu
     {
     display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
     }
 
 
@@ -128,6 +126,7 @@ body
     border-radius: 5px;
     padding: 5px;
     text-align: center;
+    background-color: rgb(250, 250, 250);
     }
 
 .tooltip-show

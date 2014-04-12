@@ -14,6 +14,7 @@
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
         - make units stronger with each wave
+        - be able to specify the time between waves in the map .json file (and have more difficult maps with shorter times)
 
         types of units:
 
@@ -90,23 +91,10 @@ var G = {
 window.onload = function()
 {
 G.CANVAS = document.querySelector( '#MainCanvas' );
-var gameMenu = document.querySelector( '#GameMenu' );
-
-var availableWidth = $( window ).width();
-var availableHeight = $( window ).height();
-
-G.CANVAS.width = availableWidth;
-G.CANVAS.height = availableHeight - G.GAME_MENU_HEIGHT;
-
-$( gameMenu ).css( 'width', availableWidth + 'px' );
-$( gameMenu ).css( 'height', G.GAME_MENU_HEIGHT + 'px' );
-$( gameMenu ).css( 'top', (availableHeight - G.GAME_MENU_HEIGHT) + 'px' );
-
 G.STAGE = new createjs.Stage( G.CANVAS );
+G.INTERVAL_SECONDS = createjs.Ticker.getInterval() / 1000;
 
 createjs.Ticker.setFPS( G.FPS );
-
-G.INTERVAL_SECONDS = createjs.Ticker.getInterval() / 1000;
 
 Tower.init();
 Tooltip.init();
@@ -121,6 +109,8 @@ G.PRELOAD = new createjs.LoadQueue();
 
 var manifest = [
         { id: 'easy', src: G.BASE_URL + 'maps/easy.json' },
+        { id: 'medium', src: G.BASE_URL + 'maps/medium.json' },
+        { id: 'hard', src: G.BASE_URL + 'maps/hard.json' },
         { id: 'creep', src: G.BASE_URL + 'images/creep.png' },
         { id: 'creep_slow', src: G.BASE_URL + 'images/creep_slow.png' },
         { id: 'creep_group', src: G.BASE_URL + 'images/creep_group.png' },

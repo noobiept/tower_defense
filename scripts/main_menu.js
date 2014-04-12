@@ -59,6 +59,7 @@ back.onclick = function()
 
 MainMenu.open = function()
 {
+$( '#MainCanvas' ).css( 'display', 'none' );
 $( MAIN_MENU ).css( 'display', 'block' );
 
 var menuWidth = $( MAIN_MENU ).outerWidth();

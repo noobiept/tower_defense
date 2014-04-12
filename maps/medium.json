@@ -1,0 +1,20 @@
+{
+    "numberOfColumns": 200,
+    "numberOfLines": 40,
+    "creepLanes": [
+            {
+                "start": { "column": 0, "line": 20 },
+                "end": { "column": 199, "line": 20 },
+                "length": 6,
+                "orientation": "horizontal"
+            }
+        ],
+    "waves": [
+        {
+            "type": "Unit",
+            "howMany": 10,
+            "health": 20,
+            "spawnInterval": 1
+        }
+    ]
+}

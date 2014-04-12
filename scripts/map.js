@@ -50,8 +50,41 @@ for (var column = 0 ; column < numberOfColumns ; column++)
 GRAPH = new Graph( map );
 
 
-STARTING_X = $( window ).width() / 2 - numberOfColumns * SQUARE_SIZE / 2;
-STARTING_Y = $( window ).height() / 2 - numberOfLines * SQUARE_SIZE / 2;
+    // set the canvas width/height
+var windowWidth = $( window ).outerWidth();
+var windowHeight = $( window ).outerHeight();
+var canvasWidth, canvasHeight;
+var padding = 10;
+var mapWidth = width + padding;
+var mapHeight = height + padding;
+
+    // we try to occupy the whole window's dimension, if the map's width/height fits there, otherwise just set the canvas width/height to the same as the map
+if ( mapWidth < windowWidth )
+    {
+    canvasWidth = windowWidth;
+    }
+
+else
+    {
+    canvasWidth = mapWidth;
+    }
+
+if ( mapHeight < windowHeight - G.GAME_MENU_HEIGHT )
+    {
+    canvasHeight = windowHeight - G.GAME_MENU_HEIGHT;
+    }
+
+else
+    {
+    canvasHeight = mapHeight;
+    }
+
+G.CANVAS.width = canvasWidth;
+G.CANVAS.height = canvasHeight;
+
+
+STARTING_X = canvasWidth / 2 - numberOfColumns * SQUARE_SIZE / 2;
+STARTING_Y = canvasHeight / 2 - numberOfLines * SQUARE_SIZE / 2;
 
     // add walls around the map
 Map.addWall({
