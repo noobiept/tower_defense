@@ -53,8 +53,8 @@ textElement.y = args.y;
 
 G.STAGE.addChild( textElement );
 
-
-window.setTimeout( function()
+this.textElement = textElement;
+this.timeout = window.setTimeout( function()
     {
     G.STAGE.removeChild( textElement );
 
@@ -64,7 +64,33 @@ window.setTimeout( function()
         }
 
     }, args.timeout );
+
+Message.ALL.push( this );
 }
+
+Message.ALL = [];
+
+
+Message.prototype.remove = function()
+{
+window.clearTimeout( this.timeout );
+
+G.STAGE.removeChild( this.textElement );
+
+var index = Message.ALL.indexOf( this );
+
+Message.ALL.splice( index, 1 );
+};
+
+
+Message.removeAll = function()
+{
+for (var a = Message.ALL.length - 1 ; a >= 0 ; a--)
+    {
+    Message.ALL[ a ].remove();
+    }
+};
+
 
 
 window.Message = Message;

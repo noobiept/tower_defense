@@ -80,8 +80,8 @@ for (var a = 0 ; a < elements.length ; a++)
 
 
 timeNextWave.onclick = Game.forceNextWave;
-START_PAUSED.onclick = GameMenu.beforeWavePause;
-quit.onclick = function() { Game.end( false ); };
+START_PAUSED.onclick = Game.pause;
+quit.onclick = function() { Game.setEndFlag( false ); };
 
 START_PAUSED.tooltip = new Tooltip({ text: 'Click to start', reference: START_PAUSED, enableEvents: false });
 
@@ -97,14 +97,6 @@ $( '#GameMenu' ).css( 'display', 'flex' );
 GameMenu.hide = function()
 {
 $( '#GameMenu' ).css( 'display', 'none' );
-};
-
-
-GameMenu.beforeWavePause = function()
-{
-Game.sendFirstWave();
-
-START_PAUSED.onclick = Game.pause;
 };
 
 

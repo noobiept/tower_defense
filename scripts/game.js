@@ -11,8 +11,8 @@ var ALL_WAVES = [];
 var ACTIVE_WAVES = [];  // you may have more than 1 wave active (adding units)
 var NEXT_WAVE = 0;
 var NO_MORE_WAVES = false;
-var WAVE_LIMIT = 400;
-var WAVE_COUNT = WAVE_LIMIT;    // start the first wave immediately
+var WAVE_LIMIT = 0;
+var WAVE_COUNT = 0;    // start the first wave immediately
 
 var ELEMENT_SELECTED = null;
 
@@ -26,6 +26,12 @@ var BEFORE_FIRST_WAVE = false;  // before the first wave, the game is paused but
 var EVENTS = {
         tick: null,
         mouseMove: null
+    };
+
+
+var GAME_END = {
+        is_over: false,
+        victory: false
     };
 
 
@@ -69,6 +75,9 @@ for (a = 0 ; a < mapInfo.creepLanes.length ; a++)
     }
 
     // reset the variables
+WAVE_LIMIT = mapInfo.waveInterval / G.INTERVAL_SECONDS;
+
+GAME_END.is_over = false;
 ELEMENT_SELECTED = null;
 GOLD = 0;
 LIFE = 0;
@@ -81,7 +90,6 @@ NEXT_WAVE = 0;
 
     // init the game
 Map.init( columns, lines, CREEP_LANES );
-
 
 
 $( '#MainCanvas' ).css( 'display', 'block' );
@@ -102,11 +110,23 @@ G.CANVAS.addEventListener( 'mouseup', Game.mouseEvents );
 };
 
 
-Game.sendFirstWave = function()
-{
-BEFORE_FIRST_WAVE = false;
 
-Game.pause( false );
+/*
+    When we determine the game has ended, we have to call this function instead of Game.end(), which will set a flag that is going to be dealt with in the end of the Game.tick()
+    Only then we'll call Game.end
+    The reason is to fix a problem when the game end is triggered during the Unit.tick() loop (the units are cleared in Game.end(), but then the loop will try to continue..)
+ */
+
+Game.setEndFlag = function( victory )
+{
+    // if the game is paused, we can safely end the game right away (it will most likely be a defeat)
+if ( IS_PAUSED )
+    {
+    Game.end( victory );
+    }
+
+GAME_END.is_over = true;
+GAME_END.victory = victory;
 };
 
 
@@ -141,7 +161,7 @@ LIFE += life;
 
 if ( LIFE <= 0 )
     {
-    Game.end( false );
+    Game.setEndFlag( false );
     }
 
 if ( life < 0 )
@@ -202,7 +222,25 @@ else if ( key == EVENT_KEY[ '6' ] )
 
 else if ( key == EVENT_KEY.n )
     {
-    Game.forceNextWave();
+    if ( BEFORE_FIRST_WAVE )
+        {
+        Game.pause();
+        }
+
+    else
+        {
+        Game.forceNextWave();
+        }
+    }
+
+else if ( key == EVENT_KEY.u )
+    {
+    var selection = Game.getSelection();
+
+    if ( selection )
+        {
+        selection.startUpgrading();
+        }
     }
 };
 
@@ -358,6 +396,7 @@ Tower.removeAll();
 Map.clear();
 GameMenu.hide();
 Tooltip.hideAll();
+Message.removeAll();
 Bullet.removeAll();
 
 ALL_WAVES.length = 0;
@@ -365,6 +404,11 @@ CREEP_LANES.length = 0;
 ACTIVE_WAVES.length = 0;
 };
 
+
+/*
+    Call Game.setEndFlag() instead
+    This is only called at the end of Game.tick() or in Game.setEndFlag() (when the game is paused)
+ */
 
 Game.end = function( victory )
 {
@@ -423,12 +467,25 @@ Game.updateScore( score );
 WAVE_COUNT = WAVE_LIMIT;
 };
 
+/*
+    If called without arguments, it starts the game if its the time before the first wave, or does the opposite of the current state if the game is already running
+ */
+
 Game.pause = function( paused )
 {
     // if its not provided, just change to the opposite of the current one
 if ( typeof paused == 'undefined' || !_.isBoolean( paused ) )
     {
-    paused = !IS_PAUSED;
+    if ( BEFORE_FIRST_WAVE )
+        {
+        BEFORE_FIRST_WAVE = false;
+        paused = false;
+        }
+
+    else
+        {
+        paused = !IS_PAUSED;
+        }
     }
 
 IS_PAUSED = paused;
@@ -530,14 +587,6 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
     }
 
 
-
-if ( NO_MORE_WAVES && ACTIVE_WAVES.length == 0 && Unit.ALL.length == 0 )
-    {
-    Game.end( true );
-    }
-
-
-
 for (a = Unit.ALL.length - 1 ; a >= 0 ; a--)
     {
     Unit.ALL[ a ].tick();
@@ -551,6 +600,19 @@ for (a = Tower.ALL.length - 1 ; a >= 0 ; a--)
 for (a = Bullet.ALL.length - 1 ; a >= 0 ; a--)
     {
     Bullet.ALL[ a ].tick();
+    }
+
+
+    // no more waves or units alive, victory!
+if ( NO_MORE_WAVES && ACTIVE_WAVES.length == 0 && Unit.ALL.length == 0 )
+    {
+    Game.setEndFlag( true );
+    }
+
+
+if ( GAME_END.is_over )
+    {
+    Game.end( GAME_END.victory );
     }
 
 G.STAGE.update();

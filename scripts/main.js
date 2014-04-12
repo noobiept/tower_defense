@@ -14,7 +14,8 @@
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
         - make units stronger with each wave
-        - be able to specify the time between waves in the map .json file (and have more difficult maps with shorter times)
+        - fast units shape not aligned
+        - don't allow to re-sell (pressing right click on a tower already selling)
 
         types of units:
 
@@ -92,9 +93,10 @@ window.onload = function()
 {
 G.CANVAS = document.querySelector( '#MainCanvas' );
 G.STAGE = new createjs.Stage( G.CANVAS );
-G.INTERVAL_SECONDS = createjs.Ticker.getInterval() / 1000;
 
 createjs.Ticker.setFPS( G.FPS );
+
+G.INTERVAL_SECONDS = createjs.Ticker.getInterval() / 1000;
 
 Tower.init();
 Tooltip.init();

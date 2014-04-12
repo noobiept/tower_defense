@@ -103,24 +103,8 @@ upgrade.onclick = function()
     {
         // if we can click on this element, it means we have a tower selected, so we can assume that what we get is a tower object
     var tower = Game.getSelection();
-    var upgradeCost = tower.stats[ tower.upgrade_level ].upgrade_cost;
-    if ( Game.haveEnoughGold( upgradeCost ) )
-        {
-        if ( Game.beforeFirstWave() )
-            {
-            tower.upgrade();
-            }
 
-        else
-            {
-            tower.startUpgrading();
-            }
-        }
-
-    else
-        {
-        GameMenu.showMessage( 'Not enough gold to upgrade.' );
-        }
+    tower.startUpgrading();
     };
 
 upgrade.onmouseover = function()
@@ -303,10 +287,24 @@ if ( this.upgrade_level + 1 >= this.stats.length )
     return;
     }
 
-this.is_upgrading = true;
-
-
 var currentLevel = this.stats[ this.upgrade_level ];
+var upgradeCost = currentLevel.upgrade_cost;
+
+if ( !Game.haveEnoughGold( upgradeCost ) )
+    {
+    GameMenu.showMessage( 'Not enough gold to upgrade.' );
+    return;
+    }
+
+if ( Game.beforeFirstWave() )
+    {
+    Game.updateGold( -currentLevel.upgrade_cost );
+    this.upgrade();
+    return;
+    }
+
+
+this.is_upgrading = true;
 
 Game.updateGold( -currentLevel.upgrade_cost );
 

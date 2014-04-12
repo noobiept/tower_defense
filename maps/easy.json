@@ -1,6 +1,7 @@
 {
     "numberOfColumns": 60,
     "numberOfLines": 30,
+    "waveInterval": 10,
     "creepLanes": [
             {
                 "start": { "column": 0, "line": 15 },
