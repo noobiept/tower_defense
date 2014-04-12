@@ -8,7 +8,7 @@ this.target = args.target;
 this.width = 4;
 this.height = 4;
 this.radius = 2;
-this.movement_speed = 100;
+this.movement_speed = 140;
 this.movement_per_tick = G.INTERVAL_SECONDS * this.movement_speed;
 
 this.shape = null;

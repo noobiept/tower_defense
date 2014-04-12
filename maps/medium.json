@@ -1,26 +1,26 @@
 {
-    "numberOfColumns": 200,
+    "numberOfColumns": 100,
     "numberOfLines": 40,
     "waveInterval": 8,
     "creepLanes": [
             {
                 "start": { "column": 0, "line": 20 },
-                "end": { "column": 199, "line": 20 },
+                "end": { "column": 99, "line": 20 },
                 "length": 6,
                 "orientation": "horizontal"
             }
         ],
     "waves": [
         {
-            "type": "Unit",
-            "howMany": 10,
-            "health": 20,
+            "type": "UnitSpawn",
+            "howMany": 15,
+            "health": 200,
             "spawnInterval": 1
         },
         {
             "type": "UnitFast",
-            "howMany": 10,
-            "health": 22,
+            "howMany": 15,
+            "health": 220,
             "spawnInterval": 1
         }
     ]

@@ -14,8 +14,7 @@
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
         - make units stronger with each wave
-        - fast units shape not aligned
-        - don't allow to re-sell (pressing right click on a tower already selling)
+        - add keyboard shortcut to sell a tower ('s')
 
         types of units:
 

@@ -280,6 +280,11 @@ $( SELECTION_MENU.range ).text( range );
 
 Tower.prototype.startUpgrading = function()
 {
+if ( this.is_upgrading )
+    {
+    return;
+    }
+
     // no more upgrades
 if ( this.upgrade_level + 1 >= this.stats.length )
     {
@@ -396,6 +401,11 @@ return this.container.y;
 
 Tower.prototype.startSelling = function()
 {
+if ( this.is_selling )
+    {
+    return;
+    }
+
 this.is_selling = true;
 
 var currentLevel = this.stats[ this.upgrade_level ];

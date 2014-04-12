@@ -9,6 +9,8 @@ function UnitSpawn( args )
 this.name = 'spawn creep';
 this.image = 'creep_spawn';
 this.slowImage = 'creep_spawn_slow';
+this.width = 15;
+this.height = 10;
 this.number_spawned_units = 4;
 this.already_spawned = false;
 this.stats = {

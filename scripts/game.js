@@ -260,8 +260,8 @@ if ( IS_PAUSED && !BEFORE_FIRST_WAVE )
     }
 
 var button = event.button;
-var x = event.clientX;
-var y = event.clientY;
+var x = event.offsetX;
+var y = event.offsetY;
 
 if ( ELEMENT_SELECTED )
     {
