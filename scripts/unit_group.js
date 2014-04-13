@@ -33,13 +33,7 @@ function UnitGroup1( args)
 {
 this.name = 'group unit';
 this.image = 'creep_group';
-this.stats = {
-        movement_speed: 50,
-        gold: 3 + args.waveNumber * 0.1,
-        score: 2,
-        health_regeneration: 2
-    };
-
+this.movement_speed = 50;
 
 Unit.call( this, args );
 }

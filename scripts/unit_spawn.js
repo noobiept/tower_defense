@@ -13,12 +13,7 @@ this.width = 15;
 this.height = 10;
 this.number_spawned_units = 4;
 this.already_spawned = false;
-this.stats = {
-        movement_speed: 50,
-        gold: 6 + args.waveNumber * 0.2,
-        score: 5,
-        health_regeneration: 2
-    };
+this.movement_speed = 50;
 
 Unit.call( this, args );
 }
@@ -38,6 +33,11 @@ if ( was_killed && !this.already_spawned )
     var position = Map.calculatePosition( this.getX(), this.getY() );
     var availablePositions = Map.getAvailablePositions( position[ 0 ], position[ 1 ], 2 );
     var spawnedPosition;
+
+    var spawnedHealth = parseInt( this.max_health / 2, 10 );
+    var spawnedRegeneration = parseInt( this.health_regeneration / 2, 10 );
+    var spawnedGold = parseInt( this.gold / 2, 10 );
+    var spawnedScore = parseInt( this.score / 2, 10 );
 
     for (var a = 0 ; a < this.number_spawned_units ; a++)
         {
@@ -60,8 +60,10 @@ if ( was_killed && !this.already_spawned )
                 line: spawnedPosition[ 1 ],
                 destination_column: this.destination_column,
                 destination_line: this.destination_line,
-                health: this.max_health / 2,
-                waveNumber: this.waveNumber
+                health: spawnedHealth,
+                health_regeneration: spawnedRegeneration,
+                gold: spawnedGold,
+                score: spawnedScore
             });
         }
     }
@@ -80,12 +82,7 @@ function UnitSpawned( args )
 this.name = 'spawned creep';
 this.image = 'creep_spawned';
 this.slowImage = 'creep_spawned_slow';
-this.stats = {
-        movement_speed: 50,
-        gold: 2 + args.waveNumber * 0.1,
-        score: 1,
-        health_regeneration: 2
-    };
+this.movement_speed = 60;
 
 Unit.call( this, args );
 }

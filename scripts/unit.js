@@ -10,16 +10,6 @@ if ( typeof this.name === 'undefined' )
     this.name = 'unit';
     }
 
-if ( typeof this.stats === 'undefined' )
-    {
-    this.stats = {
-            movement_speed: 60,
-            gold: 3 + args.waveNumber * 0.1,
-            score: 1,
-            health_regeneration: 2
-        };
-    }
-
 if ( typeof this.image === 'undefined' )
     {
     this.image = 'creep';
@@ -50,14 +40,16 @@ if ( typeof this.is_immune == 'undefined' )
     this.is_immune = false;
     }
 
+if ( typeof this.movement_speed === 'undefined' )
+    {
+    this.movement_speed = 60;   // pixels per second
+    }
 
 this.column = args.column;
 this.line = args.line;
 
-this.waveNumber = args.waveNumber;
-this.score = this.stats.score;
-this.gold = this.stats.gold;
-this.movement_speed = this.stats.movement_speed;    // pixels per second
+this.score = args.score;
+this.gold = args.gold;
 this.movement_per_tick = intervalSeconds * this.movement_speed; // pixels per tick
 this.is_slow_down = false;
 this.slow_duration = 2;
@@ -69,7 +61,7 @@ this.stun_limit = 0;
 
 this.max_health = args.health;
 this.health = this.max_health;
-this.health_regeneration = this.stats.health_regeneration;
+this.health_regeneration = args.health_regeneration;
 this.regeneration_count = 0;
 this.regeneration_limit = 1 / (intervalSeconds * this.health_regeneration);
 

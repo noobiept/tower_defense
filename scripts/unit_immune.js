@@ -5,12 +5,7 @@ function UnitImmune( args )
 this.name = 'immune unit';
 this.image = 'creep_immune';
 this.is_immune = true;
-this.stats = {
-        movement_speed: 50,
-        gold: 4 + args.waveNumber,
-        score: 3,
-        health_regeneration: 2
-    };
+this.movement_speed = 50;
 
 Unit.call( this, args );
 }

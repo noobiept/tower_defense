@@ -6,6 +6,7 @@ function Game()
 }
 
 var MAP_NAME;
+var UNITS_STATS = {};
 var CREEP_LANES = [];   // contains the start/end point of each lane
 var ALL_WAVES = [];
 var ACTIVE_WAVES = [];  // you may have more than 1 wave active (adding units)
@@ -44,20 +45,35 @@ var mapInfo = G.PRELOAD.getResult( map );
 var columns = mapInfo.numberOfColumns;
 var lines = mapInfo.numberOfLines;
 var a;
+UNITS_STATS[ 'Unit' ] = mapInfo[ 'Unit' ];
+UNITS_STATS[ 'UnitFast' ] = mapInfo[ 'UnitFast' ];
+UNITS_STATS[ 'UnitFly' ] = mapInfo[ 'UnitFly' ];
+UNITS_STATS[ 'UnitGroup' ] = mapInfo[ 'UnitGroup' ];
+UNITS_STATS[ 'UnitImmune' ] = mapInfo[ 'UnitImmune' ];
+UNITS_STATS[ 'UnitSpawn' ] = mapInfo[ 'UnitSpawn' ];
+
+
 
     // read from the map info and update the appropriate variables
 for (a = 0 ; a < mapInfo.waves.length ; a++)
     {
-    var wave = mapInfo.waves[ a ];
+    var waveType = mapInfo.waves[ a ];
+    var stats = UNITS_STATS[ waveType ];
+    var howMany = parseInt( stats.wave_count_initial * (1 + a * stats.wave_count_increase_rate), 10 );
+    var health = parseInt( stats.health_initial * (1 + a * stats.health_increase_rate), 10 );
+    var health_regeneration = parseInt( stats.health_regeneration_initial * (1 + a * stats.health_regeneration_increase_rate), 10 );
+    var gold = parseInt( stats.gold_initial * (1 + a * stats.gold_increase_rate), 10 );
+    var score = parseInt( stats.score_initial * (1 + a * stats.score_increase_rate), 10 );
 
     ALL_WAVES.push({
-            type: wave.type,
-            howMany: wave.howMany,
-            health: wave.health,
-            spawnInterval: wave.spawnInterval,
+            type: waveType,
+            howMany: howMany,
+            health: health,
+            health_regeneration: health_regeneration,
+            gold: gold,
+            score: score,
             count: 0,
-            countLimit: wave.spawnInterval / G.INTERVAL_SECONDS,
-            waveNumber: a
+            countLimit: stats.spawnInterval / G.INTERVAL_SECONDS
         });
     }
 
@@ -138,7 +154,7 @@ return IS_PAUSED;
 
 Game.updateGold = function( gold )
 {
-GOLD = round( GOLD + gold, 1 );
+GOLD += gold;
 
 GameMenu.updateGold( GOLD );
 };
@@ -401,6 +417,7 @@ Tooltip.hideAll();
 Message.removeAll();
 Bullet.removeAll();
 
+UNITS_STATS = {};
 ALL_WAVES.length = 0;
 CREEP_LANES.length = 0;
 ACTIVE_WAVES.length = 0;
@@ -571,8 +588,10 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
                     destination_column: lane.end.column,
                     destination_line: lane.end.line,
                     lane: lane,
-                    waveNumber: wave.waveNumber,
-                    health: wave.health
+                    health: wave.health,
+                    health_regeneration: wave.health_regeneration,
+                    gold: wave.gold,
+                    score: wave.score
                 });
             }
 
