@@ -138,7 +138,7 @@ return IS_PAUSED;
 
 Game.updateGold = function( gold )
 {
-GOLD += gold;
+GOLD = round( GOLD + gold, 1 );
 
 GameMenu.updateGold( GOLD );
 };
@@ -240,6 +240,16 @@ else if ( key == EVENT_KEY.u )
     if ( selection )
         {
         selection.startUpgrading();
+        }
+    }
+
+else if ( key == EVENT_KEY.s )
+    {
+    var selection = Game.getSelection();
+
+    if ( selection )
+        {
+        selection.startSelling();
         }
     }
 };
@@ -345,15 +355,7 @@ else if ( button == 2 )
 
         if ( tower.baseElement.hitTest( point.x, point.y ) )
             {
-            if ( BEFORE_FIRST_WAVE )
-                {
-                tower.sell( true );
-                }
-
-            else
-                {
-                tower.startSelling();
-                }
+            tower.startSelling();
             }
         }
     }

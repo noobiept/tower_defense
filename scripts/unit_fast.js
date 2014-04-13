@@ -9,7 +9,7 @@ this.width = 20;
 this.height = 10;
 this.stats = {
         movement_speed: 80,
-        gold: 5,
+        gold: 5 + args.waveNumber * 0.1,
         score: 3,
         health_regeneration: 4
     };

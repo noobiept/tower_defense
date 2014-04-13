@@ -7,7 +7,7 @@ this.image = 'creep_immune';
 this.is_immune = true;
 this.stats = {
         movement_speed: 50,
-        gold: 5,
+        gold: 4 + args.waveNumber,
         score: 3,
         health_regeneration: 2
     };

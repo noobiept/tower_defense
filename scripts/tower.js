@@ -406,6 +406,12 @@ if ( this.is_selling )
     return;
     }
 
+if ( Game.beforeFirstWave() )
+    {
+    this.sell( true );
+    return;
+    }
+
 this.is_selling = true;
 
 var currentLevel = this.stats[ this.upgrade_level ];
@@ -425,7 +431,7 @@ Tower.prototype.sell = function( recoverFullCost )
 {
 var recover = this.cost;
 
-if ( typeof recoverFullCost == 'undefined' )
+if ( typeof recoverFullCost === 'undefined' || recoverFullCost === false )
     {
     recover /= 2;
     }

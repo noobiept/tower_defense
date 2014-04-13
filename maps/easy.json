@@ -14,121 +14,121 @@
             {
                 "type": "Unit",
                 "howMany": 10,
-                "health": 20,
-                "spawnInterval": 1
-            },
-            {
-                "type": "UnitGroup",
-                "howMany": 5,
-                "health": 21,
-                "spawnInterval": 1
-            },
-            {
-                "type": "Unit",
-                "howMany": 10,
-                "health": 22,
-                "spawnInterval": 1
-            },
-            {
-                "type": "UnitFast",
-                "howMany": 10,
-                "health": 20,
-                "spawnInterval": 1
-            },
-            {
-                "type": "Unit",
-                "howMany": 10,
-                "health": 20,
-                "spawnInterval": 1
-            },
-            {
-                "type": "UnitSpawn",
-                "howMany": 10,
-                "health": 20,
-                "spawnInterval": 1
-            },
-            {
-                "type": "Unit",
-                "howMany": 10,
-                "health": 20,
-                "spawnInterval": 1
-            },
-            {
-                "type": "UnitImmune",
-                "howMany": 10,
-                "health": 20,
-                "spawnInterval": 1
-            },
-            {
-                "type": "Unit",
-                "howMany": 10,
-                "health": 20,
-                "spawnInterval": 1
-            },
-            {
-                "type": "UnitFly",
-                "howMany": 10,
-                "health": 20,
-                "spawnInterval": 1
-            },
-            {
-                "type": "Unit",
-                "howMany": 10,
-                "health": 20,
+                "health": 40,
                 "spawnInterval": 1
             },
             {
                 "type": "UnitGroup",
                 "howMany": 10,
-                "health": 20,
+                "health": 45,
                 "spawnInterval": 1
             },
             {
                 "type": "Unit",
                 "howMany": 10,
-                "health": 20,
+                "health": 50,
                 "spawnInterval": 1
             },
             {
                 "type": "UnitFast",
                 "howMany": 10,
-                "health": 20,
+                "health": 55,
                 "spawnInterval": 1
             },
             {
                 "type": "Unit",
                 "howMany": 10,
-                "health": 20,
+                "health": 60,
                 "spawnInterval": 1
             },
             {
                 "type": "UnitSpawn",
                 "howMany": 10,
-                "health": 20,
+                "health": 65,
                 "spawnInterval": 1
             },
             {
                 "type": "Unit",
                 "howMany": 10,
-                "health": 20,
+                "health": 70,
                 "spawnInterval": 1
             },
             {
                 "type": "UnitImmune",
                 "howMany": 10,
-                "health": 20,
+                "health": 75,
                 "spawnInterval": 1
             },
             {
                 "type": "Unit",
                 "howMany": 10,
-                "health": 20,
+                "health": 80,
                 "spawnInterval": 1
             },
             {
                 "type": "UnitFly",
                 "howMany": 10,
-                "health": 20,
+                "health": 85,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "health": 90,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitGroup",
+                "howMany": 10,
+                "health": 95,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "health": 100,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitFast",
+                "howMany": 10,
+                "health": 105,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "health": 110,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitSpawn",
+                "howMany": 10,
+                "health": 115,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "health": 120,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitImmune",
+                "howMany": 10,
+                "health": 125,
+                "spawnInterval": 1
+            },
+            {
+                "type": "Unit",
+                "howMany": 10,
+                "health": 130,
+                "spawnInterval": 1
+            },
+            {
+                "type": "UnitFly",
+                "howMany": 10,
+                "health": 135,
                 "spawnInterval": 1
             }
         ]

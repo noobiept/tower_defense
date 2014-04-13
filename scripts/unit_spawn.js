@@ -15,7 +15,7 @@ this.number_spawned_units = 4;
 this.already_spawned = false;
 this.stats = {
         movement_speed: 50,
-        gold: 10,
+        gold: 6 + args.waveNumber * 0.2,
         score: 5,
         health_regeneration: 2
     };
@@ -60,7 +60,8 @@ if ( was_killed && !this.already_spawned )
                 line: spawnedPosition[ 1 ],
                 destination_column: this.destination_column,
                 destination_line: this.destination_line,
-                health: this.health / 2
+                health: this.max_health / 2,
+                waveNumber: this.waveNumber
             });
         }
     }
@@ -81,11 +82,10 @@ this.image = 'creep_spawned';
 this.slowImage = 'creep_spawned_slow';
 this.stats = {
         movement_speed: 50,
-        gold: 5,
+        gold: 2 + args.waveNumber * 0.1,
         score: 1,
         health_regeneration: 2
     };
-
 
 Unit.call( this, args );
 }

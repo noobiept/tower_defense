@@ -14,7 +14,7 @@ if ( typeof this.stats === 'undefined' )
     {
     this.stats = {
             movement_speed: 60,
-            gold: 5 + args.waveNumber * 0.5,
+            gold: 3 + args.waveNumber * 0.1,
             score: 1,
             health_regeneration: 2
         };
@@ -54,6 +54,7 @@ if ( typeof this.is_immune == 'undefined' )
 this.column = args.column;
 this.line = args.line;
 
+this.waveNumber = args.waveNumber;
 this.score = this.stats.score;
 this.gold = this.stats.gold;
 this.movement_speed = this.stats.movement_speed;    // pixels per second
@@ -349,7 +350,7 @@ if ( this.health <= 0 )
         {
         new Message({
                 text: '+' + this.gold,
-                color: 'rgb(187, 186, 81)',
+                color: 'rgb(125, 124, 55)',
                 x: this.getX(),
                 y: this.getY() - this.height
             });
