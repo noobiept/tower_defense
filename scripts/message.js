@@ -2,30 +2,49 @@
 {
 /*
     In-game message
+
+    args = {
+            fontSize: Number,    // size in pixels
+            fillColor: String,   // any css valid color
+            strokeColor: String, // any css valid color
+            timeout: Number,     // time until the message is removed
+            x: Number,           // x position (if not given, then its centered)
+            y: Number            // y position (like x, centered in middle of canvas if not given)
+        }
  */
 
 function Message( args )
 {
-var font, color;
+var fontSize, fillColor, strokeColor;
 
-if ( typeof args.font == 'undefined' )
+if ( typeof args.fontSize == 'undefined' )
     {
-    font = '16px monospace';
+    fontSize = 16;
     }
 
 else
     {
-    font = args.font;
+    fontSize = args.fontSize;
     }
 
-if ( typeof args.color == 'undefined' )
+if ( typeof args.fillColor == 'undefined' )
     {
-    color = 'black';
+    fillColor = 'white';
     }
 
 else
     {
-    color = args.color;
+    fillColor = args.fillColor;
+    }
+
+if ( typeof args.strokeColor == 'undefined' )
+    {
+    strokeColor = 'black';
+    }
+
+else
+    {
+    strokeColor = args.strokeColor;
     }
 
 if ( typeof args.timeout == 'undefined' )
@@ -44,19 +63,30 @@ if ( typeof args.y == 'undefined' )
     args.y = G.CANVAS.height / 2;
     }
 
+var stroke = new createjs.Text( args.text, fontSize + 'px monospace', strokeColor );
 
-var textElement = new createjs.Text( args.text, font, color );
+stroke.textAlign = 'center';
+stroke.x = args.x;
+stroke.y = args.y;
+stroke.outline = parseInt( fontSize / 5, 10 );
 
-textElement.textAlign = 'center';
-textElement.x = args.x;
-textElement.y = args.y;
+var fill = stroke.clone();
 
-G.STAGE.addChild( textElement );
+fill.outline = false;
+fill.color = fillColor;
+fill.textAlign = 'center';
+fill.x = args.x;
+fill.y = args.y;
 
-this.textElement = textElement;
+G.STAGE.addChild( stroke );
+G.STAGE.addChild( fill );
+
+this.stroke = stroke;
+this.fill = fill;
 this.timeout = window.setTimeout( function()
     {
-    G.STAGE.removeChild( textElement );
+    G.STAGE.removeChild( stroke );
+    G.STAGE.removeChild( fill );
 
     if ( typeof args.onEnd !== 'undefined' )
         {
@@ -75,7 +105,8 @@ Message.prototype.remove = function()
 {
 window.clearTimeout( this.timeout );
 
-G.STAGE.removeChild( this.textElement );
+G.STAGE.removeChild( this.stroke );
+G.STAGE.removeChild( this.fill );
 
 var index = Message.ALL.indexOf( this );
 

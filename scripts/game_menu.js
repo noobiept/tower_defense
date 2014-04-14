@@ -188,13 +188,14 @@ for (var a = 0 ; a < WAVE_LIST.length ; a++)
         var wave = allWaves[ waveNumber ];
         var type = wave.type;
         var text = 'wave ' + (waveNumber + 1) + '<br/>' + type;
+        var tooltip = wave.howMany + 'x<br/>health: ' + wave.health + '<br/>regeneration: ' + wave.health_regeneration + '<br/>gold: ' + wave.gold;
 
         if ( waveElement.hasAttribute( 'data-cssClass' ) )
             {
             $( waveElement ).removeClass( waveElement.getAttribute( 'data-cssClass' ) );
             }
 
-        waveElement.tooltip.updateText( wave.howMany + 'x<br/>health: ' + wave.health );
+        waveElement.tooltip.updateText( tooltip );
         waveElement.setAttribute( 'data-cssClass', type );
         $( waveElement ).addClass( type );
         $( waveElement ).html( text );

@@ -13,9 +13,6 @@
 
         - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
-        - make units stronger with each wave
-            - add a increase_rate, which will increase the units stats from the base stat, depending on the waveNumber
-            - and so, to make it more difficult, we can set the initial stats (health etc), and the increase_rate per wave of these stats
 
         types of units:
 

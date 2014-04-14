@@ -342,7 +342,8 @@ if ( this.health <= 0 )
         {
         new Message({
                 text: '+' + this.gold,
-                color: 'rgb(125, 124, 55)',
+                strokeColor: '419C1C',
+                fillColor: 'white',
                 x: this.getX(),
                 y: this.getY() - this.height
             });

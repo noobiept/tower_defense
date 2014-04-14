@@ -449,7 +449,7 @@ else
 
 new Message({
         text: message,
-        font: '30px monospace',
+        fontSize: 30,
         onEnd: function()
             {
             G.STAGE.update();
@@ -582,17 +582,26 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
                 startLine = lane.start.line;
                 }
 
-            new className({
+            var arguments = {
                     column: startColumn,
                     line: startLine,
                     destination_column: lane.end.column,
                     destination_line: lane.end.line,
-                    lane: lane,
                     health: wave.health,
                     health_regeneration: wave.health_regeneration,
                     gold: wave.gold,
                     score: wave.score
-                });
+                };
+
+            if ( className == UnitGroup )
+                {
+                arguments.lane = lane;
+                arguments.howMany = wave.howMany;
+
+                wave.howMany = 0;
+                }
+
+            new className( arguments );
             }
 
 

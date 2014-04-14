@@ -24,9 +24,9 @@ INHERIT_PROTOTYPE( TowerBash, Tower );
 
 
 TowerBash.stats = [
-        { damage: 10, range: 20, attack_speed: 2, attack_radius: 20, slow: 20, upgrade_cost: 10, upgrade_time: 1, sell_time: 1, initial_cost: 50 },
-        { damage: 15, range: 22, attack_speed: 4, attack_radius: 22, slow: 30, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
-        { damage: 20, range: 25, attack_speed: 6, attack_radius: 25, slow: 40, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
+        { damage: 30, range: 20, attack_speed: 2, attack_radius: 20, slow: 20, upgrade_cost: 10, upgrade_time: 1, sell_time: 1, initial_cost: 50 },
+        { damage: 35, range: 22, attack_speed: 3, attack_radius: 22, slow: 30, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
+        { damage: 40, range: 25, attack_speed: 4, attack_radius: 25, slow: 40, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
     ];
 
 

@@ -9,7 +9,7 @@ var halfLength = parseInt( lane.length / 2, 10 );
     // add units randomly in the start zone
 if ( lane.orientation == 'horizontal' )
     {
-    for (a = 0 ; a < 5 ; a++)
+    for (a = 0 ; a < args.howMany ; a++)
         {
         args.line = getRandomInt( lane.start.line - halfLength, lane.start.line + halfLength - 1 );
 
@@ -19,7 +19,7 @@ if ( lane.orientation == 'horizontal' )
 
 else
     {
-    for (a = 0 ; a < 5 ; a++)
+    for (a = 0 ; a < args.howMany ; a++)
         {
         args.line = getRandomInt( lane.start.column - halfLength, lane.start.column + halfLength - 1 );
 
