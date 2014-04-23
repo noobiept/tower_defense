@@ -10,6 +10,15 @@
                 "orientation": "horizontal"
             }
         ],
+    "obstacles": [
+            {
+                "startColumn": 5,
+                "startLine": 15,
+                "columnLength": 3,
+                "lineLength": 2,
+                "passable": false
+            }
+        ],
     "Unit": {
             "wave_count_initial": 10,
             "wave_count_increase_rate": 0.05,

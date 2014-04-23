@@ -105,7 +105,7 @@ WAVE_COUNT = WAVE_LIMIT;    // start the first wave immediately
 NEXT_WAVE = 0;
 
     // init the game
-Map.init( columns, lines, CREEP_LANES );
+Map.init( columns, lines, CREEP_LANES, mapInfo.obstacles );
 
 
 $( '#MainCanvas' ).css( 'display', 'block' );

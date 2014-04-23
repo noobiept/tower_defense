@@ -11,8 +11,8 @@
 
     to doo:
 
-        - add obstacles (some squares where you can't add a tower), that can be passable or not by units
         - try not to add towers on top of a unit
+        - show the highlight element with red color if its an invalid position (like on top of other towers, etc)
 
         types of units:
 
