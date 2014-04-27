@@ -28,19 +28,12 @@ Bullet.prototype.setupShape = function()
 var width = this.width;
 var height = this.height;
 
-var shape = new createjs.Shape();
+var shape = new createjs.Bitmap( G.PRELOAD.getResult( 'bullet' ) );
 
 shape.regX = width / 2;
 shape.regY = height / 2;
 shape.x = this.shooter.getX();
 shape.y = this.shooter.getY();
-
-
-var g = shape.graphics;
-
-g.beginFill( 'blue' );
-g.drawRoundRect( 0, 0, this.width, this.height, 2 );
-g.endFill();
 
 G.STAGE.addChild( shape );
 

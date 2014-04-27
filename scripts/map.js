@@ -19,7 +19,9 @@ var GRAPH = null;       // for the AStar path finding
 var SQUARE_SIZE = 10;   // in pixels
 
 var GRID_HIGHLIGHT = {
-        shape: null,
+        shape: null,    // this will point to either 'available' or 'not_available'
+        available: null,    // will have a reference to a Bitmap
+        not_available: null,    // also a reference to a Bitmap
         column: 0,
         line: 0
     };
@@ -183,17 +185,18 @@ if ( obstacles )
 
 
     // the highlight square which shows where the towers will be added
-var highlight = new createjs.Shape();
+var highlightAvailable = new createjs.Bitmap( G.PRELOAD.getResult( 'highlight' ) );
+var highlightNotAvailable = new createjs.Bitmap( G.PRELOAD.getResult( 'highlight_not_available' ) );
 
-var g = highlight.graphics;
+    // start with the available visible first
+highlightNotAvailable.visible = false;
 
-g.beginFill( 'rgba(0,255,0,0.3)' );
-g.drawRect( 0, 0, SQUARE_SIZE * 2, SQUARE_SIZE * 2 );
-g.endFill();
+G.STAGE.addChild( highlightAvailable );
+G.STAGE.addChild( highlightNotAvailable );
 
-G.STAGE.addChild( highlight );
-
-GRID_HIGHLIGHT.shape = highlight;
+GRID_HIGHLIGHT.shape = highlightAvailable;
+GRID_HIGHLIGHT.available = highlightAvailable;
+GRID_HIGHLIGHT.not_available = highlightNotAvailable;
 MAP_WIDTH = width;
 MAP_HEIGHT = height;
 NUMBER_OF_COLUMNS = numberOfColumns;
@@ -324,7 +327,8 @@ for (var a = 0 ; a < OBSTACLES.length ; a++)
 
 OBSTACLES.length = 0;
 
-G.STAGE.removeChild( GRID_HIGHLIGHT.shape );
+G.STAGE.removeChild( GRID_HIGHLIGHT.available );
+G.STAGE.removeChild( GRID_HIGHLIGHT.not_available );
 
 GRAPH = null;
 };
@@ -398,6 +402,26 @@ else if ( line + 2 >= NUMBER_OF_LINES )
 
 GRID_HIGHLIGHT.column = column;
 GRID_HIGHLIGHT.line = line;
+
+if ( Map.isAvailable( column, line ) )
+    {
+    if ( GRID_HIGHLIGHT.shape !== GRID_HIGHLIGHT.available )
+        {
+        GRID_HIGHLIGHT.not_available.visible = false;
+        GRID_HIGHLIGHT.available.visible = true;
+        GRID_HIGHLIGHT.shape = GRID_HIGHLIGHT.available;
+        }
+    }
+
+else
+    {
+    if ( GRID_HIGHLIGHT.shape !== GRID_HIGHLIGHT.not_available )
+        {
+        GRID_HIGHLIGHT.not_available.visible = true;
+        GRID_HIGHLIGHT.available.visible = false;
+        GRID_HIGHLIGHT.shape = GRID_HIGHLIGHT.not_available;
+        }
+    }
 
 GRID_HIGHLIGHT.shape.x = STARTING_X + column * SQUARE_SIZE;
 GRID_HIGHLIGHT.shape.y = STARTING_Y + line * SQUARE_SIZE;

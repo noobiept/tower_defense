@@ -14,6 +14,13 @@
         - try not to add towers on top of a unit
         - show the highlight element with red color if its an invalid position (like on top of other towers, etc)
 
+        - optimizations:
+
+            - instead of using filters, use images for the upgraded towers
+            - use Bitmap instead of Shape (faster?..)
+            - use .cache() to cache static stuff (that doesn't move, so just the obstacles?..)
+
+
         types of units:
 
             - normal
@@ -129,7 +136,10 @@ var manifest = [
         { id: 'tower_frost', src: G.BASE_URL + 'images/tower_frost.png' },
         { id: 'tower_anti_air', src: G.BASE_URL + 'images/tower_anti_air.png' },
         { id: 'tower_bash', src: G.BASE_URL + 'images/tower_bash.png' },
-        { id: 'tower_bash_attack', src: G.BASE_URL + 'images/tower_bash_attack.png' }
+        { id: 'tower_bash_attack', src: G.BASE_URL + 'images/tower_bash_attack.png' },
+        { id: 'bullet', src: G.BASE_URL + 'images/bullet.png' },
+        { id: 'highlight', src: G.BASE_URL + 'images/highlight.png' },
+        { id: 'highlight_not_available', src: G.BASE_URL + 'images/highlight_not_available.png' }
     ];
 
 G.PRELOAD.addEventListener( 'progress', function( event )
