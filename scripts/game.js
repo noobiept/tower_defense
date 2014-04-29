@@ -437,7 +437,7 @@ var message = '';
 
 if ( victory )
     {
-    message += 'Victory!\nScore: ' + SCORE;
+    message += 'Victory!\n\nScore: ' + SCORE;
 
     HighScore.add( MAP_NAME, SCORE );
     }

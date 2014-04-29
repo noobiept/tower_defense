@@ -70,8 +70,11 @@ this.destination_column = args.destination_column;
 this.destination_line = args.destination_line;
 this.move_x = 0;
 this.move_y = 0;
-this.next_x = 0;
-this.next_y = 0;
+this.movement_angle = 0;
+this.next_left = 0;
+this.next_right = 0;
+this.next_top = 0;
+this.next_bottom = 0;
 
 this.container = null;
 this.slowElement = null;
@@ -198,8 +201,17 @@ var destY = position.y + squareSize / 2;
 
 var angleRads = calculateAngle( unitX, unitY * -1, destX, destY * -1 );
 
-this.next_x = destX;
-this.next_y = destY;
+    // the next position represents a box which is used for the collision detection
+    // its position after the destination position
+var boxHalfLength = 20; // width/height
+var centerX = destX + Math.cos( angleRads ) * boxHalfLength;
+var centerY = destY + Math.sin( angleRads ) * boxHalfLength;
+
+this.next_left = centerX - boxHalfLength;
+this.next_right = centerX + boxHalfLength;
+this.next_top = centerY - boxHalfLength;
+this.next_bottom = centerY + boxHalfLength;
+this.movement_angle = angleRads;
 
 this.move_x = Math.cos( angleRads ) * this.current_movement_speed;
 this.move_y = Math.sin( angleRads ) * this.current_movement_speed;
@@ -277,10 +289,8 @@ this.slowElement.visible = true;
 this.slow_count = 0;
 this.current_movement_speed = this.movement_speed - minusMovementSpeed;
 
-var angleRads = calculateAngle( this.getX(), this.getY() * -1, this.next_x, this.next_y * -1 );
-
-this.move_x = Math.cos( angleRads ) * this.current_movement_speed;
-this.move_y = Math.sin( angleRads ) * this.current_movement_speed;
+this.move_x = Math.cos( this.movement_angle ) * this.current_movement_speed;
+this.move_y = Math.sin( this.movement_angle ) * this.current_movement_speed;
 };
 
 
@@ -290,10 +300,8 @@ this.is_slow_down = false;
 this.slowElement.visible = false;
 this.current_movement_speed = this.movement_speed;
 
-var angleRads = calculateAngle( this.getX(), this.getY() * -1, this.next_x, this.next_y * -1 );
-
-this.move_x = Math.cos( angleRads ) * this.current_movement_speed;
-this.move_y = Math.sin( angleRads ) * this.current_movement_speed;
+this.move_x = Math.cos( this.movement_angle ) * this.current_movement_speed;
+this.move_y = Math.sin( this.movement_angle ) * this.current_movement_speed;
 };
 
 
@@ -387,7 +395,7 @@ if ( this.is_slow_down )
 this.container.x += this.move_x * deltaTime;
 this.container.y += this.move_y * deltaTime;
 
-if( circlePointCollision( this.getX(), this.getY(), this.width / 6, this.next_x, this.next_y ) )
+if ( pointBoxCollision( this.getX(), this.getY(), this.next_left, this.next_right, this.next_top, this.next_bottom ) )
     {
     if ( this.path.length == 0 )
         {

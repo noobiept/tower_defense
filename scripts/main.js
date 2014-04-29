@@ -18,11 +18,8 @@
             - instead of using filters, use images for the upgraded towers
             - use Bitmap instead of Shape (faster?..)
             - use .cache() to cache static stuff (that doesn't move, so just the obstacles?..)
-
-        - use the tick()'s event.delta instead of a fixed value from createjs.Ticker.getInterval()
-            - this adds a new problem, that is if when the game starts to get lagged, the units end up doing a big movement each tick, which may make it loose the movement destination points (and get outside of the map)
-            - perhaps need to calculate better, like have the orientation (going right for example), and if passed the point then correct the position and set a new destination point
-
+            - improve the search units in range algorithm
+                - maybe have an array with all the units positions, and then just get the units from there?...
 
         types of units:
 

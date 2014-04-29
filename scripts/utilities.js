@@ -111,6 +111,18 @@ return !(
 }
 
 
+function pointBoxCollision( pointX, pointY, boxLeft, boxRight, boxTop, boxBottom )
+{
+if ( pointX < boxLeft || pointX > boxRight || pointY < boxTop || pointY > boxBottom )
+    {
+    return false;
+    }
+
+return true;
+}
+
+
+
 
 function circlePointCollision( circleX, circleY, circleRadius, pointX, pointY )
 {
@@ -127,6 +139,7 @@ if ( squareDistance < circleRadius * circleRadius )
 
 return false;
 }
+
 
 
 function circleCircleCollision( x1, y1, radius1, x2, y2, radius2 )
