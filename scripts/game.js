@@ -12,8 +12,8 @@ var ALL_WAVES = [];
 var ACTIVE_WAVES = [];  // you may have more than 1 wave active (adding units)
 var NEXT_WAVE = 0;
 var NO_MORE_WAVES = false;
-var WAVE_LIMIT = 0;
-var WAVE_COUNT = 0;    // start the first wave immediately
+var WAVE_INTERVAL = 0;
+var WAVE_COUNT = 0;
 
 var ELEMENT_SELECTED = null;
 
@@ -73,7 +73,7 @@ for (a = 0 ; a < mapInfo.waves.length ; a++)
             gold: gold,
             score: score,
             count: 0,
-            countLimit: stats.spawnInterval / G.INTERVAL_SECONDS
+            spawnInterval: stats.spawnInterval
         });
     }
 
@@ -91,7 +91,7 @@ for (a = 0 ; a < mapInfo.creepLanes.length ; a++)
     }
 
     // reset the variables
-WAVE_LIMIT = mapInfo.waveInterval / G.INTERVAL_SECONDS;
+WAVE_INTERVAL = mapInfo.waveInterval;
 
 GAME_END.is_over = false;
 ELEMENT_SELECTED = null;
@@ -101,7 +101,7 @@ SCORE = 0;
 IS_PAUSED = false;
 NO_MORE_WAVES = false;
 BEFORE_FIRST_WAVE = true;
-WAVE_COUNT = WAVE_LIMIT;    // start the first wave immediately
+WAVE_COUNT = WAVE_INTERVAL;    // start the first wave immediately
 NEXT_WAVE = 0;
 
     // init the game
@@ -114,7 +114,7 @@ GameMenu.show();
 Game.updateGold( 200 );
 Game.updateLife( 20 );
 Game.updateScore( 0 );
-Game.tick();    // run the tick once to initialize the timer and the wave list
+Game.tick({ delta: 1 });    // run the tick once to initialize the timer and the wave list (passing dummy 'event' argument)
 Game.pause( true );
 
     // set the events
@@ -477,13 +477,14 @@ if ( NEXT_WAVE >= ALL_WAVES.length )
     }
 
 var scorePerSecond = 10;
-var waveTimeLeft = (WAVE_LIMIT - WAVE_COUNT) * G.INTERVAL_SECONDS;
+var waveTimeLeft = WAVE_INTERVAL - WAVE_COUNT;
+
 
 var score = parseInt( waveTimeLeft * scorePerSecond, 10 );
 
 Game.updateScore( score );
 
-WAVE_COUNT = WAVE_LIMIT;
+WAVE_COUNT = WAVE_INTERVAL;
 };
 
 /*
@@ -522,13 +523,14 @@ if ( IS_PAUSED )
     }
 
 var a;
+var deltaSeconds = event.delta / 1000;
 
 if ( !NO_MORE_WAVES )
     {
-    WAVE_COUNT++;
+    WAVE_COUNT += deltaSeconds;
 
         // time to start a new wave
-    if ( WAVE_COUNT >= WAVE_LIMIT )
+    if ( WAVE_COUNT >= WAVE_INTERVAL )
         {
         WAVE_COUNT = 0;
 
@@ -545,7 +547,7 @@ if ( !NO_MORE_WAVES )
             }
         }
 
-    var timeUntilNextWave = (WAVE_LIMIT - WAVE_COUNT) * G.INTERVAL_SECONDS;
+    var timeUntilNextWave = WAVE_INTERVAL - WAVE_COUNT;
 
     GameMenu.updateTimeUntilNextWave( round( timeUntilNextWave, 2 ).toFixed( 2 ) );
     }
@@ -555,9 +557,9 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
     {
     var wave = ACTIVE_WAVES[ a ];
 
-    wave.count++;
+    wave.count += deltaSeconds;
 
-    if ( wave.count >= wave.countLimit )
+    if ( wave.count >= wave.spawnInterval )
         {
         wave.count = 0;
 
@@ -617,19 +619,20 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
     }
 
 
+
 for (a = Unit.ALL.length - 1 ; a >= 0 ; a--)
     {
-    Unit.ALL[ a ].tick();
+    Unit.ALL[ a ].tick( deltaSeconds );
     }
 
 for (a = Tower.ALL.length - 1 ; a >= 0 ; a--)
     {
-    Tower.ALL[ a ].tick();
+    Tower.ALL[ a ].tick( deltaSeconds );
     }
 
 for (a = Bullet.ALL.length - 1 ; a >= 0 ; a--)
     {
-    Bullet.ALL[ a ].tick();
+    Bullet.ALL[ a ].tick( deltaSeconds );
     }
 
 

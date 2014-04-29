@@ -39,10 +39,8 @@ this.height = squareSize * 2;
 this.upgrade_level = 0;
 this.is_upgrading = false;
 this.upgrade_count = 0;
-this.upgrade_limit = 0;
 this.is_selling = false;
 this.sell_count = 0;
-this.sell_limit = 0;
 
 var currentLevel = this.stats[ this.upgrade_level ];
 
@@ -51,7 +49,7 @@ this.range = currentLevel.range;
 this.cost = currentLevel.initial_cost;
 
 this.attack_speed = currentLevel.attack_speed;
-this.attack_limit = 1 / (G.INTERVAL_SECONDS * this.attack_speed);
+this.attack_interval = 1 / this.attack_speed;
 this.attack_count = 0;
 
 this.targetUnit = null;
@@ -314,7 +312,6 @@ this.is_upgrading = true;
 Game.updateGold( -currentLevel.upgrade_cost );
 
 this.upgrade_count = 0;
-this.upgrade_limit = currentLevel.upgrade_time / G.INTERVAL_SECONDS;
 
 this.progressElement.graphics.clear();
 this.progressElement.visible = true;
@@ -348,7 +345,7 @@ var currentLevel = this.stats[ this.upgrade_level ];
 this.damage = currentLevel.damage;
 this.range = currentLevel.range;
 this.attack_speed = currentLevel.attack_speed;
-this.attack_limit = 1 / (G.INTERVAL_SECONDS * this.attack_speed);
+this.attack_interval = 1 / this.attack_speed;
 this.attack_count = 0;
 
     // re-draw the range element (since we may have increased the range in the upgrade)
@@ -414,10 +411,7 @@ if ( Game.beforeFirstWave() )
 
 this.is_selling = true;
 
-var currentLevel = this.stats[ this.upgrade_level ];
-
 this.sell_count = 0;
-this.sell_limit = currentLevel.sell_time / G.INTERVAL_SECONDS;
 
 this.progressElement.graphics.clear();
 this.progressElement.visible = true;
@@ -494,65 +488,61 @@ if ( target.tookDamage( this ) )
 };
 
 
-Tower.prototype.tick_attack = function()
+Tower.prototype.tick_attack = function( deltaTime )
 {
-if ( this.damage > 0 )
+this.attack_count -= deltaTime;
+
+    // see if we can attack right now
+if ( this.attack_count <= 0 )
     {
-        // see if we can attack right now
-    if ( this.attack_count <= 0 )
+    var target = this.targetUnit;
+
+        // check if its currently attacking a unit
+    if ( target && !target.removed )
         {
-        var target = this.targetUnit;
+        this.rotateTower( target );
 
-            // check if its currently attacking a unit
-        if ( target && !target.removed )
+
+            // check if the unit is within the tower's range
+        if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
             {
-            this.rotateTower( target );
-
-
-                // check if the unit is within the tower's range
-            if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
-                {
-                this.attack_count = this.attack_limit;
-                new Bullet({
-                        shooter: this,
-                        target: target
-                    });
-                }
-
-                // can't attack anymore, find other target
-            else
-                {
-                this.targetUnit = null;
-                }
+            this.attack_count = this.attack_interval;
+            new Bullet({
+                    shooter: this,
+                    target: target
+                });
             }
 
-            // find a target
+            // can't attack anymore, find other target
         else
             {
-            this.targetUnit = Map.getUnitInRange( this );
+            this.targetUnit = null;
             }
         }
 
-        // we need to wait a bit
+        // find a target
     else
         {
-        this.attack_count--;
+        this.targetUnit = Map.getUnitInRange( this );
         }
     }
 };
 
 
 
-Tower.prototype.tick_normal = function()
+Tower.prototype.tick_normal = function( deltaTime )
 {
-this.tick_attack();
+this.tick_attack( deltaTime );
 };
 
-Tower.prototype.tick_upgrade = function()
+Tower.prototype.tick_upgrade = function( deltaTime )
 {
-this.upgrade_count++;
+this.upgrade_count += deltaTime;
 
-var ratio = this.upgrade_count / this.upgrade_limit;
+var currentLevel = this.stats[ this.upgrade_level ];
+var upgradeTime = currentLevel.upgrade_time;
+
+var ratio = this.upgrade_count / upgradeTime;
 
 var g = this.progressElement.graphics;
 
@@ -562,7 +552,7 @@ g.endFill();
 
 
     // upgrade finish, improve the stats and return to normal tick
-if ( this.upgrade_count >= this.upgrade_limit )
+if ( this.upgrade_count >= upgradeTime )
     {
     this.progressElement.visible = false;
     this.shape.visible = true;
@@ -574,16 +564,19 @@ if ( this.upgrade_count >= this.upgrade_limit )
 };
 
 
-Tower.prototype.tick_sell = function()
+Tower.prototype.tick_sell = function( deltaTime )
 {
 if ( !this.is_selling )
     {
     return;
     }
 
-this.sell_count++;
+this.sell_count += deltaTime;
 
-var ratio = this.sell_count / this.sell_limit;
+var currentLevel = this.stats[ this.upgrade_level ];
+var sellTime = currentLevel.sell_time;
+
+var ratio = this.sell_count / sellTime;
 
 var g = this.progressElement.graphics;
 
@@ -591,7 +584,7 @@ g.beginFill( 'rgb(200,0,0)' );
 g.drawRect( 0, 0, this.width * ratio, this.progress_length );
 g.endFill();
 
-if ( this.sell_count >= this.sell_limit )
+if ( this.sell_count >= sellTime )
     {
     this.sell();
     this.is_selling = false;
@@ -600,7 +593,7 @@ if ( this.sell_count >= this.sell_limit )
 
 
 
-Tower.prototype.tick = function()
+Tower.prototype.tick = function( deltaTime )
 {
     // this will be overridden to either tick_normal(), tick_upgrade() or tick_sell() depending on the tower's current state
 };

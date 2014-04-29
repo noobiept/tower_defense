@@ -9,7 +9,6 @@ this.width = 4;
 this.height = 4;
 this.radius = 2;
 this.movement_speed = 140;
-this.movement_per_tick = G.INTERVAL_SECONDS * this.movement_speed;
 
 this.shape = null;
 this.removed = false;
@@ -42,7 +41,7 @@ this.shape = shape;
 
 
 
-Bullet.prototype.tick = function()
+Bullet.prototype.tick = function( deltaTime )
 {
 var target = this.target;
 var targetX = target.getX();
@@ -51,8 +50,8 @@ var targetRadius = target.width / 2;
 
 var angle = calculateAngle( this.shape.x, this.shape.y * -1, targetX, targetY * -1 );
 
-this.shape.x += Math.cos( angle ) * this.movement_per_tick;
-this.shape.y += Math.sin( angle ) * this.movement_per_tick;
+this.shape.x += Math.cos( angle ) * this.movement_speed * deltaTime;
+this.shape.y += Math.sin( angle ) * this.movement_speed * deltaTime;
 
 this.shape.rotation = toDegrees( angle );
 
