@@ -17,8 +17,8 @@ INHERIT_PROTOTYPE( TowerFast, Tower );
 
 TowerFast.stats = [
         { damage: 15, range: 50, attack_speed: 4, upgrade_cost: 10, upgrade_time: 1, sell_time: 1, initial_cost: 15 },
-        { damage: 20, range: 55, attack_speed: 5, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
-        { damage: 25, range: 60, attack_speed: 6, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
+        { damage: 20, range: 55, attack_speed: 5, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5 },
+        { damage: 25, range: 60, attack_speed: 6, sell_time: 2 }
     ];
 
 

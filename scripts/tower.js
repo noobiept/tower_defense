@@ -79,8 +79,8 @@ Tower.ALL = [];
     // each array position corresponds to the upgrade level of the tower
 Tower.stats = [
         { damage: 10, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1, initial_cost: 10 },
-        { damage: 15, range: 55, attack_speed: 3, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5, filter: { red: 0, green: 0, blue: 150 } },
-        { damage: 20, range: 60, attack_speed: 4, sell_time: 2, filter: { red: 150, green: 0, blue: 0 } }
+        { damage: 15, range: 55, attack_speed: 3, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5 },
+        { damage: 20, range: 60, attack_speed: 4, sell_time: 2 }
     ];
 
 var SELECTION_MENU;
@@ -142,7 +142,7 @@ var halfWidth = width / 2;
 var halfHeight = height / 2;
 
     // the tower base
-var base = new createjs.Bitmap( G.PRELOAD.getResult( 'tower_base' ) );
+var base = new createjs.Bitmap( G.PRELOAD.getResult( 'tower_base0' ) );
 
 base.regX = halfWidth;
 base.regY = halfHeight;
@@ -357,13 +357,7 @@ g.drawCircle( 0, 0, this.range );
 g.endStroke();
 
     // add some visual clue, to differentiate the towers per their upgrade level
-var filter = new createjs.ColorFilter( 1, 1, 1, 1, currentLevel.filter.red, currentLevel.filter.green, currentLevel.filter.blue );
-
-this.baseElement.filters = [
-        filter
-    ];
-
-this.baseElement.cache( 0, 0, this.width, this.height );
+this.baseElement.image = G.PRELOAD.getResult( 'tower_base' + this.upgrade_level );
 
 
 if ( Game.checkIfSelected( this ) )

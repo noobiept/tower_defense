@@ -15,7 +15,6 @@
 
         - optimizations:
 
-            - instead of using filters, use images for the upgraded towers
             - use Bitmap instead of Shape (faster?..)
             - use .cache() to cache static stuff (that doesn't move, so just the obstacles?..)
             - improve the search units in range algorithm
@@ -126,7 +125,9 @@ var manifest = [
         { id: 'creep_spawned', src: G.BASE_URL + 'images/creep_spawned.png' },
         { id: 'creep_spawned_slow', src: G.BASE_URL + 'images/creep_spawned_slow.png' },
         { id: 'creep_immune', src: G.BASE_URL + 'images/creep_immune.png' },
-        { id: 'tower_base', src: G.BASE_URL + 'images/tower_base.png' },
+        { id: 'tower_base0', src: G.BASE_URL + 'images/tower_base0.png' },
+        { id: 'tower_base1', src: G.BASE_URL + 'images/tower_base1.png' },
+        { id: 'tower_base2', src: G.BASE_URL + 'images/tower_base2.png' },
         { id: 'tower_basic', src: G.BASE_URL + 'images/tower_basic.png' },
         { id: 'tower_fast', src: G.BASE_URL + 'images/tower_fast.png' },
         { id: 'tower_rocket', src: G.BASE_URL + 'images/tower_rocket.png' },
