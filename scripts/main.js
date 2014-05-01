@@ -20,6 +20,21 @@
             - improve the search units in range algorithm
                 - maybe have an array with all the units positions, and then just get the units from there?...
 
+        maps:
+            - easy:
+                - 20 waves
+                - 1 lane
+
+            - medium:
+                - 50 waves
+                - 2 lanes
+
+            - hard:
+                - 60 waves
+                - 2 lanes
+                - with some obstacles
+
+
         types of units:
 
             - normal

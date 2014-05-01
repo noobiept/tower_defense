@@ -17,9 +17,9 @@ INHERIT_PROTOTYPE( TowerAntiAir, Tower );
 
 
 TowerAntiAir.stats = [
-        { damage: 20, range: 50, attack_speed: 2, upgrade_cost: 10, upgrade_time: 1, sell_time: 1, initial_cost: 50 },
-        { damage: 30, range: 55, attack_speed: 3, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5 },
-        { damage: 40, range: 60, attack_speed: 4, sell_time: 2 }
+        { damage: 30, range: 50, attack_speed: 2, upgrade_cost: 40, upgrade_time: 1, sell_time: 1, initial_cost: 50 },
+        { damage: 50, range: 55, attack_speed: 3, upgrade_cost: 40, upgrade_time: 2, sell_time: 1.5 },
+        { damage: 70, range: 60, attack_speed: 4, sell_time: 2 }
     ];
 
 

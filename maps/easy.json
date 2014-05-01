@@ -10,27 +10,18 @@
                 "orientation": "horizontal"
             }
         ],
-    "obstacles": [
-            {
-                "startColumn": 5,
-                "startLine": 15,
-                "columnLength": 3,
-                "lineLength": 2,
-                "passable": false
-            }
-        ],
     "Unit": {
-            "wave_count_initial": 10,
-            "wave_count_increase_rate": 0.05,
+            "wave_count_initial": 12,
+            "wave_count_increase_rate": 0.06,
 
-            "health_initial": 30,
-            "health_increase_rate": 0.2,
+            "health_initial": 40,
+            "health_increase_rate": 0.5,
 
             "health_regeneration_initial": 2,
-            "health_regeneration_increase_rate": 0.01,
+            "health_regeneration_increase_rate": 0.02,
 
             "gold_initial": 2,
-            "gold_increase_rate": 0.1,
+            "gold_increase_rate": 0.06,
 
             "score_initial": 1,
             "score_increase_rate": 0.05,
@@ -38,89 +29,89 @@
             "spawnInterval": 1
         },
     "UnitFast": {
-            "wave_count_initial": 8,
-            "wave_count_increase_rate": 0.04,
+            "wave_count_initial": 9,
+            "wave_count_increase_rate": 0.06,
 
-            "health_initial": 40,
-            "health_increase_rate": 0.2,
+            "health_initial": 60,
+            "health_increase_rate": 0.5,
 
             "health_regeneration_initial": 2,
-            "health_regeneration_increase_rate": 0.01,
+            "health_regeneration_increase_rate": 0.02,
 
             "gold_initial": 3,
-            "gold_increase_rate": 0.05,
+            "gold_increase_rate": 0.06,
 
             "score_initial": 1,
-            "score_increase_rate": 0.5,
+            "score_increase_rate": 0.05,
 
             "spawnInterval": 1
         },
     "UnitFly": {
-            "wave_count_initial": 10,
-            "wave_count_increase_rate": 0.03,
+            "wave_count_initial": 8,
+            "wave_count_increase_rate": 0.06,
 
             "health_initial": 60,
-            "health_increase_rate": 0.2,
+            "health_increase_rate": 0.5,
 
             "health_regeneration_initial": 2,
-            "health_regeneration_increase_rate": 0.01,
+            "health_regeneration_increase_rate": 0.02,
 
-            "gold_initial": 3,
-            "gold_increase_rate": 0.05,
+            "gold_initial": 5,
+            "gold_increase_rate": 0.06,
 
             "score_initial": 2,
-            "score_increase_rate": 0.5,
+            "score_increase_rate": 0.05,
 
             "spawnInterval": 1
         },
     "UnitGroup": {
             "wave_count_initial": 15,
-            "wave_count_increase_rate": 0.04,
+            "wave_count_increase_rate": 0.06,
 
-            "health_initial": 30,
-            "health_increase_rate": 0.2,
+            "health_initial": 35,
+            "health_increase_rate": 0.5,
 
             "health_regeneration_initial": 2,
-            "health_regeneration_increase_rate": 0.01,
+            "health_regeneration_increase_rate": 0.02,
 
             "gold_initial": 2,
-            "gold_increase_rate": 0.05,
+            "gold_increase_rate": 0.06,
 
             "score_initial": 1,
-            "score_increase_rate": 0.5,
+            "score_increase_rate": 0.05,
 
             "spawnInterval": 1
         },
     "UnitImmune": {
             "wave_count_initial": 10,
-            "wave_count_increase_rate": 0.03,
+            "wave_count_increase_rate": 0.06,
 
             "health_initial": 50,
-            "health_increase_rate": 0.2,
+            "health_increase_rate": 0.5,
 
             "health_regeneration_initial": 3,
-            "health_regeneration_increase_rate": 0.01,
+            "health_regeneration_increase_rate": 0.02,
 
             "gold_initial": 3,
-            "gold_increase_rate": 0.05,
+            "gold_increase_rate": 0.06,
 
             "score_initial": 2,
-            "score_increase_rate": 0.5,
+            "score_increase_rate": 0.08,
 
             "spawnInterval": 1
         },
     "UnitSpawn": {
             "wave_count_initial": 7,
-            "wave_count_increase_rate": 0.02,
+            "wave_count_increase_rate": 0.06,
 
             "health_initial": 80,
-            "health_increase_rate": 0.2,
+            "health_increase_rate": 0.5,
 
             "health_regeneration_initial": 2,
-            "health_regeneration_increase_rate": 0.01,
+            "health_regeneration_increase_rate": 0.02,
 
             "gold_initial": 5,
-            "gold_increase_rate": 0.05,
+            "gold_increase_rate": 0.06,
 
             "score_initial": 5,
             "score_increase_rate": 0.5,

@@ -15,9 +15,9 @@ INHERIT_PROTOTYPE( TowerRocket, Tower );
 
 
 TowerRocket.stats = [
-        { damage: 20, range: 50, attack_speed: 1, attack_radius: 20, upgrade_cost: 10, upgrade_time: 1, sell_time: 1, initial_cost: 30 },
-        { damage: 40, range: 55, attack_speed: 2, attack_radius: 22, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5 },
-        { damage: 60, range: 60, attack_speed: 3, attack_radius: 25, sell_time: 2 }
+        { damage: 20, range: 60, attack_speed: 1, attack_radius: 20, upgrade_cost: 25, upgrade_time: 1, sell_time: 1, initial_cost: 30 },
+        { damage: 40, range: 70, attack_speed: 1.5, attack_radius: 22, upgrade_cost: 25, upgrade_time: 2, sell_time: 1.5 },
+        { damage: 60, range: 80, attack_speed: 2, attack_radius: 25, sell_time: 2 }
     ];
 
 

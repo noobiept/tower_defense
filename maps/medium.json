@@ -1,19 +1,33 @@
 {
-    "numberOfColumns": 100,
-    "numberOfLines": 40,
-    "waveInterval": 8,
+    "numberOfColumns": 50,
+    "numberOfLines": 50,
+    "waveInterval": 25,
+    "creepLanes": [
+            {
+                "start": { "column": 0, "line": 25 },
+                "end": { "column": 49, "line": 25 },
+                "length": 6,
+                "orientation": "horizontal"
+            },
+            {
+                "start": { "column": 25, "line": 0 },
+                "end": { "column": 25, "line": 49 },
+                "length": 6,
+                "orientation": "vertical"
+            }
+        ],
     "Unit": {
-            "wave_count_initial": 10,
-            "wave_count_increase_rate": 0.2,
+            "wave_count_initial": 12,
+            "wave_count_increase_rate": 0.06,
 
             "health_initial": 40,
             "health_increase_rate": 0.5,
 
             "health_regeneration_initial": 2,
-            "health_regeneration_increase_rate": 0.1,
+            "health_regeneration_increase_rate": 0.02,
 
             "gold_initial": 2,
-            "gold_increase_rate": 0.01,
+            "gold_increase_rate": 0.06,
 
             "score_initial": 1,
             "score_increase_rate": 0.05,
@@ -21,17 +35,17 @@
             "spawnInterval": 1
         },
     "UnitFast": {
-            "wave_count_initial": 10,
-            "wave_count_increase_rate": 0.2,
+            "wave_count_initial": 9,
+            "wave_count_increase_rate": 0.06,
 
-            "health_initial": 40,
+            "health_initial": 60,
             "health_increase_rate": 0.5,
 
             "health_regeneration_initial": 2,
-            "health_regeneration_increase_rate": 0.1,
+            "health_regeneration_increase_rate": 0.02,
 
-            "gold_initial": 2,
-            "gold_increase_rate": 0.01,
+            "gold_initial": 3,
+            "gold_increase_rate": 0.06,
 
             "score_initial": 1,
             "score_increase_rate": 0.05,
@@ -39,35 +53,35 @@
             "spawnInterval": 1
         },
     "UnitFly": {
-            "wave_count_initial": 10,
-            "wave_count_increase_rate": 0.2,
+            "wave_count_initial": 8,
+            "wave_count_increase_rate": 0.06,
 
-            "health_initial": 40,
+            "health_initial": 60,
             "health_increase_rate": 0.5,
 
             "health_regeneration_initial": 2,
-            "health_regeneration_increase_rate": 0.1,
+            "health_regeneration_increase_rate": 0.02,
 
-            "gold_initial": 2,
-            "gold_increase_rate": 0.01,
+            "gold_initial": 5,
+            "gold_increase_rate": 0.06,
 
-            "score_initial": 1,
+            "score_initial": 2,
             "score_increase_rate": 0.05,
 
             "spawnInterval": 1
         },
     "UnitGroup": {
-            "wave_count_initial": 10,
-            "wave_count_increase_rate": 0.2,
+            "wave_count_initial": 15,
+            "wave_count_increase_rate": 0.06,
 
-            "health_initial": 40,
+            "health_initial": 35,
             "health_increase_rate": 0.5,
 
             "health_regeneration_initial": 2,
-            "health_regeneration_increase_rate": 0.1,
+            "health_regeneration_increase_rate": 0.02,
 
             "gold_initial": 2,
-            "gold_increase_rate": 0.01,
+            "gold_increase_rate": 0.06,
 
             "score_initial": 1,
             "score_increase_rate": 0.05,
@@ -76,49 +90,50 @@
         },
     "UnitImmune": {
             "wave_count_initial": 10,
-            "wave_count_increase_rate": 0.2,
+            "wave_count_increase_rate": 0.06,
 
-            "health_initial": 40,
+            "health_initial": 50,
             "health_increase_rate": 0.5,
 
-            "health_regeneration_initial": 2,
-            "health_regeneration_increase_rate": 0.1,
+            "health_regeneration_initial": 3,
+            "health_regeneration_increase_rate": 0.02,
 
-            "gold_initial": 2,
-            "gold_increase_rate": 0.01,
+            "gold_initial": 3,
+            "gold_increase_rate": 0.06,
 
-            "score_initial": 1,
-            "score_increase_rate": 0.05,
+            "score_initial": 2,
+            "score_increase_rate": 0.08,
 
             "spawnInterval": 1
         },
     "UnitSpawn": {
-            "wave_count_initial": 10,
-            "wave_count_increase_rate": 0.2,
+            "wave_count_initial": 7,
+            "wave_count_increase_rate": 0.06,
 
-            "health_initial": 40,
+            "health_initial": 80,
             "health_increase_rate": 0.5,
 
             "health_regeneration_initial": 2,
-            "health_regeneration_increase_rate": 0.1,
+            "health_regeneration_increase_rate": 0.02,
 
-            "gold_initial": 2,
-            "gold_increase_rate": 0.01,
+            "gold_initial": 5,
+            "gold_increase_rate": 0.06,
 
-            "score_initial": 1,
-            "score_increase_rate": 0.05,
+            "score_initial": 5,
+            "score_increase_rate": 0.5,
 
             "spawnInterval": 1
         },
-    "creepLanes": [
-            {
-                "start": { "column": 0, "line": 20 },
-                "end": { "column": 99, "line": 20 },
-                "length": 6,
-                "orientation": "horizontal"
-            }
-        ],
     "waves": [
-        "Unit", "Unit", "Unit", "Unit", "Unit"
+        "Unit", "Unit",
+
+        "Unit", "UnitFast", "UnitSpawn", "UnitGroup", "UnitImmune", "UnitFly",
+        "Unit", "UnitFast", "UnitSpawn", "UnitGroup", "UnitImmune", "UnitFly",
+        "Unit", "UnitFast", "UnitSpawn", "UnitGroup", "UnitImmune", "UnitFly",
+        "Unit", "UnitFast", "UnitSpawn", "UnitGroup", "UnitImmune", "UnitFly",
+        "Unit", "UnitFast", "UnitSpawn", "UnitGroup", "UnitImmune", "UnitFly",
+        "Unit", "UnitFast", "UnitSpawn", "UnitGroup", "UnitImmune", "UnitFly",
+        "Unit", "UnitFast", "UnitSpawn", "UnitGroup", "UnitImmune", "UnitFly",
+        "Unit", "UnitFast", "UnitSpawn", "UnitGroup", "UnitImmune", "UnitFly"
     ]
 }
