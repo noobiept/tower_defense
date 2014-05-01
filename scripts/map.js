@@ -341,31 +341,8 @@ return SQUARE_SIZE;
 
 Map.calculatePosition = function( targetX, targetY )
 {
-var line = 0;
-var column = 0;
-
-targetX -= STARTING_X;
-targetY -= STARTING_Y;
-
-for (var x = SQUARE_SIZE ; x < MAP_WIDTH ; x += SQUARE_SIZE)
-    {
-    if ( x >= targetX )
-        {
-        break;
-        }
-
-    column++;
-    }
-
-for (var y = SQUARE_SIZE ; y < MAP_HEIGHT ; y += SQUARE_SIZE)
-    {
-    if ( y >= targetY )
-        {
-        break;
-        }
-
-    line++;
-    }
+var column = parseInt( (targetX - STARTING_X) / SQUARE_SIZE );
+var line = parseInt( (targetY - STARTING_Y) / SQUARE_SIZE );
 
 return [ column, line ];
 };
@@ -608,26 +585,6 @@ for (var a = 0 ; a < array.length ; a++)
     if ( circlePointCollision( x, y, rangeRadius, unit.getX(), unit.getY() ) )
         {
         return unit;
-        }
-    }
-
-return null;
-};
-
-
-Map.getTowerInRange = function( unit )
-{
-var x = unit.getX();
-var y = unit.getY();
-var rangeRadius = unit.range;
-
-for (var a = 0 ; a < Tower.ALL.length ; a++)
-    {
-    var tower = Tower.ALL[ a ];
-
-    if ( circlePointCollision( x, y, rangeRadius, tower.getX(), tower.getY() ) )
-        {
-        return tower;
         }
     }
 

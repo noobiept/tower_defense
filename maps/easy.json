@@ -20,8 +20,8 @@
             "health_regeneration_initial": 2,
             "health_regeneration_increase_rate": 0.02,
 
-            "gold_initial": 2,
-            "gold_increase_rate": 0.06,
+            "gold_initial": 3,
+            "gold_increase_rate": 0.08,
 
             "score_initial": 1,
             "score_increase_rate": 0.05,
@@ -38,8 +38,8 @@
             "health_regeneration_initial": 2,
             "health_regeneration_increase_rate": 0.02,
 
-            "gold_initial": 3,
-            "gold_increase_rate": 0.06,
+            "gold_initial": 4,
+            "gold_increase_rate": 0.08,
 
             "score_initial": 1,
             "score_increase_rate": 0.05,
@@ -56,8 +56,8 @@
             "health_regeneration_initial": 2,
             "health_regeneration_increase_rate": 0.02,
 
-            "gold_initial": 5,
-            "gold_increase_rate": 0.06,
+            "gold_initial": 6,
+            "gold_increase_rate": 0.08,
 
             "score_initial": 2,
             "score_increase_rate": 0.05,
@@ -74,8 +74,8 @@
             "health_regeneration_initial": 2,
             "health_regeneration_increase_rate": 0.02,
 
-            "gold_initial": 2,
-            "gold_increase_rate": 0.06,
+            "gold_initial": 3,
+            "gold_increase_rate": 0.08,
 
             "score_initial": 1,
             "score_increase_rate": 0.05,
@@ -92,8 +92,8 @@
             "health_regeneration_initial": 3,
             "health_regeneration_increase_rate": 0.02,
 
-            "gold_initial": 3,
-            "gold_increase_rate": 0.06,
+            "gold_initial": 5,
+            "gold_increase_rate": 0.08,
 
             "score_initial": 2,
             "score_increase_rate": 0.08,
@@ -110,8 +110,8 @@
             "health_regeneration_initial": 2,
             "health_regeneration_increase_rate": 0.02,
 
-            "gold_initial": 5,
-            "gold_increase_rate": 0.06,
+            "gold_initial": 7,
+            "gold_increase_rate": 0.08,
 
             "score_initial": 5,
             "score_increase_rate": 0.5,
