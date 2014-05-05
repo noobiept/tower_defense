@@ -25,6 +25,7 @@ var GRID_HIGHLIGHT = {
         column: 0,
         line: 0
     };
+var WALL_LENGTH = 2;
 
 
 Map.init = function( numberOfColumns, numberOfLines, creepLanes, obstacles )
@@ -92,26 +93,26 @@ STARTING_Y = canvasHeight / 2 - numberOfLines * SQUARE_SIZE / 2;
 Map.addObstacle({
         startColumn: 0,
         startLine: 0,
-        columnLength: 1,
+        columnLength: WALL_LENGTH,
         lineLength: numberOfLines
     });     // left
 Map.addObstacle({
-        startColumn: numberOfColumns - 1,
+        startColumn: numberOfColumns - WALL_LENGTH,
         startLine: 0,
-        columnLength: 1,
+        columnLength: WALL_LENGTH,
         lineLength: numberOfLines
     });     // right
 Map.addObstacle({
-        startColumn: 0,
+        startColumn: WALL_LENGTH,
         startLine: 0,
-        columnLength: numberOfColumns,
-        lineLength: 1
+        columnLength: numberOfColumns - 2 * WALL_LENGTH,
+        lineLength: WALL_LENGTH
     });     // top
 Map.addObstacle({
-        startColumn: 0,
-        startLine: numberOfLines - 1,
-        columnLength: numberOfColumns,
-        lineLength: 1
+        startColumn: WALL_LENGTH,
+        startLine: numberOfLines - WALL_LENGTH,
+        columnLength: numberOfColumns  - 2 * WALL_LENGTH,
+        lineLength: WALL_LENGTH
     });     // bottom
 
     // add the part of the wall where the creeps start/end (new wall with different color)
@@ -131,7 +132,7 @@ for (var a = 0 ; a < creepLanes.length ; a++)
         endColumn = lane.end.column;
         endLine = startLine;
 
-        columnLength = 1;
+        columnLength = 2;
         lineLength = lane.length;
         }
 
@@ -144,7 +145,7 @@ for (var a = 0 ; a < creepLanes.length ; a++)
         endLine = lane.end.line;
 
         columnLength = lane.length;
-        lineLength = 1;
+        lineLength = 2;
         }
 
 
@@ -266,12 +267,12 @@ if ( typeof args.fillColor === 'undefined' )
     {
     if ( args.passable === true )
         {
-        args.fillColor = 'rgb(0,200,0)';
+        args.fillColor = 'rgb(250,250,250)';    // same as body's background
         }
 
     else
         {
-        args.fillColor = 'black';
+        args.fillColor = 'rgba(0,0,0,0.2)';
         }
     }
 
@@ -350,6 +351,7 @@ return [ column, line ];
 
 Map.mouseMoveEvents = function( event )
 {
+var towerLength = 2;
 var position = Map.calculatePosition( event.stageX, event.stageY );
 
 var column = position[ 0 ];
@@ -357,24 +359,24 @@ var line = position[ 1 ];
 
     // highlight is same size as a tower (2x2), so can't let it go to last position
     // also don't let it go to the walls or the creep start/end
-if ( column < 1 )
+if ( column < WALL_LENGTH )
     {
-    column = 1;
+    column = WALL_LENGTH;
     }
 
-else if ( column + 2 >= NUMBER_OF_COLUMNS )
+else if ( column + WALL_LENGTH + towerLength > NUMBER_OF_COLUMNS )
     {
-    column = NUMBER_OF_COLUMNS - 3;
+    column = NUMBER_OF_COLUMNS - WALL_LENGTH - towerLength;
     }
 
-if ( line < 1 )
+if ( line < WALL_LENGTH )
     {
-    line = 1;
+    line = WALL_LENGTH;
     }
 
-else if ( line + 2 >= NUMBER_OF_LINES )
+else if ( line + WALL_LENGTH + towerLength > NUMBER_OF_LINES )
     {
-    line = NUMBER_OF_LINES - 3;
+    line = NUMBER_OF_LINES - WALL_LENGTH - towerLength;
     }
 
 GRID_HIGHLIGHT.column = column;
@@ -590,6 +592,7 @@ for (var a = 0 ; a < array.length ; a++)
 
 return null;
 };
+
 
 
 window.Map = Map;

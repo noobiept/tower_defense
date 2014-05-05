@@ -44,6 +44,14 @@ this.shape = shape;
 Bullet.prototype.tick = function( deltaTime )
 {
 var target = this.target;
+
+    // target already died
+if ( target.removed )
+    {
+    this.remove();
+    return;
+    }
+
 var targetX = target.getX();
 var targetY = target.getY();
 var targetRadius = target.width / 2;

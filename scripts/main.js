@@ -8,6 +8,7 @@
             - easeljs : 0.7
             - preloadjs: 0.4
         - AStar: 0.2.0 ( https://github.com/bgrins/javascript-astar )
+        - underscore : 1.6
 
     to doo:
 

@@ -5,13 +5,13 @@
     "creepLanes": [
             {
                 "start": { "column": 0, "line": 25 },
-                "end": { "column": 49, "line": 25 },
+                "end": { "column": 48, "line": 25 },
                 "length": 6,
                 "orientation": "horizontal"
             },
             {
                 "start": { "column": 25, "line": 0 },
-                "end": { "column": 25, "line": 49 },
+                "end": { "column": 25, "line": 48 },
                 "length": 6,
                 "orientation": "vertical"
             }
