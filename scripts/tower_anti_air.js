@@ -24,62 +24,55 @@ TowerAntiAir.stats = [
 
 
 
-TowerAntiAir.prototype.tick_attack = function()
+TowerAntiAir.prototype.tick_attack = function( deltaTime )
 {
-if ( this.damage > 0 )
+this.attack_count -= deltaTime;
+
+    // see if we can attack right now
+if ( this.attack_count <= 0 )
     {
-        // see if we can attack right now
-    if ( this.attack_count <= 0 )
+    this.getTargets();
+
+    var targets = this.targets;
+
+        // check if its currently attacking a unit
+    if ( this.targets.length > 0 )
         {
-        this.getTargets();
+        this.rotateTower( targets[ 0 ] );
+        var x = this.getX();
+        var y = this.getY();
+        var radius = this.range;
 
-        var targets = this.targets;
-
-            // check if its currently attacking a unit
-        if ( this.targets.length > 0 )
+        for (var a = 0 ; a < this.targets.length ; a++)
             {
-            this.rotateTower( targets[ 0 ] );
-            var x = this.getX();
-            var y = this.getY();
-            var radius = this.range;
+            var target = this.targets[ a ];
 
-            for (var a = 0 ; a < this.targets.length ; a++)
+            if ( target.removed )
                 {
-                var target = this.targets[ a ];
+                this.targets.splice( a, 1 );
+                a--;
+                }
 
-                if ( target.removed )
+            else
+                {
+                    // check if the unit is within the tower's range
+                if ( circleCircleCollision( x, y, radius, target.getX(), target.getY(), target.width / 2 ) )
+                    {
+                    this.attack_count = this.attack_interval;
+                    new Bullet({
+                            shooter: this,
+                            target: target
+                        });
+                    }
+
+                    // can't attack anymore, find other target
+                else
                     {
                     this.targets.splice( a, 1 );
                     a--;
                     }
-
-                else
-                    {
-                        // check if the unit is within the tower's range
-                    if ( circleCircleCollision( x, y, radius, target.getX(), target.getY(), target.width / 2 ) )
-                        {
-                        this.attack_count = this.attack_limit;
-                        new Bullet({
-                                shooter: this,
-                                target: target
-                            });
-                        }
-
-                        // can't attack anymore, find other target
-                    else
-                        {
-                        this.targets.splice( a, 1 );
-                        a--;
-                        }
-                    }
                 }
             }
-        }
-
-        // we need to wait a bit
-    else
-        {
-        this.attack_count--;
         }
     }
 };

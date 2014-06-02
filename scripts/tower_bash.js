@@ -16,8 +16,8 @@ this.attack_animation_length = 40;  // the image is 40x40 px
 Tower.call( this, args );
 
     // have the attack animation depend on the attack speed
-this.attack_animation_limit = parseInt( this.attack_limit / 4, 10 );
-this.attack_animation_alpha_step = 1 / this.attack_animation_limit;
+this.attack_animation_interval = parseInt( this.attack_interval / 4, 10 );
+this.attack_animation_alpha_step = 1 / this.attack_animation_interval;
 }
 
 INHERIT_PROTOTYPE( TowerBash, Tower );
@@ -68,7 +68,7 @@ TowerBash.prototype.upgrade = function()
 Tower.prototype.upgrade.call( this );
 
     // the attack speed may have changed in the upgrade, so need to update this as well
-this.attack_animation_limit = parseInt( this.attack_limit / 4, 10 );
+this.attack_animation_interval = parseInt( this.attack_limit / 4, 10 );
 
 var scale = (this.width + this.range) / this.attack_animation_length; // scale the image according to the tower's range
 
@@ -77,59 +77,53 @@ this.attack_animation.scaleY = scale;
 };
 
 
-TowerBash.prototype.tick_attack = function()
+TowerBash.prototype.tick_attack = function( deltaTime )
 {
-if ( this.damage > 0 )
+this.attack_count -= deltaTime;
+
+
+if ( this.attack_count <= this.attack_animation_interval )
     {
-    if ( this.attack_count <= this.attack_animation_limit )
-        {
-        this.attack_animation.visible = false;
-        }
+    this.attack_animation.visible = false;
+    }
 
-    else
-        {
-        this.attack_animation.alpha -= this.attack_animation_alpha_step;
-        }
+else
+    {
+    this.attack_animation.alpha -= this.attack_animation_alpha_step;
+    }
 
-        // see if we can attack right now
-    if ( this.attack_count <= 0 )
-        {
-        var target = this.targetUnit;
+    // see if we can attack right now
+if ( this.attack_count <= 0 )
+    {
+    var target = this.targetUnit;
 
-            // check if its currently attacking a unit
-        if ( target )
+        // check if its currently attacking a unit
+    if ( target && !target.removed )
+        {
+        this.rotateTower( target );
+
+
+            // check if the unit is within the tower's range
+        if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
             {
-            this.rotateTower( target );
+            this.attack_count = this.attack_interval;
+            this.attack_animation.visible = true;
+            this.attack_animation.alpha = 1;
 
-
-                // check if the unit is within the tower's range
-            if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
-                {
-                this.attack_count = this.attack_limit;
-                this.attack_animation.visible = true;
-                this.attack_animation.alpha = 1;
-
-                this.attack();
-                }
-
-                // can't attack anymore, find other target
-            else
-                {
-                this.targetUnit = null;
-                }
+            this.attack();
             }
 
-            // find a target
+            // can't attack anymore, find other target
         else
             {
-            this.targetUnit = Map.getUnitInRange( this );
+            this.targetUnit = null;
             }
         }
 
-        // we need to wait a bit
+        // find a target
     else
         {
-        this.attack_count--;
+        this.targetUnit = Map.getUnitInRange( this );
         }
     }
 };

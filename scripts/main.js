@@ -101,10 +101,11 @@ var G = {
     CANVAS: null,
     STAGE: null,
     PRELOAD: null,
-    BASE_URL: '',
     FPS: 20,
     GAME_MENU_HEIGHT: 100
 };
+
+var BASE_URL = '';
 
 
 window.onload = function()
@@ -126,40 +127,53 @@ window.oncontextmenu = function( event ) { return false; };
 G.PRELOAD = new createjs.LoadQueue();
 
 var manifest = [
-        { id: 'easy', src: G.BASE_URL + 'maps/easy.json' },
-        { id: 'medium', src: G.BASE_URL + 'maps/medium.json' },
-        { id: 'hard', src: G.BASE_URL + 'maps/hard.json' },
-        { id: 'creep', src: G.BASE_URL + 'images/creep.png' },
-        { id: 'creep_slow', src: G.BASE_URL + 'images/creep_slow.png' },
-        { id: 'creep_group', src: G.BASE_URL + 'images/creep_group.png' },
-        { id: 'creep_fast', src: G.BASE_URL + 'images/creep_fast.png' },
-        { id: 'creep_fast_slow', src: G.BASE_URL + 'images/creep_fast_slow.png' },
-        { id: 'creep_fly', src: G.BASE_URL + 'images/creep_fly.png' },
-        { id: 'creep_fly_slow', src: G.BASE_URL + 'images/creep_fly_slow.png' },
-        { id: 'creep_spawn', src: G.BASE_URL + 'images/creep_spawn.png' },
-        { id: 'creep_spawn_slow', src: G.BASE_URL + 'images/creep_spawn_slow.png' },
-        { id: 'creep_spawned', src: G.BASE_URL + 'images/creep_spawned.png' },
-        { id: 'creep_spawned_slow', src: G.BASE_URL + 'images/creep_spawned_slow.png' },
-        { id: 'creep_immune', src: G.BASE_URL + 'images/creep_immune.png' },
-        { id: 'tower_base0', src: G.BASE_URL + 'images/tower_base0.png' },
-        { id: 'tower_base1', src: G.BASE_URL + 'images/tower_base1.png' },
-        { id: 'tower_base2', src: G.BASE_URL + 'images/tower_base2.png' },
-        { id: 'tower_basic', src: G.BASE_URL + 'images/tower_basic.png' },
-        { id: 'tower_fast', src: G.BASE_URL + 'images/tower_fast.png' },
-        { id: 'tower_rocket', src: G.BASE_URL + 'images/tower_rocket.png' },
-        { id: 'tower_frost', src: G.BASE_URL + 'images/tower_frost.png' },
-        { id: 'tower_anti_air', src: G.BASE_URL + 'images/tower_anti_air.png' },
-        { id: 'tower_bash', src: G.BASE_URL + 'images/tower_bash.png' },
-        { id: 'tower_bash_attack', src: G.BASE_URL + 'images/tower_bash_attack.png' },
-        { id: 'bullet', src: G.BASE_URL + 'images/bullet.png' },
-        { id: 'highlight', src: G.BASE_URL + 'images/highlight.png' },
-        { id: 'highlight_not_available', src: G.BASE_URL + 'images/highlight_not_available.png' }
+        { id: 'easy', src: BASE_URL + 'maps/easy.json' },
+        { id: 'medium', src: BASE_URL + 'maps/medium.json' },
+        { id: 'hard', src: BASE_URL + 'maps/hard.json' },
+        { id: 'creep', src: BASE_URL + 'images/creep.png' },
+        { id: 'creep_slow', src: BASE_URL + 'images/creep_slow.png' },
+        { id: 'creep_group', src: BASE_URL + 'images/creep_group.png' },
+        { id: 'creep_fast', src: BASE_URL + 'images/creep_fast.png' },
+        { id: 'creep_fast_slow', src: BASE_URL + 'images/creep_fast_slow.png' },
+        { id: 'creep_fly', src: BASE_URL + 'images/creep_fly.png' },
+        { id: 'creep_fly_slow', src: BASE_URL + 'images/creep_fly_slow.png' },
+        { id: 'creep_spawn', src: BASE_URL + 'images/creep_spawn.png' },
+        { id: 'creep_spawn_slow', src: BASE_URL + 'images/creep_spawn_slow.png' },
+        { id: 'creep_spawned', src: BASE_URL + 'images/creep_spawned.png' },
+        { id: 'creep_spawned_slow', src: BASE_URL + 'images/creep_spawned_slow.png' },
+        { id: 'creep_immune', src: BASE_URL + 'images/creep_immune.png' },
+        { id: 'tower_base0', src: BASE_URL + 'images/tower_base0.png' },
+        { id: 'tower_base1', src: BASE_URL + 'images/tower_base1.png' },
+        { id: 'tower_base2', src: BASE_URL + 'images/tower_base2.png' },
+        { id: 'tower_basic', src: BASE_URL + 'images/tower_basic.png' },
+        { id: 'tower_fast', src: BASE_URL + 'images/tower_fast.png' },
+        { id: 'tower_rocket', src: BASE_URL + 'images/tower_rocket.png' },
+        { id: 'tower_frost', src: BASE_URL + 'images/tower_frost.png' },
+        { id: 'tower_anti_air', src: BASE_URL + 'images/tower_anti_air.png' },
+        { id: 'tower_bash', src: BASE_URL + 'images/tower_bash.png' },
+        { id: 'tower_bash_attack', src: BASE_URL + 'images/tower_bash_attack.png' },
+        { id: 'bullet', src: BASE_URL + 'images/bullet.png' },
+        { id: 'highlight', src: BASE_URL + 'images/highlight.png' },
+        { id: 'highlight_not_available', src: BASE_URL + 'images/highlight_not_available.png' }
     ];
+
+var loadMessage = document.querySelector( '#LoadMessage' );
+
+var left = $( window ).width() / 2;
+var top = $( window ).height() / 2;
+
+$( loadMessage ).css( 'top', top + 'px' );
+$( loadMessage ).css( 'left', left + 'px' );
 
 G.PRELOAD.addEventListener( 'progress', function( event )
     {
-        // "Loading " + ( event.progress*100 | 0 ) + "%"
+    $( loadMessage ).text( (event.progress * 100 | 0) + '%' );
     });
-G.PRELOAD.addEventListener( 'complete', MainMenu.open );
+G.PRELOAD.addEventListener( 'complete', function()
+    {
+    $( loadMessage ).css( 'display', 'none' );
+
+    MainMenu.open();
+    });
 G.PRELOAD.loadManifest( manifest, true );
 };

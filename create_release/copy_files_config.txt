@@ -1,0 +1,12 @@
+{
+    "resultingFolder": "tower_defense",
+    "basePath": "..",
+    "files":
+        [
+            "css/",
+            "images/",
+            "libraries/",
+            "maps/",
+            "manifest.json"
+        ]
+}
