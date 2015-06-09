@@ -6,6 +6,7 @@ function Map()
 }
 
 var OBSTACLES = [];
+var CREEP_LANES;
 
 var MAP_WIDTH = 0;
 var MAP_HEIGHT = 0;
@@ -15,7 +16,6 @@ var NUMBER_OF_LINES = 0;
 var STARTING_X = 0;
 var STARTING_Y = 0;
 
-var GRAPH = null;       // for the AStar path finding
 var SQUARE_SIZE = 10;   // in pixels
 
 var GRID_HIGHLIGHT = {
@@ -27,30 +27,40 @@ var GRID_HIGHLIGHT = {
     };
 var WALL_LENGTH = 2;
 
+    // result from the path finding algorithm, with the valid paths to the destination
+var PATH = [];
+var MAP;
+var POSITION_TYPE = {
+    passable: 1,
+    blocked: 0
+};
 
-Map.init = function( numberOfColumns, numberOfLines, creepLanes, obstacles )
+
+
+Map.init = function( mapInfo )
 {
-var squareSize = Map.getSquareSize();
-var width = numberOfColumns * squareSize;
-var height = numberOfLines * squareSize;
+var columns = mapInfo.numberOfColumns;
+var lines = mapInfo.numberOfLines;
+
+var width = columns * SQUARE_SIZE;
+var height = lines * SQUARE_SIZE;
 
     // 2 dimensional array, with all the positions of the map
     // 0 -> wall (impassable square)
     // 1 -> passable square
     // main array represents the columns (map[ 0 ], first column, map[ 0 ][ 1 ], first column and second line)
-var map = [];
+MAP = [];
 
-for (var column = 0 ; column < numberOfColumns ; column++)
+for (var line = 0 ; line < lines ; line++)
     {
-    map[ column ] = [];
+    MAP[ line ] = [];
 
-    for (var line = 0 ; line < numberOfLines ; line++)
+    for (var column = 0 ; column < columns ; column++)
         {
-        map[ column ][ line ] = 1;
+        MAP[ line ][ column ] = 1;
         }
     }
 
-GRAPH = new Graph( map );
 
 
     // set the canvas width/height
@@ -86,36 +96,38 @@ G.CANVAS.width = canvasWidth;
 G.CANVAS.height = canvasHeight;
 
 
-STARTING_X = canvasWidth / 2 - numberOfColumns * SQUARE_SIZE / 2;
-STARTING_Y = canvasHeight / 2 - numberOfLines * SQUARE_SIZE / 2;
+STARTING_X = canvasWidth / 2 - columns * SQUARE_SIZE / 2;
+STARTING_Y = canvasHeight / 2 - lines * SQUARE_SIZE / 2;
 
     // add walls around the map
 Map.addObstacle({
         startColumn: 0,
         startLine: 0,
         columnLength: WALL_LENGTH,
-        lineLength: numberOfLines
+        lineLength: lines
     });     // left
 Map.addObstacle({
-        startColumn: numberOfColumns - WALL_LENGTH,
+        startColumn: columns - WALL_LENGTH,
         startLine: 0,
         columnLength: WALL_LENGTH,
-        lineLength: numberOfLines
+        lineLength: lines
     });     // right
 Map.addObstacle({
         startColumn: WALL_LENGTH,
         startLine: 0,
-        columnLength: numberOfColumns - 2 * WALL_LENGTH,
+        columnLength: columns - 2 * WALL_LENGTH,
         lineLength: WALL_LENGTH
     });     // top
 Map.addObstacle({
         startColumn: WALL_LENGTH,
-        startLine: numberOfLines - WALL_LENGTH,
-        columnLength: numberOfColumns  - 2 * WALL_LENGTH,
+        startLine: lines - WALL_LENGTH,
+        columnLength: columns  - 2 * WALL_LENGTH,
         lineLength: WALL_LENGTH
     });     // bottom
 
     // add the part of the wall where the creeps start/end (new wall with different color)
+var creepLanes = mapInfo.creepLanes;
+
 for (var a = 0 ; a < creepLanes.length ; a++)
     {
     var lane = creepLanes[ a ];
@@ -167,11 +179,13 @@ for (var a = 0 ; a < creepLanes.length ; a++)
 
 
     // other obstacles
+var obstacles = mapInfo.obstacles;
+
 if ( obstacles )
     {
     for (var a = 0 ; a < obstacles.length ; a++)
         {
-        var obstacle = obstacles[ a ]
+        var obstacle = obstacles[ a ];
 
         Map.addObstacle({
                 startColumn: obstacle.startColumn,
@@ -200,8 +214,25 @@ GRID_HIGHLIGHT.available = highlightAvailable;
 GRID_HIGHLIGHT.not_available = highlightNotAvailable;
 MAP_WIDTH = width;
 MAP_HEIGHT = height;
-NUMBER_OF_COLUMNS = numberOfColumns;
-NUMBER_OF_LINES = numberOfLines;
+NUMBER_OF_COLUMNS = columns;
+NUMBER_OF_LINES = lines;
+CREEP_LANES = creepLanes;
+
+
+    // determine the path
+PATH = PathFinding.breadthFirstSearch( MAP, mapInfo.creepLanes[ 0 ].end, POSITION_TYPE );
+};
+
+
+
+/**
+ * Find where to go next, from the current column/line position.
+ *
+ * Returns { column: number; line: number; }
+ */
+Map.findNextDestination = function( column, line )
+{
+return PATH[ line ][ column ];
 };
 
 
@@ -212,7 +243,7 @@ for (var column = startColumn ; column < startColumn + length ; column++)
     {
     for (var line = startLine ; line < startLine + length ; line++)
         {
-        GRAPH.nodes[ column ][ line ].type = 0;
+        Map.setImpassable( column, line );
         }
     }
 };
@@ -223,7 +254,7 @@ for (var column = startColumn ; column < startColumn + length ; column++)
     {
     for (var line = startLine ; line < startLine + length ; line++)
         {
-        GRAPH.nodes[ column ][ line ].type = 1;
+        Map.setPassable( column, line );
         }
     }
 };
@@ -235,12 +266,12 @@ for (var column = startColumn ; column < startColumn + length ; column++)
 
 Map.setImpassable = function( column, line )
 {
-GRAPH.nodes[ column ][ line ].type = 0;
+MAP[ line ][ column ] = POSITION_TYPE.blocked;
 };
 
 Map.setPassable = function( column, line )
 {
-GRAPH.nodes[ column ][ line ].type = 1;
+MAP[ line ][ column ] = POSITION_TYPE.passable;
 };
 
 
@@ -426,10 +457,10 @@ if ( column < 0 || column + 1 >= NUMBER_OF_COLUMNS ||
     }
 
     // check if there's already a tower in this position
-if ( !GRAPH.nodes[ column ][ line ].type ||
-     !GRAPH.nodes[ column + 1 ][ line ].type ||
-     !GRAPH.nodes[ column ][ line + 1 ].type ||
-     !GRAPH.nodes[ column + 1 ][ line + 1 ].type )
+if ( MAP[ line     ][ column     ] === POSITION_TYPE.blocked ||
+     MAP[ line + 1 ][ column     ] === POSITION_TYPE.blocked ||
+     MAP[ line     ][ column + 1 ] === POSITION_TYPE.blocked ||
+     MAP[ line + 1 ][ column + 1 ] === POSITION_TYPE.blocked )
     {
     return false;
     }
@@ -592,7 +623,6 @@ for (var a = 0 ; a < array.length ; a++)
 
 return null;
 };
-
 
 
 window.Map = Map;

@@ -66,8 +66,6 @@ this.regeneration_interval = 1 / this.health_regeneration;
 this.removed = false;   // so that we don't try to remove the unit multiple times (this may happen if several towers have the .targetUnit pointing at the same unit)
 
 this.path = [];
-this.destination_column = args.destination_column;
-this.destination_line = args.destination_line;
 this.move_x = 0;
 this.move_y = 0;
 this.movement_angle = 0;
@@ -96,7 +94,8 @@ else
     Unit.ALL_AIR.push( this );
     }
 
-this.setMoveDestination( this.destination_column, this.destination_line );
+
+this.checkNextDestination();
 }
 
 Unit.ALL = [];
@@ -161,6 +160,28 @@ this.shape = shape;
 };
 
 
+/**
+ * See where to go next.
+ */
+Unit.prototype.checkNextDestination = function()
+{
+var nextDest = Map.findNextDestination( this.column, this.line );
+
+
+    // we reached the destination
+if ( nextDest.column === this.column &&
+     nextDest.line   === this.line )
+    {
+    this.remove();
+    Game.updateLife( -1 );
+    }
+
+else
+    {
+    this.move( nextDest );
+    }
+};
+
 
 Unit.prototype.setMoveDestination = function( column, line )
 {
@@ -192,9 +213,10 @@ var unitX = this.getX();
 var unitY = this.getY();
 var squareSize = Map.getSquareSize();
 
-    // next.x is column, and next.y is line
-    // is only called x/y because of the AStar library
-var position = Map.getPosition( next.x, next.y );
+var position = Map.getPosition( next.column, next.line );
+
+this.destination_column = next.column;
+this.destination_line = next.line;
 
 var destX = position.x + squareSize / 2;
 var destY = position.y + squareSize / 2;
@@ -397,17 +419,9 @@ this.container.y += this.move_y * deltaTime;
 
 if ( pointBoxCollision( this.getX(), this.getY(), this.next_left, this.next_right, this.next_top, this.next_bottom ) )
     {
-    if ( this.path.length == 0 )
-        {
-        this.remove();
-        Game.updateLife( -1 );
-        return;
-        }
-
-    else
-        {
-        this.move( this.path.shift() );
-        }
+    this.column = this.destination_column;
+    this.line = this.destination_line;
+    this.checkNextDestination();
     }
 };
 

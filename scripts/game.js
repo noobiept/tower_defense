@@ -42,8 +42,6 @@ MAP_NAME = map;
 
 var mapInfo = G.PRELOAD.getResult( map );
 
-var columns = mapInfo.numberOfColumns;
-var lines = mapInfo.numberOfLines;
 var a;
 UNITS_STATS[ 'Unit' ] = mapInfo[ 'Unit' ];
 UNITS_STATS[ 'UnitFast' ] = mapInfo[ 'UnitFast' ];
@@ -105,7 +103,7 @@ WAVE_COUNT = WAVE_INTERVAL;    // start the first wave immediately
 NEXT_WAVE = 0;
 
     // init the game
-Map.init( columns, lines, CREEP_LANES, mapInfo.obstacles );
+Map.init( mapInfo );
 
 
 $( '#MainCanvas' ).css( 'display', 'block' );
