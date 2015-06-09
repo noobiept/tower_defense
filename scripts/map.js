@@ -220,7 +220,17 @@ CREEP_LANES = creepLanes;
 
 
     // determine the path
-PATH = PathFinding.breadthFirstSearch( MAP, mapInfo.creepLanes[ 0 ].end, POSITION_TYPE );
+Map.updatePath();
+};
+
+
+/**
+ * Update the path the units, for the current map/lanes.
+ */
+Map.updatePath = function()
+{
+PATH = PathFinding.breadthFirstSearch( MAP, CREEP_LANES[ 0 ].end, POSITION_TYPE );
+//HERE
 };
 
 
@@ -269,11 +279,11 @@ Map.setImpassable = function( column, line )
 MAP[ line ][ column ] = POSITION_TYPE.blocked;
 };
 
+
 Map.setPassable = function( column, line )
 {
 MAP[ line ][ column ] = POSITION_TYPE.passable;
 };
-
 
 
 /*
@@ -361,9 +371,8 @@ OBSTACLES.length = 0;
 
 G.STAGE.removeChild( GRID_HIGHLIGHT.available );
 G.STAGE.removeChild( GRID_HIGHLIGHT.not_available );
-
-GRAPH = null;
 };
+
 
 Map.getSquareSize = function()
 {
@@ -376,7 +385,10 @@ Map.calculatePosition = function( targetX, targetY )
 var column = parseInt( (targetX - STARTING_X) / SQUARE_SIZE );
 var line = parseInt( (targetY - STARTING_Y) / SQUARE_SIZE );
 
-return [ column, line ];
+return {
+        column: column,
+        line: line
+    };
 };
 
 
@@ -385,8 +397,8 @@ Map.mouseMoveEvents = function( event )
 var towerLength = 2;
 var position = Map.calculatePosition( event.stageX, event.stageY );
 
-var column = position[ 0 ];
-var line = position[ 1 ];
+var column = position.column;
+var line = position.line;
 
     // highlight is same size as a tower (2x2), so can't let it go to last position
     // also don't let it go to the walls or the creep start/end
@@ -659,9 +671,10 @@ if ( Map.isAvailable( column, line ) )
 /**
  * Remove a tower from the map, and update the pathing of the units.
  */
-Map.removeTower = function()
+Map.removeTower = function( tower )
 {
-    //HERE
+Map.setPassableBox( tower.column, tower.line, 2 );
+Map.updatePath();
 };
 
 

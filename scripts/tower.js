@@ -439,18 +439,22 @@ if ( this.removed )
 
 this.removed = true;
 
+    // remove the shape
 G.STAGE.removeChild( this.container );
 
-Map.setPassableBox( this.column, this.line, 2 );
-
+    // from from the ALL array
 var index = Tower.ALL.indexOf( this );
 
 Tower.ALL.splice( index, 1 );
 
+    // remove the selection of this tower
 if ( Game.checkIfSelected( this ) )
     {
     Game.clearSelection();
     }
+
+    // remove the tower from the map (and update the pathing)
+Map.removeTower( this );
 };
 
 
@@ -524,6 +528,7 @@ Tower.prototype.tick_normal = function( deltaTime )
 {
 this.tick_attack( deltaTime );
 };
+
 
 Tower.prototype.tick_upgrade = function( deltaTime )
 {

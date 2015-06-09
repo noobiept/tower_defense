@@ -57,8 +57,6 @@ return str;
 }
 
 
-
-
 function getRandomInt( min, max )
 {
 return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -69,8 +67,6 @@ function getRandomFloat( min, max )
 {
 return Math.random() * (max - min) + min;
 }
-
-
 
 
 function calculateAngle( aX, aY, bX, bY )
@@ -122,8 +118,6 @@ return true;
 }
 
 
-
-
 function circlePointCollision( circleX, circleY, circleRadius, pointX, pointY )
 {
 var distanceX = circleX - pointX;
@@ -141,7 +135,6 @@ return false;
 }
 
 
-
 function circleCircleCollision( x1, y1, radius1, x2, y2, radius2 )
 {
 var distX = x1 - x2;
@@ -154,7 +147,6 @@ if ( Math.pow( distX, 2 ) + Math.pow( distY, 2 ) <= Math.pow( radius1 + radius2,
 
 return false;
 }
-
 
 
 /*
@@ -180,7 +172,6 @@ var value = this.getItem( key );
 
 return value && JSON.parse( value );
 };
-
 
 
 /*

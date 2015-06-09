@@ -31,7 +31,7 @@ if ( was_killed && !this.already_spawned )
     this.already_spawned = true;
 
     var position = Map.calculatePosition( this.getX(), this.getY() );
-    var availablePositions = Map.getAvailablePositions( position[ 0 ], position[ 1 ], 1 );
+    var availablePositions = Map.getAvailablePositions( position.column, position.line, 2 );
     var spawnedPosition;
 
     var spawnedHealth = parseInt( this.max_health / 2, 10 );
