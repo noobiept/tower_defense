@@ -507,9 +507,9 @@ for (var column = leftColumn ; column < rightColumn ; column++)
     {
     for (var line = topLine ; line < bottomLine ; line++)
         {
-        var position = GRAPH.nodes[ column ][ line ];
+        var position = MAP[ line ][ column ];
 
-        if ( position.type === 1 )
+        if ( position.type === POSITION_TYPE.passable )
             {
             availablePositions.push( [ column, line ] );
             }
@@ -532,15 +532,6 @@ return {
     };
 };
 
-
-
-Map.getPath = function( startColumn, startLine, endColumn, endLine )
-{
-var start = GRAPH.nodes[ startColumn ][ startLine ];
-var end = GRAPH.nodes[ endColumn ][ endLine ];
-
-return astar.search( GRAPH.nodes, start, end );
-};
 
 /*
     Gets all units in an area (only ground / only air / both, depending on the tower)
@@ -623,6 +614,91 @@ for (var a = 0 ; a < array.length ; a++)
 
 return null;
 };
+
+
+/**
+ * Check if its possible to add a tower in this position (if it doesn't block the units path).
+ * If that is the case, then add the tower at the given position.
+ */
+Map.addTower = function( towerClass, column, line )
+{
+if ( Map.isAvailable( column, line ) )
+    {
+        // check if by filling this position, we're not blocking the units (they need to be always be able to reach the destination)
+    Map.setImpassableBox( column, line, 2 );
+
+
+        // check if there is a possible path (if its not going to block a lane)
+    for (var b = 0 ; b < CREEP_LANES.length ; b++)
+        {
+        var lane = CREEP_LANES[ b ];
+        var path = PathFinding.breadthFirstSearch( MAP, CREEP_LANES[ b ].end, POSITION_TYPE );
+
+            //HERE need to check each unit as well? or they might get trapped
+        var canReach = canReachDestination( path, lane.start.column, lane.start.line );
+
+        if ( canReach === false )
+            {
+            GameMenu.showMessage( "Can't block the unit's path." );
+
+                // reset the position
+            Map.setPassableBox( column, line, 2 );
+            return;
+            }
+        }
+
+        // its possible to add the tower
+        // update the path and add the tower
+    PATH = path;
+
+    new towerClass({
+            column: column,
+            line: line
+        });
+    }
+};
+
+
+/**
+ * Remove a tower from the map, and update the pathing of the units.
+ */
+Map.removeTower = function()
+{
+    //HERE
+};
+
+
+/**
+ * Check if its possible to reach the destination from a given column/line position.
+ */
+function canReachDestination( path, column, line )
+{
+var next;
+
+while( true )
+    {
+    next = path[ line ][ column ];
+
+    if ( next === null )
+        {
+        return false;
+        }
+
+        // reached the end
+    if ( next.column === column &&
+         next.line   === line )
+        {
+        return true;
+        }
+
+    else
+        {
+        column = next.column;
+        line = next.line;
+        }
+    }
+}
+
 
 
 window.Map = Map;

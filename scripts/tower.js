@@ -70,8 +70,6 @@ Game.updateGold( -this.cost );
 
     // tower occupies 2x2 squares
 Map.setImpassableBox( this.column, this.line, 2 );
-
-Unit.redoMoveDestination();
 }
 
 Tower.ALL = [];
@@ -453,8 +451,6 @@ if ( Game.checkIfSelected( this ) )
     {
     Game.clearSelection();
     }
-
-Unit.redoMoveDestination();
 };
 
 

@@ -183,30 +183,6 @@ else
 };
 
 
-Unit.prototype.setMoveDestination = function( column, line )
-{
-var startPosition = Map.calculatePosition( this.getX(), this.getY() );
-
-this.path = Map.getPath( startPosition[ 0 ], startPosition[ 1 ], column, line );
-
-    // happens when the unit is at the destination
-if ( this.path.length <= 0 )
-    {
-    return;
-    }
-
-
-    // the first element is the current position of the unit, so we remove it
-    // also since if the unit is already moving somewhere, and you give another command, the shape will sometimes move a bit back and then proceeds with the path (this is due to the shape being in a position between the squares)
-if ( this.path.length > 2 )
-    {
-    this.path.shift();
-    }
-
-this.move( this.path.shift() );
-};
-
-
 Unit.prototype.move = function( next )
 {
 var unitX = this.getX();
@@ -486,21 +462,6 @@ for (var a = 0 ; a < Unit.ALL.length ; a++)
     a--;
     }
 };
-
-/*
-    When we add/remove towers, we need to calculate the movement of the units again (since the map was changed)
- */
-
-Unit.redoMoveDestination = function()
-{
-for (var a = 0 ; a < Unit.ALL.length ; a++)
-    {
-    var unit = Unit.ALL[ a ];
-
-    unit.setMoveDestination( unit.destination_column, unit.destination_line );
-    }
-};
-
 
 
 window.Unit = Unit;

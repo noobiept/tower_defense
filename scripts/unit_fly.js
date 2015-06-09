@@ -16,16 +16,6 @@ Unit.call( this, args );
 INHERIT_PROTOTYPE( UnitFly, Unit );
 
 
-UnitFly.prototype.setMoveDestination = function( column, line )
-{
-this.move(
-    {
-        x: column,
-        y: line
-    });
-};
-
-
 window.UnitFly = UnitFly;
 
 }(window));

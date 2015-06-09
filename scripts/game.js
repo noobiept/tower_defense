@@ -286,6 +286,9 @@ if ( IS_PAUSED && !BEFORE_FIRST_WAVE )
 var button = event.button;
 var x = event.offsetX;
 var y = event.offsetY;
+var a;
+var tower;
+var point;
 
 if ( ELEMENT_SELECTED )
     {
@@ -296,10 +299,10 @@ if ( ELEMENT_SELECTED )
 if ( button == 0 )
     {
         // see if we're selecting a tower
-    for (var a = 0 ; a < Tower.ALL.length ; a++)
+    for (a = 0 ; a < Tower.ALL.length ; a++)
         {
-        var tower = Tower.ALL[ a ];
-        var point = tower.baseElement.globalToLocal( x, y );
+        tower = Tower.ALL[ a ];
+        point = tower.baseElement.globalToLocal( x, y );
 
         if ( tower.baseElement.hitTest( point.x, point.y ) )
             {
@@ -319,53 +322,19 @@ if ( button == 0 )
         return;
         }
 
-
     var highlight = Map.getHighlightSquare();
 
-    var column = highlight.column;
-    var line = highlight.line;
-
-    if ( Map.isAvailable( column, line ) )
-        {
-            // check if by filling this position, we're not blocking the units (they need to be always be able to reach the destination)
-        Map.setImpassableBox( column, line, 2 );
-
-            // check if there is a possible path (if its not going to block a lane)
-        for (var b = 0 ; b < CREEP_LANES.length ; b++)
-            {
-            var lane = CREEP_LANES[ b ];
-
-            var path = Map.getPath( lane.start.column, lane.start.line, lane.end.column, lane.end.line );
-
-            if ( path.length <= 0 )
-                {
-                GameMenu.showMessage( "Can't block the unit's path." );
-
-                    // reset the position
-                Map.setPassableBox( column, line, 2 );
-                return;
-                }
-            }
-
-            // reset the position
-        Map.setPassableBox( column, line, 2 );
-
-
-        new towerClass({
-                column: column,
-                line: line
-            });
-        }
+    Map.addTower( towerClass, highlight.column, highlight.line );
     }
 
     // right click
 else if ( button == 2 )
     {
         // see if we're selecting a tower
-    for (var a = 0 ; a < Tower.ALL.length ; a++)
+    for (a = 0 ; a < Tower.ALL.length ; a++)
         {
-        var tower = Tower.ALL[ a ];
-        var point = tower.baseElement.globalToLocal( x, y );
+        tower = Tower.ALL[ a ];
+        point = tower.baseElement.globalToLocal( x, y );
 
         if ( tower.baseElement.hitTest( point.x, point.y ) )
             {
@@ -547,7 +516,7 @@ if ( !NO_MORE_WAVES )
 
     var timeUntilNextWave = WAVE_INTERVAL - WAVE_COUNT;
 
-    GameMenu.updateTimeUntilNextWave( round( timeUntilNextWave, 2 ).toFixed( 2 ) );
+    GameMenu.updateTimeUntilNextWave( round( timeUntilNextWave, 2 ).toFixed( 1 ) );
     }
 
 
