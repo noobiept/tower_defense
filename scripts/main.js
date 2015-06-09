@@ -7,7 +7,6 @@
         - createjs
             - easeljs : 0.7
             - preloadjs: 0.4
-        - underscore : 1.6
 
     to doo:
 

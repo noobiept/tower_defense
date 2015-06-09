@@ -35,7 +35,7 @@ CURRENT_LIFE = document.querySelector( '.currentLife span' );
 CURRENT_SCORE = document.querySelector( '.currentScore span' );
 
 MESSAGE = document.querySelector( '#Message' );
-MESSAGE_TIMEOUT = new Timeout();
+MESSAGE_TIMEOUT = new Utilities.Timeout();
 
 var quit = document.querySelector( '#quit' );
 var timeNextWave = document.querySelector( '.timeUntilNextWave' );

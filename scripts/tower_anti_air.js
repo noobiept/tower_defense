@@ -13,7 +13,7 @@ this.stats = TowerAntiAir.stats;
 Tower.call( this, args );
 }
 
-INHERIT_PROTOTYPE( TowerAntiAir, Tower );
+Utilities.inheritPrototype( TowerAntiAir, Tower );
 
 
 TowerAntiAir.stats = [
@@ -56,7 +56,7 @@ if ( this.attack_count <= 0 )
             else
                 {
                     // check if the unit is within the tower's range
-                if ( circleCircleCollision( x, y, radius, target.getX(), target.getY(), target.width / 2 ) )
+                if ( Utilities.circleCircleCollision( x, y, radius, target.getX(), target.getY(), target.width / 2 ) )
                     {
                     this.attack_count = this.attack_interval;
                     new Bullet({
@@ -97,7 +97,7 @@ for (var a = 0 ; a < Unit.ALL_AIR.length ; a++)
     if ( this.targets.indexOf( unit ) < 0 )
         {
             // check if its in range
-        if ( circlePointCollision( x, y, radius, unit.getX(), unit.getY() ) )
+        if ( Utilities.circlePointCollision( x, y, radius, unit.getX(), unit.getY() ) )
             {
             this.targets.push( unit );
 

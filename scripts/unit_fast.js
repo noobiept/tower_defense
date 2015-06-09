@@ -12,7 +12,7 @@ this.movement_speed = 80;
 Unit.call( this, args );
 }
 
-INHERIT_PROTOTYPE( UnitFast, Unit );
+Utilities.inheritPrototype( UnitFast, Unit );
 
 
 window.UnitFast = UnitFast;

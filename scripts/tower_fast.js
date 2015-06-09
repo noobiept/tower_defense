@@ -12,7 +12,7 @@ this.stats = TowerFast.stats;
 Tower.call( this, args );
 }
 
-INHERIT_PROTOTYPE( TowerFast, Tower );
+Utilities.inheritPrototype( TowerFast, Tower );
 
 
 TowerFast.stats = [

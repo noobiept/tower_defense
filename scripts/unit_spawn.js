@@ -18,7 +18,7 @@ this.movement_speed = 50;
 Unit.call( this, args );
 }
 
-INHERIT_PROTOTYPE( UnitSpawn, Unit );
+Utilities.inheritPrototype( UnitSpawn, Unit );
 
 
 UnitSpawn.prototype.tookDamage = function( attacker )
@@ -44,7 +44,7 @@ if ( was_killed && !this.already_spawned )
             // position the spawned unit in a random position close to the main one
         if ( availablePositions.length > 0 )
             {
-            var select = getRandomInt( 0, availablePositions.length - 1 );
+            var select = Utilities.getRandomInt( 0, availablePositions.length - 1 );
 
             spawnedPosition = availablePositions.splice( select, 1 )[ 0 ];
             }
@@ -87,7 +87,7 @@ this.movement_speed = 60;
 Unit.call( this, args );
 }
 
-INHERIT_PROTOTYPE( UnitSpawned, Unit );
+Utilities.inheritPrototype( UnitSpawned, Unit );
 
 
 window.UnitSpawn = UnitSpawn;

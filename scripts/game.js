@@ -202,69 +202,63 @@ if ( IS_PAUSED && !BEFORE_FIRST_WAVE )
     return;
     }
 
-var key = event.keyCode;
+var selection;
 
-if ( key == EVENT_KEY[ '1' ] )
+switch( event.keyCode )
     {
-    GameMenu.selectTower( 0 );
-    }
+    case Utilities.KEY_CODE[ '1' ]:
+        GameMenu.selectTower( 0 );
+        break;
 
-else if ( key == EVENT_KEY[ '2' ] )
-    {
-    GameMenu.selectTower( 1 );
-    }
+    case Utilities.KEY_CODE[ '2' ]:
+        GameMenu.selectTower( 1 );
+        break;
 
-else if ( key == EVENT_KEY[ '3' ] )
-    {
-    GameMenu.selectTower( 2 );
-    }
+    case Utilities.KEY_CODE[ '3' ]:
+        GameMenu.selectTower( 2 );
+        break;
 
-else if ( key == EVENT_KEY[ '4' ] )
-    {
-    GameMenu.selectTower( 3 );
-    }
+    case Utilities.KEY_CODE[ '4' ]:
+        GameMenu.selectTower( 3 );
+        break;
 
-else if ( key == EVENT_KEY[ '5' ] )
-    {
-    GameMenu.selectTower( 4 );
-    }
+    case Utilities.KEY_CODE[ '5' ]:
+        GameMenu.selectTower( 4 );
+        break;
 
-else if ( key == EVENT_KEY[ '6' ] )
-    {
-    GameMenu.selectTower( 5 );
-    }
+    case Utilities.KEY_CODE[ '6' ]:
+        GameMenu.selectTower( 5 );
+        break;
 
-else if ( key == EVENT_KEY.n )
-    {
-    if ( BEFORE_FIRST_WAVE )
-        {
-        Game.pause();
-        }
+    case Utilities.KEY_CODE.n:
+        if ( BEFORE_FIRST_WAVE )
+            {
+            Game.pause();
+            }
 
-    else
-        {
-        Game.forceNextWave();
-        }
-    }
+        else
+            {
+            Game.forceNextWave();
+            }
+        break;
 
-else if ( key == EVENT_KEY.u )
-    {
-    var selection = Game.getSelection();
+    case Utilities.KEY_CODE.u:
+        selection = Game.getSelection();
 
-    if ( selection )
-        {
-        selection.startUpgrading();
-        }
-    }
+        if ( selection )
+            {
+            selection.startUpgrading();
+            }
+        break;
 
-else if ( key == EVENT_KEY.s )
-    {
-    var selection = Game.getSelection();
+    case Utilities.KEY_CODE.s:
+        selection = Game.getSelection();
 
-    if ( selection )
-        {
-        selection.startSelling();
-        }
+        if ( selection )
+            {
+            selection.startSelling();
+            }
+        break;
     }
 };
 
@@ -461,7 +455,7 @@ WAVE_COUNT = WAVE_INTERVAL;
 Game.pause = function( paused )
 {
     // if its not provided, just change to the opposite of the current one
-if ( typeof paused == 'undefined' || !_.isBoolean( paused ) )
+if ( typeof paused == 'undefined' || !Utilities.isBoolean( paused ) )
     {
     if ( BEFORE_FIRST_WAVE )
         {
@@ -516,7 +510,7 @@ if ( !NO_MORE_WAVES )
 
     var timeUntilNextWave = WAVE_INTERVAL - WAVE_COUNT;
 
-    GameMenu.updateTimeUntilNextWave( round( timeUntilNextWave, 2 ).toFixed( 1 ) );
+    GameMenu.updateTimeUntilNextWave( Utilities.round( timeUntilNextWave, 2 ).toFixed( 1 ) );
     }
 
 
@@ -542,12 +536,12 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
             if ( lane.orientation == 'horizontal' )
                 {
                 startColumn = lane.start.column;
-                startLine = getRandomInt( lane.start.line - halfLength, lane.start.line + halfLength - 1 );
+                startLine = Utilities.getRandomInt( lane.start.line - halfLength, lane.start.line + halfLength - 1 );
                 }
 
             else
                 {
-                startColumn = getRandomInt( lane.start.column - halfLength, lane.start.column + halfLength - 1 );
+                startColumn = Utilities.getRandomInt( lane.start.column - halfLength, lane.start.column + halfLength - 1 );
                 startLine = lane.start.line;
                 }
 

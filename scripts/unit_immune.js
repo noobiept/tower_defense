@@ -10,7 +10,7 @@ this.movement_speed = 50;
 Unit.call( this, args );
 }
 
-INHERIT_PROTOTYPE( UnitImmune, Unit );
+Utilities.inheritPrototype( UnitImmune, Unit );
 
 
 window.UnitImmune = UnitImmune;

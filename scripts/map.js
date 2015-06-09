@@ -575,7 +575,7 @@ for (var a = 0 ; a < array.length ; a++)
     {
     var unit = array[ a ];
 
-    if ( circlePointCollision( x, y, radius, unit.getX(), unit.getY() ) )
+    if ( Utilities.circlePointCollision( x, y, radius, unit.getX(), unit.getY() ) )
         {
         unitsInRange.push( unit );
         }
@@ -615,7 +615,7 @@ for (var a = 0 ; a < array.length ; a++)
     {
     var unit = array[ a ];
 
-    if ( circlePointCollision( x, y, rangeRadius, unit.getX(), unit.getY() ) )
+    if ( Utilities.circlePointCollision( x, y, rangeRadius, unit.getX(), unit.getY() ) )
         {
         return unit;
         }

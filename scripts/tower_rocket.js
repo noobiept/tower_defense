@@ -11,7 +11,7 @@ this.stats = TowerRocket.stats;
 Tower.call( this, args );
 }
 
-INHERIT_PROTOTYPE( TowerRocket, Tower );
+Utilities.inheritPrototype( TowerRocket, Tower );
 
 
 TowerRocket.stats = [

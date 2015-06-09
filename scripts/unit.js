@@ -69,10 +69,9 @@ this.path = [];
 this.move_x = 0;
 this.move_y = 0;
 this.movement_angle = 0;
-this.next_left = 0;
-this.next_right = 0;
-this.next_top = 0;
-this.next_bottom = 0;
+this.next_x = 0;
+this.next_y = 0;
+this.next_length = 0;
 
 this.container = null;
 this.slowElement = null;
@@ -176,7 +175,7 @@ if ( nextDest === null )
         // move to a random available position nearby
     if ( positions.length > 0 )
         {
-        var index = getRandomInt( 0, positions.length - 1 );
+        var index = Utilities.getRandomInt( 0, positions.length - 1 );
 
         nextDest = positions[ index ];
 
@@ -224,24 +223,24 @@ this.destination_line = next.line;
 var destX = position.x + squareSize / 2;
 var destY = position.y + squareSize / 2;
 
-var angleRads = calculateAngle( unitX, unitY * -1, destX, destY * -1 );
+var angleRads = Utilities.calculateAngle( unitX, unitY * -1, destX, destY * -1 );
 
     // the next position represents a box which is used for the collision detection
     // its position after the destination position
-var boxHalfLength = 20; // width/height
+var boxLength = 40; // width/height
+var boxHalfLength = boxLength / 2;
 var centerX = destX + Math.cos( angleRads ) * boxHalfLength;
 var centerY = destY + Math.sin( angleRads ) * boxHalfLength;
 
-this.next_left = centerX - boxHalfLength;
-this.next_right = centerX + boxHalfLength;
-this.next_top = centerY - boxHalfLength;
-this.next_bottom = centerY + boxHalfLength;
+this.next_x = centerX - boxHalfLength;
+this.next_y = centerY - boxHalfLength;
+this.next_length = boxLength;
 this.movement_angle = angleRads;
 
 this.move_x = Math.cos( angleRads ) * this.current_movement_speed;
 this.move_y = Math.sin( angleRads ) * this.current_movement_speed;
 
-var rotation = toDegrees( angleRads );
+var rotation = Utilities.toDegrees( angleRads );
 
 this.shape.rotation = rotation;
 this.slowElement.rotation = rotation;
@@ -420,7 +419,7 @@ if ( this.is_slow_down )
 this.container.x += this.move_x * deltaTime;
 this.container.y += this.move_y * deltaTime;
 
-if ( pointBoxCollision( this.getX(), this.getY(), this.next_left, this.next_right, this.next_top, this.next_bottom ) )
+if ( Utilities.pointBoxCollision( this.getX(), this.getY(), this.next_x, this.next_y, this.next_length, this.next_length ) )
     {
     this.column = this.destination_column;
     this.line = this.destination_line;

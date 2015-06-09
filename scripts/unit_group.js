@@ -11,7 +11,7 @@ if ( lane.orientation == 'horizontal' )
     {
     for (a = 0 ; a < args.howMany ; a++)
         {
-        args.line = getRandomInt( lane.start.line - halfLength, lane.start.line + halfLength - 1 );
+        args.line = Utilities.getRandomInt( lane.start.line - halfLength, lane.start.line + halfLength - 1 );
 
         new UnitGroup1( args );
         }
@@ -21,7 +21,7 @@ else
     {
     for (a = 0 ; a < args.howMany ; a++)
         {
-        args.line = getRandomInt( lane.start.column - halfLength, lane.start.column + halfLength - 1 );
+        args.line = Utilities.getRandomInt( lane.start.column - halfLength, lane.start.column + halfLength - 1 );
 
         new UnitGroup1( args );
         }
@@ -38,7 +38,7 @@ this.movement_speed = 50;
 Unit.call( this, args );
 }
 
-INHERIT_PROTOTYPE( UnitGroup1, Unit );
+Utilities.inheritPrototype( UnitGroup1, Unit );
 
 
 window.UnitGroup = UnitGroup;

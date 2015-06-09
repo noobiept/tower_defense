@@ -12,6 +12,11 @@ body
     text-align: center;
     }
 
+#MainMenu > *
+    {
+    min-width: 150px;
+    }
+
 #MainMenu, #HighScore
     {
     display: none;

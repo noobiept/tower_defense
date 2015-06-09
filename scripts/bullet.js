@@ -56,14 +56,14 @@ var targetX = target.getX();
 var targetY = target.getY();
 var targetRadius = target.width / 2;
 
-var angle = calculateAngle( this.shape.x, this.shape.y * -1, targetX, targetY * -1 );
+var angle = Utilities.calculateAngle( this.shape.x, this.shape.y * -1, targetX, targetY * -1 );
 
 this.shape.x += Math.cos( angle ) * this.movement_speed * deltaTime;
 this.shape.y += Math.sin( angle ) * this.movement_speed * deltaTime;
 
-this.shape.rotation = toDegrees( angle );
+this.shape.rotation = Utilities.toDegrees( angle );
 
-if ( circleCircleCollision( this.shape.x, this.shape.y, this.radius, targetX, targetY, targetRadius ) )
+if ( Utilities.circleCircleCollision( this.shape.x, this.shape.y, this.radius, targetX, targetY, targetRadius ) )
     {
     this.shooter.onBulletHit( target );
 

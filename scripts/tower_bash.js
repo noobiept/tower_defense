@@ -20,7 +20,7 @@ this.attack_animation_interval = parseInt( this.attack_interval / 4, 10 );
 this.attack_animation_alpha_step = 1 / this.attack_animation_interval;
 }
 
-INHERIT_PROTOTYPE( TowerBash, Tower );
+Utilities.inheritPrototype( TowerBash, Tower );
 
 
 TowerBash.stats = [
@@ -104,7 +104,7 @@ if ( this.attack_count <= 0 )
 
 
             // check if the unit is within the tower's range
-        if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
+        if ( Utilities.circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
             {
             this.attack_count = this.attack_interval;
             this.attack_animation.visible = true;
@@ -146,14 +146,14 @@ for (var a = 0 ; a < units.length ; a++)
 
     unit.tookDamage( this );
 
-    var slowChance = getRandomInt( 0, 100 );
+    var slowChance = Utilities.getRandomInt( 0, 100 );
 
     if ( slowChance <= this.slow_chance )
         {
         unit.slowDown( slow );
         }
 
-    var stunChance = getRandomInt( 0, 100 );
+    var stunChance = Utilities.getRandomInt( 0, 100 );
 
     if ( stunChance <= this.stun_chance )
         {

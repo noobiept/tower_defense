@@ -150,7 +150,7 @@ var shape = new createjs.Bitmap( G.PRELOAD.getResult( this.image ) );
 
 shape.regX = halfWidth;
 shape.regY = halfHeight;
-shape.rotation = getRandomInt( 0, 360 );
+shape.rotation = Utilities.getRandomInt( 0, 360 );
 
     // the range circle
 var range = new createjs.Shape();
@@ -464,9 +464,9 @@ Map.removeTower( this );
 
 Tower.prototype.rotateTower = function( unit )
 {
-var angleRads = calculateAngle( this.getX(), this.getY() * -1, unit.getX(), unit.getY() * -1 );
+var angleRads = Utilities.calculateAngle( this.getX(), this.getY() * -1, unit.getX(), unit.getY() * -1 );
 
-var angleDegrees = toDegrees( angleRads );
+var angleDegrees = Utilities.toDegrees( angleRads );
 
 this.shape.rotation = angleDegrees;
 };
@@ -498,7 +498,7 @@ if ( this.attack_count <= 0 )
 
 
             // check if the unit is within the tower's range
-        if ( circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
+        if ( Utilities.circleCircleCollision( this.getX(), this.getY(), this.range, target.getX(), target.getY(), target.width / 2 ) )
             {
             this.attack_count = this.attack_interval;
             new Bullet({

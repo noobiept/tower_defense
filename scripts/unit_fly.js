@@ -17,7 +17,7 @@ this.final_line = args.destination_line;
 Unit.call( this, args );
 }
 
-INHERIT_PROTOTYPE( UnitFly, Unit );
+Utilities.inheritPrototype( UnitFly, Unit );
 
 
 /**

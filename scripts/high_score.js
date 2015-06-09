@@ -20,7 +20,7 @@ return MAX_SCORES_SAVED;
 
 HighScore.load = function()
 {
-var score = localStorage.getObject( 'high_score' );
+var score = Utilities.getObject( 'high_score' );
 
 if ( score !== null )
     {
@@ -31,7 +31,7 @@ if ( score !== null )
 
 HighScore.save = function()
 {
-localStorage.setObject( 'high_score', HIGH_SCORE );
+Utilities.setObject( 'high_score', HIGH_SCORE );
 };
 
 
