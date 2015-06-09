@@ -167,6 +167,33 @@ Unit.prototype.checkNextDestination = function()
 {
 var nextDest = Map.findNextDestination( this.column, this.line );
 
+    // can happen if we place a tower on top of a unit
+    // just move the unit to a close valid position
+if ( nextDest === null )
+    {
+    var positions = Map.getAvailablePositions( this.column, this.line, 2 );
+
+        // move to a random available position nearby
+    if ( positions.length > 0 )
+        {
+        var index = getRandomInt( 0, positions.length - 1 );
+
+        nextDest = positions[ index ];
+
+        this.column = nextDest.column;
+        this.line = nextDest.line;
+        this.move( nextDest );
+        }
+
+        // if there isn't a place to go to, just remove the unit
+    else
+        {
+        this.remove();
+        }
+
+    return;
+    }
+
 
     // we reached the destination
 if ( nextDest.column === this.column &&

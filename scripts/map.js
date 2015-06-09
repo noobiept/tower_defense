@@ -469,56 +469,54 @@ return true;
 };
 
 
-Map.getAvailablePositions = function( centerColumn, centerLine, length )
+/**
+ * Get a list of passable/available positions, around a given position.
+ */
+Map.getAvailablePositions = function( centerColumn, centerLine, range )
 {
-var halfLength = parseInt( length / 2, 10 );
-var leftColumn = centerColumn - halfLength;
+var startColumn = centerColumn - range;
+var startLine = centerLine - range;
 
-if ( leftColumn < 0 )
+var endColumn = centerColumn + range;
+var endLine = centerLine + range;
+
+if ( startColumn < 0 )
     {
-    leftColumn = 0;
+    startColumn = 0;
+    }
+if ( startLine < 0 )
+    {
+    startLine = 0;
     }
 
-var rightColumn = centerColumn + halfLength;
-
-if ( rightColumn >= NUMBER_OF_COLUMNS )
+if ( endColumn >= NUMBER_OF_COLUMNS )
     {
-    rightColumn = NUMBER_OF_COLUMNS - 1;
+    endColumn = NUMBER_OF_COLUMNS - 1;
     }
-
-var topLine = centerLine - halfLength;
-
-if ( topLine < 0 )
+if ( endLine >= NUMBER_OF_LINES )
     {
-    topLine = 0;
-    }
-
-var bottomLine = centerLine + halfLength;
-
-if ( bottomLine >= NUMBER_OF_LINES )
-    {
-    bottomLine = NUMBER_OF_LINES - 1;
+    endLine = NUMBER_OF_LINES - 1;
     }
 
 
 var availablePositions = [];
 
-for (var column = leftColumn ; column < rightColumn ; column++)
+for (var column = startColumn ; column < endColumn ; column++)
     {
-    for (var line = topLine ; line < bottomLine ; line++)
+    for (var line = startLine ; line < endLine ; line++)
         {
-        var position = MAP[ line ][ column ];
-
-        if ( position.type === POSITION_TYPE.passable )
+        if ( MAP[ line ][ column ] === POSITION_TYPE.passable )
             {
-            availablePositions.push( [ column, line ] );
+            availablePositions.push({
+                    column: column,
+                    line: line
+                });
             }
         }
     }
 
 return availablePositions;
 };
-
 
 
 Map.getPosition = function( column, line )
@@ -536,7 +534,6 @@ return {
 /*
     Gets all units in an area (only ground / only air / both, depending on the tower)
  */
-
 Map.getUnits = function( x, y, radius, tower )
 {
 var unitsInRange = [];

@@ -31,7 +31,7 @@ if ( was_killed && !this.already_spawned )
     this.already_spawned = true;
 
     var position = Map.calculatePosition( this.getX(), this.getY() );
-    var availablePositions = Map.getAvailablePositions( position[ 0 ], position[ 1 ], 2 );
+    var availablePositions = Map.getAvailablePositions( position[ 0 ], position[ 1 ], 1 );
     var spawnedPosition;
 
     var spawnedHealth = parseInt( this.max_health / 2, 10 );
@@ -56,8 +56,8 @@ if ( was_killed && !this.already_spawned )
             }
 
         new UnitSpawned({
-                column: spawnedPosition[ 0 ],
-                line: spawnedPosition[ 1 ],
+                column: spawnedPosition.column,
+                line: spawnedPosition.line,
                 destination_column: this.destination_column,
                 destination_line: this.destination_line,
                 health: spawnedHealth,
