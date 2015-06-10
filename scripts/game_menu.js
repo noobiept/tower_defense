@@ -5,7 +5,7 @@ function GameMenu()
 
 }
 
-    // html elements
+    // reference to the game menu's html elements
 var START_PAUSED = null;
 var TIME_UNTIL_NEXT_WAVE = null;
 var CURRENT_GOLD = null;
@@ -14,7 +14,6 @@ var CURRENT_SCORE = null;
 var WAVE_LIST = [];
 var MESSAGE = null;
 var MESSAGE_TIMEOUT = null;
-
 
 var SELECTED_TOWER = null;
 var TOWERS = [
@@ -25,43 +24,59 @@ var TOWERS = [
         { tower: TowerAntiAir, htmlElement: null, position: 4 },
         { tower: TowerBash, htmlElement: null, position: 5 }
     ];
+var TOWER_INFO;
+
 
 GameMenu.init = function()
 {
+var menu = document.querySelector( '#GameMenu' );
+var a;
+
+
+    // game controls
+START_PAUSED = menu.querySelector( '#startPause' );
+START_PAUSED.onclick = Game.pause;
+START_PAUSED.tooltip = new Tooltip({ text: 'Click to start', reference: START_PAUSED, enableEvents: false });
+
+TIME_UNTIL_NEXT_WAVE = menu.querySelector( '.timeUntilNextWave span' );
+TIME_UNTIL_NEXT_WAVE.onclick = Game.forceNextWave;
+
+var quit = menu.querySelector( '#quit' );
+
+quit.onclick = function() { Game.setEndFlag( false ); };
+
+
     // game info stuff
-START_PAUSED = document.querySelector( '#startPause' );
-CURRENT_GOLD = document.querySelector( '.currentGold span' );
-CURRENT_LIFE = document.querySelector( '.currentLife span' );
-CURRENT_SCORE = document.querySelector( '.currentScore span' );
-
-MESSAGE = document.querySelector( '#Message' );
-MESSAGE_TIMEOUT = new Utilities.Timeout();
-
-var quit = document.querySelector( '#quit' );
-var timeNextWave = document.querySelector( '.timeUntilNextWave' );
-TIME_UNTIL_NEXT_WAVE = timeNextWave.querySelector( 'span' );
+CURRENT_GOLD = menu.querySelector( '.currentGold span' );
+CURRENT_LIFE = menu.querySelector( '.currentLife span' );
+CURRENT_SCORE = menu.querySelector( '.currentScore span' );
 
 
+    // wave list
+WAVE_LIST = menu.querySelectorAll( '#GameMenu-waveList > div' );
 
-WAVE_LIST = document.querySelectorAll( '#GameMenu-waveList > div' );
-
-for (var a = 0 ; a < WAVE_LIST.length ; a++)
+for (a = 0 ; a < WAVE_LIST.length ; a++)
     {
     WAVE_LIST[ a ].tooltip = new Tooltip({ text: '', reference: WAVE_LIST[ a ] });
     }
 
 
+    // game menu's message
+MESSAGE = menu.querySelector( '#Message' );
+MESSAGE_TIMEOUT = new Utilities.Timeout();
+
+
     // tower selector
-var basicTower = document.querySelector( '#basicTower' );
-var fastTower = document.querySelector( '#fastTower' );
-var rocketTower = document.querySelector( '#rocketTower' );
-var frostTower = document.querySelector( '#frostTower' );
-var antiAirTower = document.querySelector( '#antiAirTower' );
-var bashTower = document.querySelector( '#bashTower' );
+var basicTower = menu.querySelector( '#basicTower' );
+var fastTower = menu.querySelector( '#fastTower' );
+var rocketTower = menu.querySelector( '#rocketTower' );
+var frostTower = menu.querySelector( '#frostTower' );
+var antiAirTower = menu.querySelector( '#antiAirTower' );
+var bashTower = menu.querySelector( '#bashTower' );
 
 var elements = [ basicTower, fastTower, rocketTower, frostTower, antiAirTower, bashTower ]; // same order as in the TOWERS array
 
-for (var a = 0 ; a < elements.length ; a++)
+for (a = 0 ; a < elements.length ; a++)
     {
     var htmlElement = elements[ a ];
 
@@ -79,14 +94,65 @@ for (var a = 0 ; a < elements.length ; a++)
     }
 
 
-timeNextWave.onclick = Game.forceNextWave;
-START_PAUSED.onclick = Game.pause;
-quit.onclick = function() { Game.setEndFlag( false ); };
+    // tower info
+var towerInfo = menu.querySelector( '#GameMenu-TowerInfo' );
 
-START_PAUSED.tooltip = new Tooltip({ text: 'Click to start', reference: START_PAUSED, enableEvents: false });
+TOWER_INFO = {
+    container       : towerInfo,
+    name            : towerInfo.querySelector( '.name span' ),
+    damage          : towerInfo.querySelector( '.damage span' ),
+    attack_speed    : towerInfo.querySelector( '.attack_speed span' ),
+    range           : towerInfo.querySelector( '.range span' ),
+    upgrade         : towerInfo.querySelector( '#GameMenu-Upgrade' ),
+    sell            : towerInfo.querySelector( '#GameMenu-Sell' ),
+    upgrade_message : towerInfo.querySelector( '.upgradeMessage' ),
+    sell_message    : towerInfo.querySelector( '.sellMessage' )
+};
 
+TOWER_INFO.upgrade.onclick = function()
+    {
+    var tower = Game.getSelection();
+
+    if ( tower )
+        {
+        tower.startUpgrading();
+        }
+    };
+TOWER_INFO.upgrade.onmouseover = function()
+    {
+    var tower = Game.getSelection();
+
+    if ( tower )
+        {
+        GameMenu.updateTowerStats( tower, true );
+        }
+    };
+TOWER_INFO.upgrade.onmouseout = function()
+    {
+    var tower = Game.getSelection();
+
+    if ( tower )
+        {
+        GameMenu.updateTowerStats( tower, false );
+        }
+    };
+
+TOWER_INFO.sell.onclick = function()
+    {
+    var tower = Game.getSelection();
+
+    if ( tower )
+        {
+        tower.startSelling();
+        }
+    };
+
+
+
+    // start with the basic tower selected
 GameMenu.selectTower( 0 );
 };
+
 
 GameMenu.show = function()
 {
@@ -221,6 +287,89 @@ return SELECTED_TOWER.tower;
 };
 
 
+
+GameMenu.showTowerStats = function( tower )
+{
+$( TOWER_INFO.container ).css( 'display', 'flex' );
+
+GameMenu.updateTowerStats( tower, false );
+
+    // update the info that won't change during the selection
+$( TOWER_INFO.name ).text( tower.name );
+};
+
+
+/**
+ * Hide the tower stats html element.
+ */
+GameMenu.hideTowerStats = function()
+{
+$( TOWER_INFO.container ).css( 'display', 'none' );
+};
+
+
+/**
+ * Update the selected tower stats. It can show the stats after the next upgrade is completed (next to the current stats).
+ */
+GameMenu.updateTowerStats = function( tower, showNextUpgrade )
+{
+GameMenu.updateMenuControls( tower );
+
+var damage = tower.damage;
+var attack_speed = tower.attack_speed;
+var range = tower.range;
+
+if ( showNextUpgrade && !tower.maxUpgrade() )
+    {
+    var next = tower.stats[ tower.upgrade_level + 1 ];
+
+    damage       += ' (' + next.damage       + ')';
+    attack_speed += ' (' + next.attack_speed + ')';
+    range        += ' (' + next.range        + ')';
+    }
+
+
+$( TOWER_INFO.damage ).text( damage );
+$( TOWER_INFO.attack_speed ).text( attack_speed );
+$( TOWER_INFO.range ).text( range );
+};
+
+
+GameMenu.updateMenuControls = function( tower )
+{
+if ( tower.is_upgrading )
+    {
+    $( TOWER_INFO.upgrade ).css( 'display', 'none' );
+    $( TOWER_INFO.sell ).css( 'display', 'none' );
+    $( TOWER_INFO.sell_message ).css( 'display', 'none' );
+    $( TOWER_INFO.upgrade_message ).css( 'display', 'block' );
+    }
+
+else if ( tower.is_selling )
+    {
+    $( TOWER_INFO.upgrade ).css( 'display', 'none' );
+    $( TOWER_INFO.sell ).css( 'display', 'none' );
+    $( TOWER_INFO.upgrade_message ).css( 'display', 'none' );
+    $( TOWER_INFO.sell_message ).css( 'display', 'block' );
+    }
+
+else
+    {
+    $( TOWER_INFO.upgrade_message ).css( 'display', 'none' );
+    $( TOWER_INFO.sell_message ).css( 'display', 'none' );
+    $( TOWER_INFO.sell ).css( 'display', 'block' );
+
+    if ( tower.maxUpgrade() )
+        {
+        $( TOWER_INFO.upgrade ).css( 'display', 'none' );
+        }
+
+    else
+        {
+        $( TOWER_INFO.upgrade ).css( 'display', 'block' );
+        }
+    }
+};
 
 
 window.GameMenu = GameMenu;

@@ -113,7 +113,6 @@ G.STAGE = new createjs.Stage( G.CANVAS );
 
 createjs.Ticker.setFPS( G.FPS );
 
-Tower.init();
 Tooltip.init();
 GameMenu.init();
 MainMenu.init();

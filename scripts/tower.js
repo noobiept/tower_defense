@@ -81,55 +81,6 @@ Tower.stats = [
         { damage: 20, range: 60, attack_speed: 3, sell_time: 2 }
     ];
 
-var SELECTION_MENU;
-
-Tower.init = function()
-{
-var container = document.querySelector( '#GameMenu-tower' );
-
-var name = container.querySelector( '.name span' );
-var damage = container.querySelector( '.damage span' );
-var attack_speed = container.querySelector( '.attack_speed span' );
-var range = container.querySelector( '.range span' );
-var upgrade = container.querySelector( '.upgrade' );
-var upgradeMessage = container.querySelector( '.upgradeMessage' );
-var sellMessage = container.querySelector( '.sellMessage' );
-
-upgrade.onclick = function()
-    {
-        // if we can click on this element, it means we have a tower selected, so we can assume that what we get is a tower object
-    var tower = Game.getSelection();
-
-    tower.startUpgrading();
-    };
-
-upgrade.onmouseover = function()
-    {
-    SELECTION_MENU.showNextUpgrade = true;
-
-    Game.getSelection().updateSelection();
-    };
-upgrade.onmouseout = function()
-    {
-    SELECTION_MENU.showNextUpgrade = false;
-
-    Game.getSelection().updateSelection();
-    };
-
-
-SELECTION_MENU = {
-        container: container,
-        name: name,
-        damage: damage,
-        attack_speed: attack_speed,
-        range: range,
-        upgrade: upgrade,
-        upgradeMessage: upgradeMessage,
-        sellMessage: sellMessage,
-        showNextUpgrade: false
-    };
-};
-
 
 
 Tower.prototype.setupShape = function()
@@ -193,18 +144,14 @@ this.progressElement = progress;
 this.shape = shape;
 };
 
+
 Tower.prototype.selected = function()
 {
     // show the range
 this.rangeElement.visible = true;
 
-    // show the game menu
-$( SELECTION_MENU.container ).css( 'display', 'flex' );
-
-this.updateSelection();
-
-    // update the info that won't change during the selection
-$( SELECTION_MENU.name ).text( this.name );
+    // show the stats in the game menu
+GameMenu.showTowerStats( this );
 };
 
 
@@ -212,66 +159,7 @@ Tower.prototype.unselected = function()
 {
 this.rangeElement.visible = false;
 
-    // hide the game menu
-$( SELECTION_MENU.container ).css( 'display', 'none' );
-};
-
-
-Tower.prototype.updateMenuControls = function()
-{
-if ( this.is_upgrading )
-    {
-    $( SELECTION_MENU.upgrade ).css( 'display', 'none' );
-    $( SELECTION_MENU.sellMessage ).css( 'display', 'none' );
-    $( SELECTION_MENU.upgradeMessage ).css( 'display', 'block' );
-    }
-
-else if ( this.is_selling )
-    {
-    $( SELECTION_MENU.upgrade ).css( 'display', 'none' );
-    $( SELECTION_MENU.upgradeMessage ).css( 'display', 'none' );
-    $( SELECTION_MENU.sellMessage ).css( 'display', 'block' );
-    }
-
-else
-    {
-    $( SELECTION_MENU.upgradeMessage ).css( 'display', 'none' );
-    $( SELECTION_MENU.sellMessage ).css( 'display', 'none' );
-
-    if ( this.maxUpgrade() )
-        {
-        $( SELECTION_MENU.upgrade ).css( 'display', 'none' );
-        }
-
-    else
-        {
-        $( SELECTION_MENU.upgrade ).css( 'display', 'block' );
-        }
-    }
-};
-
-
-Tower.prototype.updateSelection = function()
-{
-this.updateMenuControls();
-
-var damage = this.damage;
-var attack_speed = this.attack_speed;
-var range = this.range;
-
-if ( SELECTION_MENU.showNextUpgrade && !this.maxUpgrade() )
-    {
-    var next = this.stats[ this.upgrade_level + 1 ];
-
-    damage       += ' (' + next.damage       + ')';
-    attack_speed += ' (' + next.attack_speed + ')';
-    range        += ' (' + next.range        + ')';
-    }
-
-
-$( SELECTION_MENU.damage ).text( damage );
-$( SELECTION_MENU.attack_speed ).text( attack_speed );
-$( SELECTION_MENU.range ).text( range );
+GameMenu.hideTowerStats();
 };
 
 
@@ -316,11 +204,10 @@ this.progressElement.graphics.clear();
 this.progressElement.visible = true;
 this.shape.visible = false;
 
-this.updateMenuControls();
+GameMenu.updateMenuControls( this );
 
 this.tick = this.tick_upgrade;
 };
-
 
 
 Tower.prototype.upgrade = function()
@@ -361,7 +248,7 @@ this.baseElement.image = G.PRELOAD.getResult( 'tower_base' + this.upgrade_level 
 
 if ( Game.checkIfSelected( this ) )
     {
-    this.updateSelection();
+    GameMenu.updateTowerStats( this, false );
     }
 };
 
@@ -410,7 +297,7 @@ this.progressElement.graphics.clear();
 this.progressElement.visible = true;
 this.shape.visible = false;
 
-this.updateMenuControls();
+GameMenu.updateMenuControls( this );
 
 this.tick = this.tick_sell;
 };
