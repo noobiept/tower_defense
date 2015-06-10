@@ -47,6 +47,7 @@ if ( typeof this.movement_speed === 'undefined' )
 this.column = args.column;
 this.line = args.line;
 
+this.lane_id = args.lane_id;
 this.score = args.score;
 this.gold = args.gold;
 this.is_slow_down = false;
@@ -65,7 +66,6 @@ this.regeneration_interval = 1 / this.health_regeneration;
 
 this.removed = false;   // so that we don't try to remove the unit multiple times (this may happen if several towers have the .targetUnit pointing at the same unit)
 
-this.path = [];
 this.move_x = 0;
 this.move_y = 0;
 this.movement_angle = 0;
@@ -164,7 +164,7 @@ this.shape = shape;
  */
 Unit.prototype.checkNextDestination = function()
 {
-var nextDest = Map.findNextDestination( this.column, this.line );
+var nextDest = Map.findNextDestination( this.column, this.line, this.lane_id );
 
     // can happen if we place a tower on top of a unit
     // just move the unit to a close valid position

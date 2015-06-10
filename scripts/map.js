@@ -28,7 +28,7 @@ var GRID_HIGHLIGHT = {
 var WALL_LENGTH = 2;
 
     // result from the path finding algorithm, with the valid paths to the destination
-var PATH = [];
+var PATHS = [];
 var MAP;
 var POSITION_TYPE = {
     passable: 1,
@@ -229,10 +229,16 @@ Map.updatePath();
  */
 Map.updatePath = function()
 {
-PATH = PathFinding.breadthFirstSearch( MAP, CREEP_LANES[ 0 ].end, POSITION_TYPE );
-//HERE
-};
+PATHS.length = 0;
 
+for (var a = 0 ; a < CREEP_LANES.length ; a++)
+    {
+    var lane = CREEP_LANES[ a ];
+    var path = PathFinding.breadthFirstSearch( MAP, lane.end, POSITION_TYPE );
+
+    PATHS.push( path );
+    }
+};
 
 
 /**
@@ -240,9 +246,9 @@ PATH = PathFinding.breadthFirstSearch( MAP, CREEP_LANES[ 0 ].end, POSITION_TYPE 
  *
  * Returns { column: number; line: number; }
  */
-Map.findNextDestination = function( column, line )
+Map.findNextDestination = function( column, line, laneId )
 {
-return PATH[ line ][ column ];
+return PATHS[ laneId ][ line ][ column ];
 };
 
 
@@ -638,6 +644,8 @@ if ( Map.isAvailable( column, line ) )
 
 
         // check if there is a possible path (if its not going to block a lane)
+    var paths = [];
+
     for (var b = 0 ; b < CREEP_LANES.length ; b++)
         {
         var lane = CREEP_LANES[ b ];
@@ -654,11 +662,17 @@ if ( Map.isAvailable( column, line ) )
             Map.setPassableBox( column, line, 2 );
             return;
             }
+
+        else
+            {
+            paths.push( path );
+            }
         }
 
         // its possible to add the tower
         // update the path and add the tower
-    PATH = path;
+    PATHS = paths;
+
 
     new towerClass({
             column: column,

@@ -63,7 +63,8 @@ if ( was_killed && !this.already_spawned )
                 health: spawnedHealth,
                 health_regeneration: spawnedRegeneration,
                 gold: spawnedGold,
-                score: spawnedScore
+                score: spawnedScore,
+                lane_id: this.lane_id
             });
         }
     }
