@@ -303,10 +303,19 @@ if ( Game.checkIfSelected( this ) )
 
 Unit.prototype.slowDown = function( minusMovementSpeed )
 {
+    // immune units aren't affected by slow
 if ( this.is_immune )
     {
     return;
     }
+
+    // reset the slow down counter
+if ( this.is_slow_down )
+    {
+    this.slow_count = 0;
+    return;
+    }
+
 
 this.is_slow_down = true;
 this.slowElement.visible = true;
