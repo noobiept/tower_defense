@@ -100,7 +100,7 @@ var G = {
     STAGE: null,
     PRELOAD: null,
     FPS: 20,
-    GAME_MENU_HEIGHT: 100
+    GAME_MENU_HEIGHT: 120
 };
 
 var BASE_URL = '';

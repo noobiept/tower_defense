@@ -207,6 +207,7 @@ this.updateSelection();
 $( SELECTION_MENU.name ).text( this.name );
 };
 
+
 Tower.prototype.unselected = function()
 {
 this.rangeElement.visible = false;
@@ -284,7 +285,7 @@ if ( this.is_upgrading )
     // no more upgrades
 if ( this.upgrade_level + 1 >= this.stats.length )
     {
-    GameMenu.showMessage( 'No more tower upgrades.' );
+    GameMenu.showMessage( 'No more upgrades.' );
     return;
     }
 
@@ -293,7 +294,7 @@ var upgradeCost = currentLevel.upgrade_cost;
 
 if ( !Game.haveEnoughGold( upgradeCost ) )
     {
-    GameMenu.showMessage( 'Not enough gold to upgrade.' );
+    GameMenu.showMessage( 'Not enough gold.' );
     return;
     }
 
@@ -327,7 +328,7 @@ Tower.prototype.upgrade = function()
     // no more upgrades
 if ( this.upgrade_level + 1 >= this.stats.length )
     {
-    GameMenu.showMessage( 'No more tower upgrades' );
+    GameMenu.showMessage( 'No more upgrades.' );
     return;
     }
 
@@ -408,6 +409,8 @@ this.sell_count = 0;
 this.progressElement.graphics.clear();
 this.progressElement.visible = true;
 this.shape.visible = false;
+
+this.updateMenuControls();
 
 this.tick = this.tick_sell;
 };

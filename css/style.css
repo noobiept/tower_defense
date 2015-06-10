@@ -44,10 +44,11 @@ body
     user-select: none;
     text-align: center;
     font-size: 18px;
+    min-height: 85px;
     }
 
 
-#GameMenu-unit, #GameMenu-tower
+#GameMenu-tower
     {
     display: none;
     flex-direction: row;
@@ -55,9 +56,14 @@ body
     align-items: center;
     }
 
+#GameMenu-TowerStats
+    {
+    min-width: 150px;
+    }
+
 .MenuBlock
     {
-    min-width: 130px;
+    min-width: 150px;
     margin: 0 10px;
     }
 
@@ -73,7 +79,9 @@ body
 
 #Message
     {
-    display: none;
+    visibility: hidden;
+    text-align: center;
+    color: blue;
     }
 
 .selectedTower, .selectedTower:hover

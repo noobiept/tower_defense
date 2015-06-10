@@ -143,12 +143,12 @@ $( SELECTED_TOWER.htmlElement ).addClass( 'selectedTower' );
 
 GameMenu.showMessage = function( message )
 {
-$( MESSAGE ).css( 'display', 'block' );
+$( MESSAGE ).css( 'visibility', 'visible' );
 $( MESSAGE ).text( message );
 
 MESSAGE_TIMEOUT.start( function()
     {
-    $( MESSAGE ).css( 'display', 'none' );
+    $( MESSAGE ).css( 'visibility', 'hidden' );
     }, 1000 );
 };
 
