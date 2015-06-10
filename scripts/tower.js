@@ -72,7 +72,8 @@ Game.updateGold( -this.cost );
 Map.setImpassableBox( this.column, this.line, 2 );
 }
 
-Tower.ALL = [];
+var CONTAINER;      // createjs.Container() which will hold all the tower elements
+Tower.ALL = [];     // has all the 'Tower' objects
 
     // each array position corresponds to the upgrade level of the tower
 Tower.stats = [
@@ -81,6 +82,16 @@ Tower.stats = [
         { damage: 20, range: 60, attack_speed: 3, sell_time: 2 }
     ];
 
+
+/**
+ * Create the container which will hold all the tower elements.
+ */
+Tower.init = function( parent )
+{
+CONTAINER = new createjs.Container();
+
+parent.addChild( CONTAINER );
+};
 
 
 Tower.prototype.setupShape = function()
@@ -135,7 +146,7 @@ container.addChild( progress );
 container.x = position.x + halfWidth;
 container.y = position.y + halfHeight;
 
-G.STAGE.addChildAt( container, 0 );
+CONTAINER.addChild( container );
 
 this.container = container;
 this.rangeElement = range;
@@ -330,7 +341,7 @@ if ( this.removed )
 this.removed = true;
 
     // remove the shape
-G.STAGE.removeChild( this.container );
+CONTAINER.removeChild( this.container );
 
     // from from the ALL array
 var index = Tower.ALL.indexOf( this );

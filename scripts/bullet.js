@@ -20,6 +20,18 @@ Bullet.ALL.push( this );
 
 Bullet.ALL = [];
 
+var CONTAINER;      // createjs.Container() which will hold all the bullet elements
+
+
+/**
+ * Create the container which will hold all the bullet elements.
+ */
+Bullet.init = function( parent )
+{
+CONTAINER = new createjs.Container();
+
+parent.addChild( CONTAINER );
+};
 
 
 Bullet.prototype.setupShape = function()
@@ -34,7 +46,7 @@ shape.regY = height / 2;
 shape.x = this.shooter.getX();
 shape.y = this.shooter.getY();
 
-G.STAGE.addChild( shape );
+CONTAINER.addChild( shape );
 
 this.shape = shape;
 };
@@ -81,7 +93,7 @@ if ( this.removed )
 
 this.removed = true;
 
-G.STAGE.removeChild( this.shape );
+CONTAINER.removeChild( this.shape );
 
 var index = Bullet.ALL.indexOf( this );
 

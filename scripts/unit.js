@@ -101,6 +101,19 @@ Unit.ALL = [];
 Unit.ALL_GROUND = [];
 Unit.ALL_AIR = [];
 
+var CONTAINER;      // createjs.Container() which will hold all the unit elements
+
+
+/**
+ * Create the container which will hold all the unit elements.
+ */
+Unit.init = function( parent )
+{
+CONTAINER = new createjs.Container();
+
+parent.addChild( CONTAINER );
+};
+
 
 Unit.prototype.setupShape = function()
 {
@@ -150,7 +163,7 @@ container.addChild( slow );
 container.x = position.x + halfWidth;
 container.y = position.y + halfHeight;
 
-G.STAGE.addChild( container );
+CONTAINER.addChild( container );
 
 this.container = container;
 this.healthBar = healthBar;
@@ -268,7 +281,7 @@ if ( this.removed )
 
 this.removed = true;
 
-G.STAGE.removeChild( this.container );
+CONTAINER.removeChild( this.container );
 
     // remove from 'all' array and 'ground' or 'air' array
 var index = Unit.ALL.indexOf( this );

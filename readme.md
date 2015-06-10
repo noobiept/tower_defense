@@ -1,6 +1,9 @@
 Based on [http://www.kongregate.com/games/preecep/desktop-tower-defense](http://www.kongregate.com/games/preecep/desktop-tower-defense).
 
 
+Try it out here: [http://nbpt.eu/games/tower_defense/](http://nbpt.eu/games/tower_defense/)
+
+
 Maps
 ====
 

@@ -78,15 +78,15 @@ fill.textAlign = 'center';
 fill.x = args.x;
 fill.y = args.y;
 
-G.STAGE.addChild( stroke );
-G.STAGE.addChild( fill );
+CONTAINER.addChild( stroke );
+CONTAINER.addChild( fill );
 
 this.stroke = stroke;
 this.fill = fill;
 this.timeout = window.setTimeout( function()
     {
-    G.STAGE.removeChild( stroke );
-    G.STAGE.removeChild( fill );
+    CONTAINER.removeChild( stroke );
+    CONTAINER.removeChild( fill );
 
     if ( typeof args.onEnd !== 'undefined' )
         {
@@ -98,15 +98,29 @@ this.timeout = window.setTimeout( function()
 Message.ALL.push( this );
 }
 
+
 Message.ALL = [];
+
+var CONTAINER;      // createjs.Container() which will hold all the text elements
+
+
+/**
+ * Create the container which will hold all the text elements.
+ */
+Message.init = function( parent )
+{
+CONTAINER = new createjs.Container();
+
+parent.addChild( CONTAINER );
+};
 
 
 Message.prototype.remove = function()
 {
 window.clearTimeout( this.timeout );
 
-G.STAGE.removeChild( this.stroke );
-G.STAGE.removeChild( this.fill );
+CONTAINER.removeChild( this.stroke );
+CONTAINER.removeChild( this.fill );
 
 var index = Message.ALL.indexOf( this );
 

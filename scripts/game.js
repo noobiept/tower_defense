@@ -103,7 +103,7 @@ WAVE_COUNT = WAVE_INTERVAL;    // start the first wave immediately
 NEXT_WAVE = 0;
 
     // init the game
-Map.init( mapInfo );
+Map.build( mapInfo );
 
 
 $( '#MainCanvas' ).css( 'display', 'block' );

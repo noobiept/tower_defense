@@ -16,6 +16,14 @@ G.STAGE = new createjs.Stage( G.CANVAS );
 
 createjs.Ticker.setFPS( G.FPS );
 
+    // the order of these calls sets the display order (what elements are drawn first, etc)
+Map.init( G.STAGE );
+Tower.init( G.STAGE );
+Unit.init( G.STAGE );
+Bullet.init( G.STAGE );
+Message.init( G.STAGE );
+Map.initHighlight( G.STAGE );
+
 Tooltip.init();
 GameMenu.init();
 MainMenu.init();

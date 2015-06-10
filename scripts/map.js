@@ -5,7 +5,8 @@ function Map()
 
 }
 
-var OBSTACLES = [];
+var CONTAINER;      // createjs.Container() which will hold all the map elements
+var HIGHLIGHT_CONTAINER;
 var CREEP_LANES;
 
 var MAP_WIDTH = 0;
@@ -36,8 +37,30 @@ var POSITION_TYPE = {
 };
 
 
+/**
+ * Create the container for all the shape elements that are part of the map.
+ */
+Map.init = function( parent )
+{
+CONTAINER = new createjs.Container();
 
-Map.init = function( mapInfo )
+parent.addChild( CONTAINER );
+};
+
+
+/**
+ * The highlight element has a separate container, so that it can be drawn last (so it appears on top of the rest of the elements)
+ */
+Map.initHighlight = function( parent )
+{
+HIGHLIGHT_CONTAINER = new createjs.Container();
+
+parent.addChild( HIGHLIGHT_CONTAINER );
+};
+
+
+
+Map.build = function( mapInfo )
 {
 var columns = mapInfo.numberOfColumns;
 var lines = mapInfo.numberOfLines;
@@ -206,8 +229,8 @@ var highlightNotAvailable = new createjs.Bitmap( G.PRELOAD.getResult( 'highlight
     // start with the available visible first
 highlightNotAvailable.visible = false;
 
-G.STAGE.addChild( highlightAvailable );
-G.STAGE.addChild( highlightNotAvailable );
+HIGHLIGHT_CONTAINER.addChild( highlightAvailable );
+HIGHLIGHT_CONTAINER.addChild( highlightNotAvailable );
 
 GRID_HIGHLIGHT.shape = highlightAvailable;
 GRID_HIGHLIGHT.available = highlightAvailable;
@@ -359,24 +382,15 @@ g.endFill();
 obstacle.x = STARTING_X + args.startColumn * SQUARE_SIZE;
 obstacle.y = STARTING_Y + args.startLine * SQUARE_SIZE;
 
-G.STAGE.addChild( obstacle );
-
-OBSTACLES.push( obstacle );
+CONTAINER.addChild( obstacle );
 };
 
 
 
 Map.clear = function()
 {
-for (var a = 0 ; a < OBSTACLES.length ; a++)
-    {
-    G.STAGE.removeChild( OBSTACLES[ a ] );
-    }
-
-OBSTACLES.length = 0;
-
-G.STAGE.removeChild( GRID_HIGHLIGHT.available );
-G.STAGE.removeChild( GRID_HIGHLIGHT.not_available );
+CONTAINER.removeAllChildren();
+HIGHLIGHT_CONTAINER.removeAllChildren();
 };
 
 
