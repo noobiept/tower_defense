@@ -31,7 +31,7 @@ if ( score !== null )
 
 HighScore.save = function()
 {
-Utilities.setObject( 'high_score', HIGH_SCORE );
+Utilities.saveObject( 'high_score', HIGH_SCORE );
 };
 
 

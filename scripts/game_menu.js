@@ -62,7 +62,7 @@ for (a = 0 ; a < WAVE_LIST.length ; a++)
 
 
     // game menu's message
-MESSAGE = menu.querySelector( '#Message' );
+MESSAGE = document.querySelector( '#Message' );
 MESSAGE_TIMEOUT = new Utilities.Timeout();
 
 
