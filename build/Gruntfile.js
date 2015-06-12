@@ -34,7 +34,32 @@ grunt.initConfig({
         uglify: {
             release: {
                 files: {
-                    '../release/<%= pkg.name %> <%= pkg.version %>/min.js': [ '../scripts/*.js' ]
+                    '../release/<%= pkg.name %> <%= pkg.version %>/min.js': [
+                            // the order matters, since some classes inherit from others, so the base ones need to be defined first
+                            // this is based on the order in index.html
+                        '../scripts/path_finding.js',
+                        '../scripts/bullet.js',
+                        '../scripts/tower.js',
+                        '../scripts/tower_fast.js',
+                        '../scripts/tower_rocket.js',
+                        '../scripts/tower_frost.js',
+                        '../scripts/tower_anti_air.js',
+                        '../scripts/tower_bash.js',
+                        '../scripts/unit.js',
+                        '../scripts/unit_group.js',
+                        '../scripts/unit_fly.js',
+                        '../scripts/unit_fast.js',
+                        '../scripts/unit_spawn.js',
+                        '../scripts/unit_immune.js',
+                        '../scripts/game.js',
+                        '../scripts/game_menu.js',
+                        '../scripts/main_menu.js',
+                        '../scripts/message.js',
+                        '../scripts/tooltip.js',
+                        '../scripts/high_score.js',
+                        '../scripts/map.js',
+                        '../scripts/main.js'
+                    ]
                 }
             }
         },
