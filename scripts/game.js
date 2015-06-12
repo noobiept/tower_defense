@@ -231,15 +231,7 @@ switch( event.keyCode )
         break;
 
     case Utilities.KEY_CODE.n:
-        if ( BEFORE_FIRST_WAVE )
-            {
-            Game.pause();
-            }
-
-        else
-            {
-            Game.forceNextWave();
-            }
+        Game.forceNextWave();
         break;
 
     case Utilities.KEY_CODE.u:
@@ -426,6 +418,12 @@ G.STAGE.update();
 
 Game.forceNextWave = function()
 {
+if ( BEFORE_FIRST_WAVE )
+    {
+    Game.pause();
+    return;
+    }
+
 if ( IS_PAUSED )
     {
     return;
@@ -436,6 +434,7 @@ if ( NEXT_WAVE >= ALL_WAVES.length )
     {
     return;
     }
+
 
 var scorePerSecond = 10;
 var waveTimeLeft = WAVE_INTERVAL - WAVE_COUNT;

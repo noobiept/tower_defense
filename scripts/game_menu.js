@@ -38,11 +38,13 @@ START_PAUSED = menu.querySelector( '#startPause' );
 START_PAUSED.onclick = Game.pause;
 START_PAUSED.tooltip = new Tooltip({ text: 'Click to start', reference: START_PAUSED, enableEvents: false });
 
-TIME_UNTIL_NEXT_WAVE = menu.querySelector( '.timeUntilNextWave span' );
-TIME_UNTIL_NEXT_WAVE.onclick = Game.forceNextWave;
+var timeUntilNext = menu.querySelector( '.timeUntilNextWave' );
+timeUntilNext.onclick = Game.forceNextWave;
+
+TIME_UNTIL_NEXT_WAVE = timeUntilNext.querySelector( 'span' );
+
 
 var quit = menu.querySelector( '#quit' );
-
 quit.onclick = function() { Game.setEndFlag( false ); };
 
 

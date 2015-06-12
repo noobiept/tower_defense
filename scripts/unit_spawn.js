@@ -34,7 +34,7 @@ if ( was_killed && !this.already_spawned )
     var availablePositions = Map.getAvailablePositions( position.column, position.line, 2 );
     var spawnedPosition;
 
-    var spawnedHealth = parseInt( this.max_health / 2, 10 );
+    var spawnedHealth = parseInt( this.max_health / this.number_spawned_units, 10 );
     var spawnedRegeneration = parseInt( this.health_regeneration / 2, 10 );
     var spawnedGold = parseInt( this.gold / 2, 10 );
     var spawnedScore = parseInt( this.score / 2, 10 );

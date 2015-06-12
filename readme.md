@@ -36,6 +36,13 @@ Keyboard Shortcuts
 - `s` -- `S`ell selected tower.
 
 
+Mouse
+=====
+
+- `left click` -- Add a tower on the highlighted position. Can be used to select a tower as well.
+- `right click` -- Remove the tower currently under the mouse.
+
+
 Libraries
 =========
 

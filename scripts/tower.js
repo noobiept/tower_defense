@@ -176,7 +176,8 @@ GameMenu.hideTowerStats();
 
 Tower.prototype.startUpgrading = function()
 {
-if ( this.is_upgrading )
+if ( this.is_upgrading ||
+     this.is_selling )
     {
     return;
     }
@@ -289,7 +290,8 @@ return this.container.y;
 
 Tower.prototype.startSelling = function()
 {
-if ( this.is_selling )
+if ( this.is_selling ||
+     this.is_upgrading )
     {
     return;
     }
