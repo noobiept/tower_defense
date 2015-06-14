@@ -320,6 +320,7 @@ GameMenu.updateMenuControls( tower );
 var damage = tower.damage;
 var attack_speed = tower.attack_speed;
 var range = tower.range;
+var current = tower.stats[ tower.upgrade_level ];
 
 if ( showNextUpgrade && !tower.maxUpgrade() )
     {
@@ -334,6 +335,8 @@ if ( showNextUpgrade && !tower.maxUpgrade() )
 $( TOWER_INFO.damage ).text( damage );
 $( TOWER_INFO.attack_speed ).text( attack_speed );
 $( TOWER_INFO.range ).text( range );
+$( TOWER_INFO.upgrade ).text( 'Upgrade (' + current.upgrade_cost + ')' );
+$( TOWER_INFO.sell ).text( 'Sell (' + tower.getSellRefund() + ')' );
 };
 
 

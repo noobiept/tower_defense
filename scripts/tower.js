@@ -298,7 +298,7 @@ if ( this.is_selling ||
 
 if ( Game.beforeFirstWave() )
     {
-    this.sell( true );
+    this.sell();
     return;
     }
 
@@ -316,20 +316,26 @@ this.tick = this.tick_sell;
 };
 
 
-Tower.prototype.sell = function( recoverFullCost )
+Tower.prototype.sell = function()
 {
-var recover = this.cost;
-
-if ( typeof recoverFullCost === 'undefined' || recoverFullCost === false )
-    {
-    recover /= 2;
-    }
-
-
     // recover half the cost
-Game.updateGold( recover );
+Game.updateGold( this.getSellRefund() );
 
 this.remove();
+};
+
+
+Tower.prototype.getSellRefund = function()
+{
+if ( Game.beforeFirstWave() )
+    {
+    return this.cost;
+    }
+
+else
+    {
+    return this.cost / 2;
+    }
 };
 
 

@@ -269,9 +269,10 @@ if ( IS_PAUSED && !BEFORE_FIRST_WAVE )
     return;
     }
 
+var canvasRect = G.CANVAS.getBoundingClientRect();
 var button = event.button;
-var x = event.clientX;
-var y = event.clientY;
+var x = event.clientX - canvasRect.left;
+var y = event.clientY - canvasRect.top;
 var a;
 var tower;
 var point;
@@ -524,6 +525,7 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
         wave.count = 0;
 
         var className = window[ wave.type ];
+        var removeWave = false;
 
         for (var b = 0 ; b < CREEP_LANES.length ; b++)
             {
@@ -556,12 +558,14 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
                     score: wave.score
                 };
 
+                // the group units work a bit differently
+                // they are added all at the same time (instead of one at a time)
             if ( className == UnitGroup )
                 {
                 arguments.lane = lane;
                 arguments.howMany = wave.howMany;
 
-                wave.howMany = 0;
+                removeWave = true;
                 }
 
             new className( arguments );
@@ -570,7 +574,8 @@ for (a = ACTIVE_WAVES.length - 1 ; a >= 0 ; a--)
 
         wave.howMany--;
 
-        if ( wave.howMany <= 0 )
+        if ( wave.howMany <= 0 ||
+             removeWave === true )
             {
             var index = ACTIVE_WAVES.indexOf( wave );
 

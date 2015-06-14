@@ -21,7 +21,7 @@ else
     {
     for (a = 0 ; a < args.howMany ; a++)
         {
-        args.line = Utilities.getRandomInt( lane.start.column - halfLength, lane.start.column + halfLength - 1 );
+        args.column = Utilities.getRandomInt( lane.start.column - halfLength, lane.start.column + halfLength - 1 );
 
         new UnitGroup1( args );
         }

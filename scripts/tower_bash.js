@@ -24,8 +24,8 @@ Utilities.inheritPrototype( TowerBash, Tower );
 
 
 TowerBash.stats = [
-        { damage: 30, range: 20, attack_speed: 1.5, attack_radius: 20, slow: 20, upgrade_cost: 10, upgrade_time: 1, sell_time: 1, initial_cost: 50 },
-        { damage: 35, range: 22, attack_speed: 2, attack_radius: 22, slow: 30, upgrade_cost: 10, upgrade_time: 2, sell_time: 1.5 },
+        { damage: 30, range: 20, attack_speed: 1.5, attack_radius: 20, slow: 20, upgrade_cost: 65, upgrade_time: 1, sell_time: 1, initial_cost: 70 },
+        { damage: 35, range: 22, attack_speed: 2, attack_radius: 22, slow: 30, upgrade_cost: 65, upgrade_time: 2, sell_time: 1.5 },
         { damage: 40, range: 25, attack_speed: 2.5, attack_radius: 25, slow: 40, sell_time: 2 }
     ];
 
