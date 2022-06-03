@@ -1,6 +1,5 @@
-(function(window)
-{
-/*
+(function (window) {
+    /*
     In-game message
 
     args = {
@@ -13,131 +12,105 @@
         }
  */
 
-function Message( args )
-{
-var fontSize, fillColor, strokeColor;
+    function Message(args) {
+        var fontSize, fillColor, strokeColor;
 
-if ( typeof args.fontSize == 'undefined' )
-    {
-    fontSize = 16;
-    }
-
-else
-    {
-    fontSize = args.fontSize;
-    }
-
-if ( typeof args.fillColor == 'undefined' )
-    {
-    fillColor = 'white';
-    }
-
-else
-    {
-    fillColor = args.fillColor;
-    }
-
-if ( typeof args.strokeColor == 'undefined' )
-    {
-    strokeColor = 'black';
-    }
-
-else
-    {
-    strokeColor = args.strokeColor;
-    }
-
-if ( typeof args.timeout == 'undefined' )
-    {
-    args.timeout = 1000;
-    }
-
-    // center in the middle of the canvas
-if ( typeof args.x == 'undefined' )
-    {
-    args.x = G.CANVAS.width / 2;
-    }
-
-if ( typeof args.y == 'undefined' )
-    {
-    args.y = G.CANVAS.height / 2;
-    }
-
-var stroke = new createjs.Text( args.text, fontSize + 'px monospace', strokeColor );
-
-stroke.textAlign = 'center';
-stroke.x = args.x;
-stroke.y = args.y;
-stroke.outline = parseInt( fontSize / 5, 10 );
-
-var fill = stroke.clone();
-
-fill.outline = false;
-fill.color = fillColor;
-fill.textAlign = 'center';
-fill.x = args.x;
-fill.y = args.y;
-
-CONTAINER.addChild( stroke );
-CONTAINER.addChild( fill );
-
-this.stroke = stroke;
-this.fill = fill;
-this.timeout = window.setTimeout( function()
-    {
-    CONTAINER.removeChild( stroke );
-    CONTAINER.removeChild( fill );
-
-    if ( typeof args.onEnd !== 'undefined' )
-        {
-        args.onEnd();
+        if (typeof args.fontSize == "undefined") {
+            fontSize = 16;
+        } else {
+            fontSize = args.fontSize;
         }
 
-    }, args.timeout );
+        if (typeof args.fillColor == "undefined") {
+            fillColor = "white";
+        } else {
+            fillColor = args.fillColor;
+        }
 
-Message.ALL.push( this );
-}
+        if (typeof args.strokeColor == "undefined") {
+            strokeColor = "black";
+        } else {
+            strokeColor = args.strokeColor;
+        }
 
+        if (typeof args.timeout == "undefined") {
+            args.timeout = 1000;
+        }
 
-Message.ALL = [];
+        // center in the middle of the canvas
+        if (typeof args.x == "undefined") {
+            args.x = G.CANVAS.width / 2;
+        }
 
-var CONTAINER;      // createjs.Container() which will hold all the text elements
+        if (typeof args.y == "undefined") {
+            args.y = G.CANVAS.height / 2;
+        }
 
+        var stroke = new createjs.Text(
+            args.text,
+            fontSize + "px monospace",
+            strokeColor
+        );
 
-/**
- * Create the container which will hold all the text elements.
- */
-Message.init = function( parent )
-{
-CONTAINER = new createjs.Container();
+        stroke.textAlign = "center";
+        stroke.x = args.x;
+        stroke.y = args.y;
+        stroke.outline = parseInt(fontSize / 5, 10);
 
-parent.addChild( CONTAINER );
-};
+        var fill = stroke.clone();
 
+        fill.outline = false;
+        fill.color = fillColor;
+        fill.textAlign = "center";
+        fill.x = args.x;
+        fill.y = args.y;
 
-Message.prototype.remove = function()
-{
-window.clearTimeout( this.timeout );
+        CONTAINER.addChild(stroke);
+        CONTAINER.addChild(fill);
 
-CONTAINER.removeChild( this.stroke );
-CONTAINER.removeChild( this.fill );
+        this.stroke = stroke;
+        this.fill = fill;
+        this.timeout = window.setTimeout(function () {
+            CONTAINER.removeChild(stroke);
+            CONTAINER.removeChild(fill);
 
-var index = Message.ALL.indexOf( this );
+            if (typeof args.onEnd !== "undefined") {
+                args.onEnd();
+            }
+        }, args.timeout);
 
-Message.ALL.splice( index, 1 );
-};
-
-
-Message.removeAll = function()
-{
-for (var a = Message.ALL.length - 1 ; a >= 0 ; a--)
-    {
-    Message.ALL[ a ].remove();
+        Message.ALL.push(this);
     }
-};
 
+    Message.ALL = [];
 
+    var CONTAINER; // createjs.Container() which will hold all the text elements
 
-window.Message = Message;
+    /**
+     * Create the container which will hold all the text elements.
+     */
+    Message.init = function (parent) {
+        CONTAINER = new createjs.Container();
 
-}(window));
+        parent.addChild(CONTAINER);
+    };
+
+    Message.prototype.remove = function () {
+        window.clearTimeout(this.timeout);
+
+        CONTAINER.removeChild(this.stroke);
+        CONTAINER.removeChild(this.fill);
+
+        var index = Message.ALL.indexOf(this);
+
+        Message.ALL.splice(index, 1);
+    };
+
+    Message.removeAll = function () {
+        for (var a = Message.ALL.length - 1; a >= 0; a--) {
+            Message.ALL[a].remove();
+        }
+    };
+
+    window.Message = Message;
+})(window);

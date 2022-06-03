@@ -1,41 +1,36 @@
-body
-    {
+body {
     background-color: rgb(250, 250, 250);
     margin: 0;
-    }
+}
 
-    /* Main Menu */
+/* Main Menu */
 
-#LoadMessage
-    {
+#LoadMessage {
     position: fixed;
     text-align: center;
-    }
+}
 
-#MainMenu > *
-    {
+#MainMenu > * {
     min-width: 150px;
-    }
+}
 
-#MainMenu, #HighScore
-    {
+#MainMenu,
+#HighScore {
     display: none;
     position: absolute;
     top: 0;
     left: 0;
     text-align: center;
-    }
+}
 
-    /* Game Menu */
+/* Game Menu */
 
-#MainCanvas, #GameMenu
-    {
+#MainCanvas,
+#GameMenu {
     display: none;
-    }
+}
 
-
-#GameMenu
-    {
+#GameMenu {
     /*display: flex;*/
     flex-direction: row;
     justify-content: flex-start;
@@ -45,100 +40,83 @@ body
     text-align: center;
     font-size: 18px;
     min-height: 85px;
-    }
+}
 
-
-#GameMenu-TowerInfo
-    {
+#GameMenu-TowerInfo {
     display: none;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    }
+}
 
-#GameMenu-TowerStats
-    {
+#GameMenu-TowerStats {
     min-width: 150px;
-    }
+}
 
-.MenuBlock
-    {
+.MenuBlock {
     min-width: 150px;
     margin: 0 10px;
-    }
+}
 
-.button
-    {
+.button {
     cursor: pointer;
-    }
+}
 
-.button:hover
-    {
+.button:hover {
     background-color: #e8e8ca;
-    }
+}
 
-#Message
-    {
+#Message {
     visibility: hidden;
     text-align: center;
     color: blue;
-    }
+}
 
-.selectedTower, .selectedTower:hover
-    {
+.selectedTower,
+.selectedTower:hover {
     background-color: burlywood;
-    }
+}
 
-#GameMenu-waveList #current
-    {
+#GameMenu-waveList #current {
     border: 3px solid cadetblue;
-    }
+}
 
-#GameMenu-waveList
-    {
+#GameMenu-waveList {
     display: flex;
     flex-direction: row;
-    }
+}
 
-#GameMenu-waveList .wave
-    {
+#GameMenu-waveList .wave {
     min-width: 100px;
     padding: 10px;
     cursor: default;
-    }
+}
 
-.Unit
-    {
+.Unit {
     background-color: rgb(235, 182, 185);
-    }
+}
 
-.UnitFast
-    {
+.UnitFast {
     background-color: rgb(235, 164, 47);
-    }
+}
 
-.UnitFly
-    {
+.UnitFly {
     background-color: rgb(226, 243, 155);
-    }
+}
 
-.UnitGroup
-    {
+.UnitGroup {
     background-color: rgb(69, 205, 223);
-    }
+}
 
-.UnitImmune
-    {
+.UnitImmune {
     background-color: rgb(235, 222, 231);
-    }
+}
 
-.UnitSpawn
-    {
+.UnitSpawn {
     background-color: rgb(16, 194, 71);
-    }
+}
 
-.tooltip
-    {
+.tooltip {
     display: none;
     position: absolute;
     min-width: 100px;
@@ -148,11 +126,8 @@ body
     font-size: 20px;
     text-align: center;
     background-color: rgb(250, 250, 250);
-    }
+}
 
-.tooltip-show
-    {
+.tooltip-show {
     display: block;
-    }
-
-
+}
