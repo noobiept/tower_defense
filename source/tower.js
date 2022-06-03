@@ -2,6 +2,7 @@ import { Map } from "./map";
 import { G } from "./main";
 import { Game } from "./game";
 import { Bullet } from "./bullet";
+import { GameMenu } from "./game_menu";
 
 export function Tower(args) {
     var squareSize = Map.getSquareSize();
