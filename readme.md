@@ -36,6 +36,11 @@ Try it out here: [http://nbpt.eu/games/tower_defense/](http://nbpt.eu/games/towe
 -   `left click` -- Add a tower on the highlighted position. Can be used to select a tower as well.
 -   `right click` -- Remove the tower currently under the mouse.
 
+# Development
+
+-   `npm start`
+-   `npm run build`
+
 # Libraries
 
 -   [http://jquery.com/](http://jquery.com/) -- 2.1
