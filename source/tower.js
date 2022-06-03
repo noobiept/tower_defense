@@ -1,463 +1,464 @@
-(function (window) {
-    function Tower(args) {
-        var squareSize = Map.getSquareSize();
+import { Map } from "./map";
+import { G } from "./main";
+import { Game } from "./game";
+import { Bullet } from "./bullet";
 
-        if (typeof this.name === "undefined") {
-            this.name = "tower";
-        }
+export function Tower(args) {
+    var squareSize = Map.getSquareSize();
 
-        if (typeof this.image === "undefined") {
-            this.image = "tower_basic";
-        }
-
-        if (typeof this.stats === "undefined") {
-            this.stats = Tower.stats;
-        }
-
-        if (typeof this.can_target_ground === "undefined") {
-            this.can_target_ground = true;
-        }
-
-        if (typeof this.can_target_air === "undefined") {
-            this.can_target_air = true;
-        }
-
-        this.column = parseInt(args.column, 10);
-        this.line = parseInt(args.line, 10);
-
-        this.width = squareSize * 2;
-        this.height = squareSize * 2;
-
-        this.upgrade_level = 0;
-        this.is_upgrading = false;
-        this.upgrade_count = 0;
-        this.is_selling = false;
-        this.sell_count = 0;
-
-        var currentLevel = this.stats[this.upgrade_level];
-
-        this.damage = currentLevel.damage;
-        this.range = currentLevel.range;
-        this.cost = currentLevel.initial_cost;
-
-        this.attack_speed = currentLevel.attack_speed;
-        this.attack_interval = 1 / this.attack_speed;
-        this.attack_count = 0;
-
-        this.targetUnit = null;
-        this.removed = false;
-
-        this.container = null;
-        this.rangeElement = null;
-        this.shape = null;
-        this.progressElement = null;
-        this.progress_length = 3;
-
-        this.setupShape();
-        this.tick = this.tick_normal;
-
-        Tower.ALL.push(this);
-
-        Game.updateGold(-this.cost);
-
-        // tower occupies 2x2 squares
-        Map.setImpassableBox(this.column, this.line, 2);
+    if (typeof this.name === "undefined") {
+        this.name = "tower";
     }
 
-    var CONTAINER; // createjs.Container() which will hold all the tower elements
-    Tower.ALL = []; // has all the 'Tower' objects
+    if (typeof this.image === "undefined") {
+        this.image = "tower_basic";
+    }
 
-    // each array position corresponds to the upgrade level of the tower
-    Tower.stats = [
-        {
-            damage: 10,
-            range: 50,
-            attack_speed: 2,
-            upgrade_cost: 10,
-            upgrade_time: 1,
-            sell_time: 1,
-            initial_cost: 10,
-        },
-        {
-            damage: 15,
-            range: 55,
-            attack_speed: 2.5,
-            upgrade_cost: 10,
-            upgrade_time: 2,
-            sell_time: 1.5,
-        },
-        { damage: 20, range: 60, attack_speed: 3, sell_time: 2 },
-    ];
+    if (typeof this.stats === "undefined") {
+        this.stats = Tower.stats;
+    }
 
-    /**
-     * Create the container which will hold all the tower elements.
-     */
-    Tower.init = function (parent) {
-        CONTAINER = new createjs.Container();
+    if (typeof this.can_target_ground === "undefined") {
+        this.can_target_ground = true;
+    }
 
-        parent.addChild(CONTAINER);
-    };
+    if (typeof this.can_target_air === "undefined") {
+        this.can_target_air = true;
+    }
 
-    Tower.prototype.setupShape = function () {
-        var width = this.width;
-        var height = this.height;
-        var halfWidth = width / 2;
-        var halfHeight = height / 2;
+    this.column = parseInt(args.column, 10);
+    this.line = parseInt(args.line, 10);
 
-        // the tower base
-        var base = new createjs.Bitmap(G.PRELOAD.getResult("tower_base0"));
+    this.width = squareSize * 2;
+    this.height = squareSize * 2;
 
-        base.regX = halfWidth;
-        base.regY = halfHeight;
+    this.upgrade_level = 0;
+    this.is_upgrading = false;
+    this.upgrade_count = 0;
+    this.is_selling = false;
+    this.sell_count = 0;
 
-        // the tower
-        var shape = new createjs.Bitmap(G.PRELOAD.getResult(this.image));
+    var currentLevel = this.stats[this.upgrade_level];
 
-        shape.regX = halfWidth;
-        shape.regY = halfHeight;
-        shape.rotation = Utilities.getRandomInt(0, 360);
+    this.damage = currentLevel.damage;
+    this.range = currentLevel.range;
+    this.cost = currentLevel.initial_cost;
 
-        // the range circle
-        var range = new createjs.Shape();
+    this.attack_speed = currentLevel.attack_speed;
+    this.attack_interval = 1 / this.attack_speed;
+    this.attack_count = 0;
 
-        var g = range.graphics;
+    this.targetUnit = null;
+    this.removed = false;
 
-        g.beginStroke("gray");
-        g.drawCircle(0, 0, this.range);
-        g.endStroke();
+    this.container = null;
+    this.rangeElement = null;
+    this.shape = null;
+    this.progressElement = null;
+    this.progress_length = 3;
 
-        range.visible = false;
+    this.setupShape();
+    this.tick = this.tick_normal;
 
-        // progress bar (shown when upgrading or selling the tower)
-        var progress = new createjs.Shape();
+    Tower.ALL.push(this);
 
-        progress.x = -halfWidth;
-        progress.y = -this.progress_length / 2;
+    Game.updateGold(-this.cost);
 
-        progress.visible = false;
+    // tower occupies 2x2 squares
+    Map.setImpassableBox(this.column, this.line, 2);
+}
 
-        // the container
-        var container = new createjs.Container();
+var CONTAINER; // createjs.Container() which will hold all the tower elements
+Tower.ALL = []; // has all the 'Tower' objects
 
-        var position = Map.getPosition(this.column, this.line);
+// each array position corresponds to the upgrade level of the tower
+Tower.stats = [
+    {
+        damage: 10,
+        range: 50,
+        attack_speed: 2,
+        upgrade_cost: 10,
+        upgrade_time: 1,
+        sell_time: 1,
+        initial_cost: 10,
+    },
+    {
+        damage: 15,
+        range: 55,
+        attack_speed: 2.5,
+        upgrade_cost: 10,
+        upgrade_time: 2,
+        sell_time: 1.5,
+    },
+    { damage: 20, range: 60, attack_speed: 3, sell_time: 2 },
+];
 
-        container.addChild(base);
-        container.addChild(shape);
-        container.addChild(range);
-        container.addChild(progress);
-        container.x = position.x + halfWidth;
-        container.y = position.y + halfHeight;
+/**
+ * Create the container which will hold all the tower elements.
+ */
+Tower.init = function (parent) {
+    CONTAINER = new createjs.Container();
 
-        CONTAINER.addChild(container);
+    parent.addChild(CONTAINER);
+};
 
-        this.container = container;
-        this.rangeElement = range;
-        this.baseElement = base;
-        this.progressElement = progress;
-        this.shape = shape;
-    };
+Tower.prototype.setupShape = function () {
+    var width = this.width;
+    var height = this.height;
+    var halfWidth = width / 2;
+    var halfHeight = height / 2;
 
-    Tower.prototype.selected = function () {
-        // show the range
-        this.rangeElement.visible = true;
+    // the tower base
+    var base = new createjs.Bitmap(G.PRELOAD.getResult("tower_base0"));
 
-        // show the stats in the game menu
-        GameMenu.showTowerStats(this);
-    };
+    base.regX = halfWidth;
+    base.regY = halfHeight;
 
-    Tower.prototype.unselected = function () {
-        this.rangeElement.visible = false;
+    // the tower
+    var shape = new createjs.Bitmap(G.PRELOAD.getResult(this.image));
 
-        GameMenu.hideTowerStats();
-    };
+    shape.regX = halfWidth;
+    shape.regY = halfHeight;
+    shape.rotation = Utilities.getRandomInt(0, 360);
 
-    Tower.prototype.startUpgrading = function () {
-        if (this.is_upgrading || this.is_selling) {
-            return;
-        }
+    // the range circle
+    var range = new createjs.Shape();
 
-        // no more upgrades
-        if (this.upgrade_level + 1 >= this.stats.length) {
-            GameMenu.showMessage("No more upgrades.");
-            return;
-        }
+    var g = range.graphics;
 
-        var currentLevel = this.stats[this.upgrade_level];
-        var upgradeCost = currentLevel.upgrade_cost;
+    g.beginStroke("gray");
+    g.drawCircle(0, 0, this.range);
+    g.endStroke();
 
-        if (!Game.haveEnoughGold(upgradeCost)) {
-            GameMenu.showMessage("Not enough gold.");
-            return;
-        }
+    range.visible = false;
 
-        if (Game.beforeFirstWave()) {
-            Game.updateGold(-currentLevel.upgrade_cost);
-            this.upgrade();
-            return;
-        }
+    // progress bar (shown when upgrading or selling the tower)
+    var progress = new createjs.Shape();
 
-        this.is_upgrading = true;
+    progress.x = -halfWidth;
+    progress.y = -this.progress_length / 2;
 
+    progress.visible = false;
+
+    // the container
+    var container = new createjs.Container();
+
+    var position = Map.getPosition(this.column, this.line);
+
+    container.addChild(base);
+    container.addChild(shape);
+    container.addChild(range);
+    container.addChild(progress);
+    container.x = position.x + halfWidth;
+    container.y = position.y + halfHeight;
+
+    CONTAINER.addChild(container);
+
+    this.container = container;
+    this.rangeElement = range;
+    this.baseElement = base;
+    this.progressElement = progress;
+    this.shape = shape;
+};
+
+Tower.prototype.selected = function () {
+    // show the range
+    this.rangeElement.visible = true;
+
+    // show the stats in the game menu
+    GameMenu.showTowerStats(this);
+};
+
+Tower.prototype.unselected = function () {
+    this.rangeElement.visible = false;
+
+    GameMenu.hideTowerStats();
+};
+
+Tower.prototype.startUpgrading = function () {
+    if (this.is_upgrading || this.is_selling) {
+        return;
+    }
+
+    // no more upgrades
+    if (this.upgrade_level + 1 >= this.stats.length) {
+        GameMenu.showMessage("No more upgrades.");
+        return;
+    }
+
+    var currentLevel = this.stats[this.upgrade_level];
+    var upgradeCost = currentLevel.upgrade_cost;
+
+    if (!Game.haveEnoughGold(upgradeCost)) {
+        GameMenu.showMessage("Not enough gold.");
+        return;
+    }
+
+    if (Game.beforeFirstWave()) {
         Game.updateGold(-currentLevel.upgrade_cost);
+        this.upgrade();
+        return;
+    }
 
-        this.upgrade_count = 0;
+    this.is_upgrading = true;
 
-        this.progressElement.graphics.clear();
-        this.progressElement.visible = true;
-        this.shape.visible = false;
+    Game.updateGold(-currentLevel.upgrade_cost);
 
-        GameMenu.updateMenuControls(this);
+    this.upgrade_count = 0;
 
-        this.tick = this.tick_upgrade;
-    };
+    this.progressElement.graphics.clear();
+    this.progressElement.visible = true;
+    this.shape.visible = false;
 
-    Tower.prototype.upgrade = function () {
-        // no more upgrades
-        if (this.upgrade_level + 1 >= this.stats.length) {
-            GameMenu.showMessage("No more upgrades.");
-            return;
-        }
+    GameMenu.updateMenuControls(this);
 
-        // update the overall cost of the tower
-        this.cost += this.stats[this.upgrade_level].upgrade_cost;
+    this.tick = this.tick_upgrade;
+};
 
-        // upgrade a level
-        this.upgrade_level++;
+Tower.prototype.upgrade = function () {
+    // no more upgrades
+    if (this.upgrade_level + 1 >= this.stats.length) {
+        GameMenu.showMessage("No more upgrades.");
+        return;
+    }
 
-        var currentLevel = this.stats[this.upgrade_level];
+    // update the overall cost of the tower
+    this.cost += this.stats[this.upgrade_level].upgrade_cost;
 
-        this.damage = currentLevel.damage;
-        this.range = currentLevel.range;
-        this.attack_speed = currentLevel.attack_speed;
-        this.attack_interval = 1 / this.attack_speed;
-        this.attack_count = 0;
+    // upgrade a level
+    this.upgrade_level++;
 
-        // re-draw the range element (since we may have increased the range in the upgrade)
-        var g = this.rangeElement.graphics;
+    var currentLevel = this.stats[this.upgrade_level];
 
-        g.clear();
-        g.beginStroke("gray");
-        g.drawCircle(0, 0, this.range);
-        g.endStroke();
+    this.damage = currentLevel.damage;
+    this.range = currentLevel.range;
+    this.attack_speed = currentLevel.attack_speed;
+    this.attack_interval = 1 / this.attack_speed;
+    this.attack_count = 0;
 
-        // add some visual clue, to differentiate the towers per their upgrade level
-        this.baseElement.image = G.PRELOAD.getResult(
-            "tower_base" + this.upgrade_level
-        );
+    // re-draw the range element (since we may have increased the range in the upgrade)
+    var g = this.rangeElement.graphics;
 
-        if (Game.checkIfSelected(this)) {
-            GameMenu.updateTowerStats(this, false);
-        }
-    };
+    g.clear();
+    g.beginStroke("gray");
+    g.drawCircle(0, 0, this.range);
+    g.endStroke();
 
-    Tower.prototype.maxUpgrade = function () {
-        if (this.upgrade_level + 1 >= this.stats.length) {
-            return true;
-        }
+    // add some visual clue, to differentiate the towers per their upgrade level
+    this.baseElement.image = G.PRELOAD.getResult(
+        "tower_base" + this.upgrade_level
+    );
 
-        return false;
-    };
+    if (Game.checkIfSelected(this)) {
+        GameMenu.updateTowerStats(this, false);
+    }
+};
 
-    Tower.prototype.getX = function () {
-        return this.container.x;
-    };
+Tower.prototype.maxUpgrade = function () {
+    if (this.upgrade_level + 1 >= this.stats.length) {
+        return true;
+    }
 
-    Tower.prototype.getY = function () {
-        return this.container.y;
-    };
+    return false;
+};
 
-    Tower.prototype.startSelling = function () {
-        if (this.is_selling || this.is_upgrading) {
-            return;
-        }
+Tower.prototype.getX = function () {
+    return this.container.x;
+};
 
-        if (Game.beforeFirstWave()) {
-            this.sell();
-            return;
-        }
+Tower.prototype.getY = function () {
+    return this.container.y;
+};
 
-        this.is_selling = true;
+Tower.prototype.startSelling = function () {
+    if (this.is_selling || this.is_upgrading) {
+        return;
+    }
 
-        this.sell_count = 0;
+    if (Game.beforeFirstWave()) {
+        this.sell();
+        return;
+    }
 
-        this.progressElement.graphics.clear();
-        this.progressElement.visible = true;
-        this.shape.visible = false;
+    this.is_selling = true;
 
-        GameMenu.updateMenuControls(this);
+    this.sell_count = 0;
 
-        this.tick = this.tick_sell;
-    };
+    this.progressElement.graphics.clear();
+    this.progressElement.visible = true;
+    this.shape.visible = false;
 
-    Tower.prototype.sell = function () {
-        // recover half the cost
-        Game.updateGold(this.getSellRefund());
+    GameMenu.updateMenuControls(this);
 
-        this.remove();
-    };
+    this.tick = this.tick_sell;
+};
 
-    Tower.prototype.getSellRefund = function () {
-        if (Game.beforeFirstWave()) {
-            return this.cost;
-        } else {
-            return this.cost / 2;
-        }
-    };
+Tower.prototype.sell = function () {
+    // recover half the cost
+    Game.updateGold(this.getSellRefund());
 
-    Tower.prototype.remove = function () {
-        if (this.removed) {
-            return;
-        }
+    this.remove();
+};
 
-        this.removed = true;
+Tower.prototype.getSellRefund = function () {
+    if (Game.beforeFirstWave()) {
+        return this.cost;
+    } else {
+        return this.cost / 2;
+    }
+};
 
-        // remove the shape
-        CONTAINER.removeChild(this.container);
+Tower.prototype.remove = function () {
+    if (this.removed) {
+        return;
+    }
 
-        // from from the ALL array
-        var index = Tower.ALL.indexOf(this);
+    this.removed = true;
 
-        Tower.ALL.splice(index, 1);
+    // remove the shape
+    CONTAINER.removeChild(this.container);
 
-        // remove the selection of this tower
-        if (Game.checkIfSelected(this)) {
-            Game.clearSelection();
-        }
+    // from from the ALL array
+    var index = Tower.ALL.indexOf(this);
 
-        // remove the tower from the map (and update the pathing)
-        Map.removeTower(this);
-    };
+    Tower.ALL.splice(index, 1);
 
-    /*
+    // remove the selection of this tower
+    if (Game.checkIfSelected(this)) {
+        Game.clearSelection();
+    }
+
+    // remove the tower from the map (and update the pathing)
+    Map.removeTower(this);
+};
+
+/*
     Rotate the tower (the center part, not the whole element) to point in the direction of a unit
  */
 
-    Tower.prototype.rotateTower = function (unit) {
-        var angleRads = Utilities.calculateAngle(
-            this.getX(),
-            this.getY() * -1,
-            unit.getX(),
-            unit.getY() * -1
-        );
+Tower.prototype.rotateTower = function (unit) {
+    var angleRads = Utilities.calculateAngle(
+        this.getX(),
+        this.getY() * -1,
+        unit.getX(),
+        unit.getY() * -1
+    );
 
-        var angleDegrees = Utilities.toDegrees(angleRads);
+    var angleDegrees = Utilities.toDegrees(angleRads);
 
-        this.shape.rotation = angleDegrees;
-    };
+    this.shape.rotation = angleDegrees;
+};
 
-    Tower.prototype.onBulletHit = function (target) {
-        // deal damage, and see if the unit died from this attack or not
-        if (target.tookDamage(this)) {
-            this.targetUnit = null;
-        }
-    };
+Tower.prototype.onBulletHit = function (target) {
+    // deal damage, and see if the unit died from this attack or not
+    if (target.tookDamage(this)) {
+        this.targetUnit = null;
+    }
+};
 
-    Tower.prototype.tick_attack = function (deltaTime) {
-        this.attack_count -= deltaTime;
+Tower.prototype.tick_attack = function (deltaTime) {
+    this.attack_count -= deltaTime;
 
-        // see if we can attack right now
-        if (this.attack_count <= 0) {
-            var target = this.targetUnit;
+    // see if we can attack right now
+    if (this.attack_count <= 0) {
+        var target = this.targetUnit;
 
-            // check if its currently attacking a unit
-            if (target && !target.removed) {
-                this.rotateTower(target);
+        // check if its currently attacking a unit
+        if (target && !target.removed) {
+            this.rotateTower(target);
 
-                // check if the unit is within the tower's range
-                if (
-                    Utilities.circleCircleCollision(
-                        this.getX(),
-                        this.getY(),
-                        this.range,
-                        target.getX(),
-                        target.getY(),
-                        target.width / 2
-                    )
-                ) {
-                    this.attack_count = this.attack_interval;
-                    new Bullet({
-                        shooter: this,
-                        target: target,
-                    });
-                }
-
-                // can't attack anymore, find other target
-                else {
-                    this.targetUnit = null;
-                }
+            // check if the unit is within the tower's range
+            if (
+                Utilities.circleCircleCollision(
+                    this.getX(),
+                    this.getY(),
+                    this.range,
+                    target.getX(),
+                    target.getY(),
+                    target.width / 2
+                )
+            ) {
+                this.attack_count = this.attack_interval;
+                new Bullet({
+                    shooter: this,
+                    target: target,
+                });
             }
 
-            // find a target
+            // can't attack anymore, find other target
             else {
-                this.targetUnit = Map.getUnitInRange(this);
+                this.targetUnit = null;
             }
         }
-    };
 
-    Tower.prototype.tick_normal = function (deltaTime) {
-        this.tick_attack(deltaTime);
-    };
-
-    Tower.prototype.tick_upgrade = function (deltaTime) {
-        this.upgrade_count += deltaTime;
-
-        var currentLevel = this.stats[this.upgrade_level];
-        var upgradeTime = currentLevel.upgrade_time;
-
-        var ratio = this.upgrade_count / upgradeTime;
-
-        var g = this.progressElement.graphics;
-
-        g.beginFill("gray");
-        g.drawRect(0, 0, this.width * ratio, this.progress_length);
-        g.endFill();
-
-        // upgrade finish, improve the stats and return to normal tick
-        if (this.upgrade_count >= upgradeTime) {
-            this.progressElement.visible = false;
-            this.shape.visible = true;
-
-            this.tick = this.tick_normal;
-            this.is_upgrading = false;
-            this.upgrade();
+        // find a target
+        else {
+            this.targetUnit = Map.getUnitInRange(this);
         }
-    };
+    }
+};
 
-    Tower.prototype.tick_sell = function (deltaTime) {
-        if (!this.is_selling) {
-            return;
-        }
+Tower.prototype.tick_normal = function (deltaTime) {
+    this.tick_attack(deltaTime);
+};
 
-        this.sell_count += deltaTime;
+Tower.prototype.tick_upgrade = function (deltaTime) {
+    this.upgrade_count += deltaTime;
 
-        var currentLevel = this.stats[this.upgrade_level];
-        var sellTime = currentLevel.sell_time;
+    var currentLevel = this.stats[this.upgrade_level];
+    var upgradeTime = currentLevel.upgrade_time;
 
-        var ratio = this.sell_count / sellTime;
+    var ratio = this.upgrade_count / upgradeTime;
 
-        var g = this.progressElement.graphics;
+    var g = this.progressElement.graphics;
 
-        g.beginFill("rgb(200,0,0)");
-        g.drawRect(0, 0, this.width * ratio, this.progress_length);
-        g.endFill();
+    g.beginFill("gray");
+    g.drawRect(0, 0, this.width * ratio, this.progress_length);
+    g.endFill();
 
-        if (this.sell_count >= sellTime) {
-            this.sell();
-            this.is_selling = false;
-        }
-    };
+    // upgrade finish, improve the stats and return to normal tick
+    if (this.upgrade_count >= upgradeTime) {
+        this.progressElement.visible = false;
+        this.shape.visible = true;
 
-    Tower.prototype.tick = function (deltaTime) {
-        // this will be overridden to either tick_normal(), tick_upgrade() or tick_sell() depending on the tower's current state
-    };
+        this.tick = this.tick_normal;
+        this.is_upgrading = false;
+        this.upgrade();
+    }
+};
 
-    Tower.removeAll = function () {
-        for (var a = 0; a < Tower.ALL.length; a++) {
-            Tower.ALL[a].remove();
+Tower.prototype.tick_sell = function (deltaTime) {
+    if (!this.is_selling) {
+        return;
+    }
 
-            a--;
-        }
-    };
+    this.sell_count += deltaTime;
 
-    window.Tower = Tower;
-})(window);
+    var currentLevel = this.stats[this.upgrade_level];
+    var sellTime = currentLevel.sell_time;
+
+    var ratio = this.sell_count / sellTime;
+
+    var g = this.progressElement.graphics;
+
+    g.beginFill("rgb(200,0,0)");
+    g.drawRect(0, 0, this.width * ratio, this.progress_length);
+    g.endFill();
+
+    if (this.sell_count >= sellTime) {
+        this.sell();
+        this.is_selling = false;
+    }
+};
+
+Tower.prototype.tick = function (deltaTime) {
+    // this will be overridden to either tick_normal(), tick_upgrade() or tick_sell() depending on the tower's current state
+};
+
+Tower.removeAll = function () {
+    for (var a = 0; a < Tower.ALL.length; a++) {
+        Tower.ALL[a].remove();
+
+        a--;
+    }
+};

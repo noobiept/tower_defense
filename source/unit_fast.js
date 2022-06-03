@@ -1,16 +1,14 @@
-(function (window) {
-    function UnitFast(args) {
-        this.name = "fast unit";
-        this.image = "creep_fast";
-        this.slowImage = "creep_fast_slow";
-        this.width = 20;
-        this.height = 10;
-        this.movement_speed = 80;
+import { Unit } from "./unit";
 
-        Unit.call(this, args);
-    }
+export function UnitFast(args) {
+    this.name = "fast unit";
+    this.image = "creep_fast";
+    this.slowImage = "creep_fast_slow";
+    this.width = 20;
+    this.height = 10;
+    this.movement_speed = 80;
 
-    Utilities.inheritPrototype(UnitFast, Unit);
+    Unit.call(this, args);
+}
 
-    window.UnitFast = UnitFast;
-})(window);
+Utilities.inheritPrototype(UnitFast, Unit);

@@ -15,7 +15,7 @@
         "webpack-dev-server": "^4.9.1"
     },
     "scripts": {
-        "start": "webpack serve --mode=development --config ./webpack.config.js",
+        "start": "webpack serve --mode=development --config ./webpack.config.js --devtool eval-source-map",
         "build": "webpack --mode=production --config ./webpack.config.js",
         "test": "npm-run-all --parallel test:*",
         "test:format": "prettier --check ."

@@ -1,14 +1,12 @@
-(function (window) {
-    function UnitImmune(args) {
-        this.name = "immune unit";
-        this.image = "creep_immune";
-        this.is_immune = true;
-        this.movement_speed = 50;
+import { Unit } from "./unit";
 
-        Unit.call(this, args);
-    }
+export function UnitImmune(args) {
+    this.name = "immune unit";
+    this.image = "creep_immune";
+    this.is_immune = true;
+    this.movement_speed = 50;
 
-    Utilities.inheritPrototype(UnitImmune, Unit);
+    Unit.call(this, args);
+}
 
-    window.UnitImmune = UnitImmune;
-})(window);
+Utilities.inheritPrototype(UnitImmune, Unit);

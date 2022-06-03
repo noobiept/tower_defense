@@ -1,101 +1,94 @@
-(function (window) {
-    function Tooltip(args) {
-        var _this = this;
-        var reference = args.reference;
-        var element = document.createElement("div");
+export function Tooltip(args) {
+    var _this = this;
+    var reference = args.reference;
+    var element = document.createElement("div");
 
-        element.className = "tooltip";
-        $(element).html(args.text);
+    element.className = "tooltip";
+    $(element).html(args.text);
 
-        CONTAINER.appendChild(element);
+    CONTAINER.appendChild(element);
 
-        Tooltip.ALL.push(this);
+    Tooltip.ALL.push(this);
 
-        this.text = args.text;
-        this.element = element;
-        this.reference = reference;
-        this.is_opened = false;
+    this.text = args.text;
+    this.element = element;
+    this.reference = reference;
+    this.is_opened = false;
 
-        if (
-            typeof args.enableEvents == "undefined" ||
-            args.enableEvents === true
-        ) {
-            reference.onmouseover = function () {
-                _this.show();
-            };
-            reference.onmouseout = function () {
-                _this.hide();
-            };
-        }
+    if (typeof args.enableEvents == "undefined" || args.enableEvents === true) {
+        reference.onmouseover = function () {
+            _this.show();
+        };
+        reference.onmouseout = function () {
+            _this.hide();
+        };
+    }
+}
+
+var CONTAINER = null;
+Tooltip.ALL = [];
+
+Tooltip.init = function () {
+    var container = document.createElement("div");
+
+    container.id = "TooltipContainer";
+    document.body.appendChild(container);
+
+    CONTAINER = container;
+};
+
+Tooltip.removeAll = function () {
+    for (var a = Tooltip.ALL.length - 1; a >= 0; a--) {
+        var tooltip = Tooltip.ALL[a];
+
+        tooltip.reference.onmouseover = null;
+        tooltip.reference.onmouseout = null;
+
+        CONTAINER.removeChild(tooltip.element);
+
+        Tooltip.ALL.splice(a, 1);
+    }
+};
+
+Tooltip.hideAll = function () {
+    for (var a = 0; a < Tooltip.ALL.length; a++) {
+        Tooltip.ALL[a].hide();
+    }
+};
+
+Tooltip.prototype.show = function () {
+    if (this.text === "") {
+        return;
     }
 
-    var CONTAINER = null;
-    Tooltip.ALL = [];
+    this.is_opened = true;
 
-    Tooltip.init = function () {
-        var container = document.createElement("div");
+    var reference = this.reference;
+    var element = this.element;
 
-        container.id = "TooltipContainer";
-        document.body.appendChild(container);
+    var position = $(reference).offset();
 
-        CONTAINER = container;
-    };
+    var left = position.left;
+    var top = position.top - $(element).outerHeight() - 5;
 
-    Tooltip.removeAll = function () {
-        for (var a = Tooltip.ALL.length - 1; a >= 0; a--) {
-            var tooltip = Tooltip.ALL[a];
+    $(element).css("top", top + "px");
+    $(element).css("left", left + "px");
 
-            tooltip.reference.onmouseover = null;
-            tooltip.reference.onmouseout = null;
+    $(element).addClass("tooltip-show");
+};
 
-            CONTAINER.removeChild(tooltip.element);
+Tooltip.prototype.hide = function () {
+    this.is_opened = false;
 
-            Tooltip.ALL.splice(a, 1);
-        }
-    };
+    $(this.element).removeClass("tooltip-show");
+};
 
-    Tooltip.hideAll = function () {
-        for (var a = 0; a < Tooltip.ALL.length; a++) {
-            Tooltip.ALL[a].hide();
-        }
-    };
+Tooltip.prototype.isOpened = function () {
+    return this.is_opened;
+};
 
-    Tooltip.prototype.show = function () {
-        if (this.text === "") {
-            return;
-        }
+Tooltip.prototype.updateText = function (text) {
+    this.text = text;
 
-        this.is_opened = true;
-
-        var reference = this.reference;
-        var element = this.element;
-
-        var position = $(reference).offset();
-
-        var left = position.left;
-        var top = position.top - $(element).outerHeight() - 5;
-
-        $(element).css("top", top + "px");
-        $(element).css("left", left + "px");
-
-        $(element).addClass("tooltip-show");
-    };
-
-    Tooltip.prototype.hide = function () {
-        this.is_opened = false;
-
-        $(this.element).removeClass("tooltip-show");
-    };
-
-    Tooltip.prototype.isOpened = function () {
-        return this.is_opened;
-    };
-
-    Tooltip.prototype.updateText = function (text) {
-        this.text = text;
-
-        $(this.element).html(text);
-    };
-
-    window.Tooltip = Tooltip;
-})(window);
+    $(this.element).html(text);
+};

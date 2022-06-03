@@ -4,7 +4,7 @@ const Path = require("path");
 const Package = require("./package.json");
 
 module.exports = {
-    entry: "./source/index.js",
+    entry: "./source/main.js",
     module: {
         rules: [
             {

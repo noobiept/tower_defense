@@ -1,4 +1,15 @@
-var G = {
+import { Game } from "./game";
+import { Map } from "./map";
+import { Tower } from "./tower";
+import { Unit } from "./unit";
+import { Bullet } from "./bullet";
+import { Message } from "./message";
+import { Tooltip } from "./tooltip";
+import { GameMenu } from "./game_menu";
+import { MainMenu } from "./main_menu";
+import { HighScore } from "./high_score";
+
+export var G = {
     CANVAS: null,
     STAGE: null,
     PRELOAD: null,
