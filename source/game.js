@@ -11,7 +11,7 @@ import { UnitImmune } from "./unit_immune";
 import { UnitSpawn } from "./unit_spawn";
 import { Tooltip } from "./tooltip";
 import { Message } from "./message";
-import { MainMenu } from "./main_menu";
+import * as MainMenu from "./main_menu";
 
 export function Game() {}
 

@@ -1,5 +1,5 @@
 import { G } from "./main";
-import { PathFinding } from "./path_finding";
+import { breadthFirstSearch } from "./path_finding";
 import { Unit } from "./unit";
 import { GameMenu } from "./game_menu";
 
@@ -226,7 +226,7 @@ Map.updatePath = function () {
 
     for (var a = 0; a < CREEP_LANES.length; a++) {
         var lane = CREEP_LANES[a];
-        var path = PathFinding.breadthFirstSearch(MAP, lane.end, POSITION_TYPE);
+        var path = breadthFirstSearch(MAP, lane.end, POSITION_TYPE);
 
         PATHS.push(path);
     }
@@ -556,7 +556,7 @@ Map.addTower = function (towerClass, column, line) {
 
         for (var b = 0; b < CREEP_LANES.length; b++) {
             var lane = CREEP_LANES[b];
-            var path = PathFinding.breadthFirstSearch(
+            var path = breadthFirstSearch(
                 MAP,
                 CREEP_LANES[b].end,
                 POSITION_TYPE

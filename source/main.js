@@ -6,8 +6,8 @@ import { Bullet } from "./bullet";
 import { Message } from "./message";
 import { Tooltip } from "./tooltip";
 import { GameMenu } from "./game_menu";
-import { MainMenu } from "./main_menu";
-import { HighScore } from "./high_score";
+import * as MainMenu from "./main_menu";
+import * as HighScore from "./high_score";
 
 export var G = {
     CANVAS: null,

@@ -1,13 +1,11 @@
 import { Game } from "./game";
-import { HighScore } from "./high_score";
-
-export function MainMenu() {}
+import * as HighScore from "./high_score";
 
 var MAIN_MENU = null;
 var HIGH_SCORE = null;
 var TBODY = null;
 
-MainMenu.init = function () {
+export function init() {
     MAIN_MENU = document.querySelector("#MainMenu");
     HIGH_SCORE = document.querySelector("#HighScore");
     TBODY = HIGH_SCORE.querySelector("tbody");
@@ -18,38 +16,34 @@ MainMenu.init = function () {
     var highScore = MAIN_MENU.querySelector("#MainMenu-highScores");
 
     easy.onclick = function () {
-        MainMenu.close();
-
+        close();
         Game.start("easy");
     };
 
     medium.onclick = function () {
-        MainMenu.close();
-
+        close();
         Game.start("medium");
     };
 
     hard.onclick = function () {
-        MainMenu.close();
-
+        close();
         Game.start("hard");
     };
 
-    highScore.onclick = MainMenu.openHighScore;
+    highScore.onclick = openHighScore;
 
     // high-score
     var back = HIGH_SCORE.querySelector("#HighScore-back");
 
     back.onclick = function () {
         $(HIGH_SCORE).css("display", "none");
-
         $(TBODY).empty();
 
-        MainMenu.open();
+        open();
     };
-};
+}
 
-MainMenu.open = function () {
+export function open() {
     $("#MainCanvas").css("display", "none");
     $(MAIN_MENU).css("display", "block");
 
@@ -64,14 +58,14 @@ MainMenu.open = function () {
 
     $(MAIN_MENU).css("top", top + "px");
     $(MAIN_MENU).css("left", left + "px");
-};
+}
 
-MainMenu.close = function () {
+export function close() {
     $(MAIN_MENU).css("display", "none");
-};
+}
 
-MainMenu.openHighScore = function () {
-    MainMenu.close();
+export function openHighScore() {
+    close();
 
     var easy = HighScore.get("easy");
     var medium = HighScore.get("medium");
@@ -116,4 +110,4 @@ MainMenu.openHighScore = function () {
 
     $(HIGH_SCORE).css("top", top + "px");
     $(HIGH_SCORE).css("left", left + "px");
-};
+}

@@ -1,4 +1,3 @@
-export var PathFinding = {};
 /**
  * Calculate the path that an element needs to take to reach the destination, from any valid position.
  *
@@ -37,7 +36,7 @@ export var PathFinding = {};
  * @param destination The destination position.
  * @param positionType What value in the `map` represents a passable position and what value represents a blocked position.
  */
-PathFinding.breadthFirstSearch = function (map, destination, positionType) {
+export function breadthFirstSearch(map, destination, positionType) {
     var frontier = [destination];
     var cameFrom = [];
 
@@ -79,7 +78,7 @@ PathFinding.breadthFirstSearch = function (map, destination, positionType) {
     }
 
     return cameFrom;
-};
+}
 
 /**
  * Get the neighbor positions (top/bottom/left/right).

@@ -1,33 +1,35 @@
-export function HighScore() {}
+interface HighScoreData {
+    [mapName: string]: number[];
+}
 
 // HIGH_SCORE = { mapName: [ score1, score2, ... ] }
-var HIGH_SCORE = {};
+var HIGH_SCORE: HighScoreData = {};
 
 // max. number of scores saved per map (the top scores)
 var MAX_SCORES_SAVED = 5;
 
-HighScore.getMaxScoresSaved = function () {
+export function getMaxScoresSaved() {
     return MAX_SCORES_SAVED;
-};
+}
 
-HighScore.load = function () {
+export function load() {
     var score = Utilities.getObject("high_score");
 
     if (score !== null) {
         HIGH_SCORE = score;
     }
-};
+}
 
-HighScore.save = function () {
+export function save() {
     Utilities.saveObject("high_score", HIGH_SCORE);
-};
+}
 
 /**
     @param {String} mapName
     @param {Number} score
  */
 
-HighScore.add = function (mapName, score) {
+export function add(mapName, score) {
     if (typeof HIGH_SCORE[mapName] == "undefined") {
         HIGH_SCORE[mapName] = [];
     }
@@ -44,23 +46,22 @@ HighScore.add = function (mapName, score) {
         HIGH_SCORE[mapName].pop();
     }
 
-    HighScore.save();
-};
+    save();
+}
 
-HighScore.getAll = function () {
+export function getAll() {
     return HIGH_SCORE;
-};
+}
 
-HighScore.get = function (mapName) {
+export function get(mapName) {
     if (typeof HIGH_SCORE[mapName] == "undefined") {
         return null;
     }
 
     return HIGH_SCORE[mapName];
-};
+}
 
-HighScore.removeAll = function () {
-    HIGH_SCORE.length = 0;
-
+export function removeAll() {
+    HIGH_SCORE = {};
     localStorage.removeItem("high_score");
-};
+}
