@@ -1,5 +1,5 @@
 import { Tower, TowerStats } from "./tower";
-import { Map } from "./map";
+import * as Map from "./map";
 
 export type TowerFrostStats = TowerStats & {
     slow: number;

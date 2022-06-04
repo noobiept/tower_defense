@@ -1,7 +1,7 @@
 import { G } from "./main";
-import { Map } from "./map";
+import * as Map from "./map";
 import { Message } from "./message";
-import { Game } from "./game";
+import * as Game from "./game";
 
 var CONTAINER; // createjs.Container() which will hold all the unit elements
 
@@ -14,6 +14,10 @@ export interface UnitArgs {
     is_ground_unit?: boolean;
     is_immune?: boolean;
     movement_speed?: number;
+    destination_column?: number;
+    destination_line?: number;
+    lane?: number;
+    howMany?: number;
 
     column: number;
     line: number;

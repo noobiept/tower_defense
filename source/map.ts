@@ -1,9 +1,7 @@
 import { G } from "./main";
 import { breadthFirstSearch } from "./path_finding";
 import { Unit } from "./unit";
-import { GameMenu } from "./game_menu";
-
-export function Map() {}
+import * as GameMenu from "./game_menu";
 
 var CONTAINER; // createjs.Container() which will hold all the map elements
 var HIGHLIGHT_CONTAINER;
@@ -39,22 +37,22 @@ var POSITION_TYPE = {
 /**
  * Create the container for all the shape elements that are part of the map.
  */
-Map.init = function (parent) {
+export function init(parent) {
     CONTAINER = new createjs.Container();
 
     parent.addChild(CONTAINER);
-};
+}
 
 /**
  * The highlight element has a separate container, so that it can be drawn last (so it appears on top of the rest of the elements)
  */
-Map.initHighlight = function (parent) {
+export function initHighlight(parent) {
     HIGHLIGHT_CONTAINER = new createjs.Container();
 
     parent.addChild(HIGHLIGHT_CONTAINER);
-};
+}
 
-Map.build = function (mapInfo) {
+export function build(mapInfo) {
     var columns = mapInfo.numberOfColumns;
     var lines = mapInfo.numberOfLines;
 
@@ -103,25 +101,25 @@ Map.build = function (mapInfo) {
     STARTING_Y = canvasHeight / 2 - (lines * SQUARE_SIZE) / 2;
 
     // add walls around the map
-    Map.addObstacle({
+    addObstacle({
         startColumn: 0,
         startLine: 0,
         columnLength: WALL_LENGTH,
         lineLength: lines,
     }); // left
-    Map.addObstacle({
+    addObstacle({
         startColumn: columns - WALL_LENGTH,
         startLine: 0,
         columnLength: WALL_LENGTH,
         lineLength: lines,
     }); // right
-    Map.addObstacle({
+    addObstacle({
         startColumn: WALL_LENGTH,
         startLine: 0,
         columnLength: columns - 2 * WALL_LENGTH,
         lineLength: WALL_LENGTH,
     }); // top
-    Map.addObstacle({
+    addObstacle({
         startColumn: WALL_LENGTH,
         startLine: lines - WALL_LENGTH,
         columnLength: columns - 2 * WALL_LENGTH,
@@ -133,7 +131,7 @@ Map.build = function (mapInfo) {
 
     for (var a = 0; a < creepLanes.length; a++) {
         var lane = creepLanes[a];
-        var halfLength = parseInt(lane.length / 2, 10);
+        var halfLength = Math.floor(lane.length / 2);
         var startColumn, startLine;
         var endColumn, endLine;
         var columnLength, lineLength;
@@ -158,14 +156,14 @@ Map.build = function (mapInfo) {
             lineLength = 2;
         }
 
-        Map.addObstacle({
+        addObstacle({
             startColumn: startColumn,
             startLine: startLine,
             columnLength: columnLength,
             lineLength: lineLength,
             passable: true,
         });
-        Map.addObstacle({
+        addObstacle({
             startColumn: endColumn,
             startLine: endLine,
             columnLength: columnLength,
@@ -181,7 +179,7 @@ Map.build = function (mapInfo) {
         for (var a = 0; a < obstacles.length; a++) {
             var obstacle = obstacles[a];
 
-            Map.addObstacle({
+            addObstacle({
                 startColumn: obstacle.startColumn,
                 startLine: obstacle.startLine,
                 columnLength: obstacle.columnLength,
@@ -215,13 +213,13 @@ Map.build = function (mapInfo) {
     CREEP_LANES = creepLanes;
 
     // determine the path
-    Map.updatePath();
-};
+    updatePath();
+}
 
 /**
  * Update the path the units, for the current map/lanes.
  */
-Map.updatePath = function () {
+function updatePath() {
     PATHS.length = 0;
 
     for (var a = 0; a < CREEP_LANES.length; a++) {
@@ -230,44 +228,44 @@ Map.updatePath = function () {
 
         PATHS.push(path);
     }
-};
+}
 
 /**
  * Find where to go next, from the current column/line position.
  *
  * Returns { column: number; line: number; }
  */
-Map.findNextDestination = function (column, line, laneId) {
+export function findNextDestination(column, line, laneId) {
     return PATHS[laneId][line][column];
-};
+}
 
-Map.setImpassableBox = function (startColumn, startLine, length) {
+export function setImpassableBox(startColumn, startLine, length) {
     for (var column = startColumn; column < startColumn + length; column++) {
         for (var line = startLine; line < startLine + length; line++) {
-            Map.setImpassable(column, line);
+            setImpassable(column, line);
         }
     }
-};
+}
 
-Map.setPassableBox = function (startColumn, startLine, length) {
+function setPassableBox(startColumn, startLine, length) {
     for (var column = startColumn; column < startColumn + length; column++) {
         for (var line = startLine; line < startLine + length; line++) {
-            Map.setPassable(column, line);
+            setPassable(column, line);
         }
     }
-};
+}
 
 /*
     Sets a single square
  */
 
-Map.setImpassable = function (column, line) {
+export function setImpassable(column, line) {
     MAP[line][column] = POSITION_TYPE.blocked;
-};
+}
 
-Map.setPassable = function (column, line) {
+function setPassable(column, line) {
     MAP[line][column] = POSITION_TYPE.passable;
-};
+}
 
 /*
     args = {
@@ -279,8 +277,7 @@ Map.setPassable = function (column, line) {
         fillColor: String (optional -- default: 'black' if passable, else +- 'green'),
     }
  */
-
-Map.addObstacle = function (args) {
+function addObstacle(args) {
     if (typeof args.passable === "undefined") {
         args.passable = false;
     }
@@ -301,9 +298,9 @@ Map.addObstacle = function (args) {
     for (var column = args.startColumn; column < endColumn; column++) {
         for (var line = args.startLine; line < endLine; line++) {
             if (args.passable === true) {
-                Map.setPassable(column, line);
+                setPassable(column, line);
             } else {
-                Map.setImpassable(column, line);
+                setImpassable(column, line);
             }
         }
     }
@@ -320,30 +317,30 @@ Map.addObstacle = function (args) {
     obstacle.y = STARTING_Y + args.startLine * SQUARE_SIZE;
 
     CONTAINER.addChild(obstacle);
-};
+}
 
-Map.clear = function () {
+export function clear() {
     CONTAINER.removeAllChildren();
     HIGHLIGHT_CONTAINER.removeAllChildren();
-};
+}
 
-Map.getSquareSize = function () {
+export function getSquareSize() {
     return SQUARE_SIZE;
-};
+}
 
-Map.calculatePosition = function (targetX, targetY) {
-    var column = parseInt((targetX - STARTING_X) / SQUARE_SIZE);
-    var line = parseInt((targetY - STARTING_Y) / SQUARE_SIZE);
+export function calculatePosition(targetX, targetY) {
+    var column = Math.floor((targetX - STARTING_X) / SQUARE_SIZE);
+    var line = Math.floor((targetY - STARTING_Y) / SQUARE_SIZE);
 
     return {
         column: column,
         line: line,
     };
-};
+}
 
-Map.mouseMoveEvents = function (event) {
+export function mouseMoveEvents(event) {
     var towerLength = 2;
-    var position = Map.calculatePosition(event.stageX, event.stageY);
+    var position = calculatePosition(event.stageX, event.stageY);
 
     var column = position.column;
     var line = position.line;
@@ -365,7 +362,7 @@ Map.mouseMoveEvents = function (event) {
     GRID_HIGHLIGHT.column = column;
     GRID_HIGHLIGHT.line = line;
 
-    if (Map.isAvailable(column, line)) {
+    if (isAvailable(column, line)) {
         if (GRID_HIGHLIGHT.shape !== GRID_HIGHLIGHT.available) {
             GRID_HIGHLIGHT.not_available.visible = false;
             GRID_HIGHLIGHT.available.visible = true;
@@ -381,17 +378,17 @@ Map.mouseMoveEvents = function (event) {
 
     GRID_HIGHLIGHT.shape.x = STARTING_X + column * SQUARE_SIZE;
     GRID_HIGHLIGHT.shape.y = STARTING_Y + line * SQUARE_SIZE;
-};
+}
 
-Map.getHighlightSquare = function () {
+export function getHighlightSquare() {
     return GRID_HIGHLIGHT;
-};
+}
 
 /*
     Checks if its possible to add a tower in this position (tower occupies 2x2 squares)
  */
 
-Map.isAvailable = function (column, line) {
+function isAvailable(column, line) {
     // check for the limits of the map
     if (
         column < 0 ||
@@ -413,12 +410,12 @@ Map.isAvailable = function (column, line) {
     }
 
     return true;
-};
+}
 
 /**
  * Get a list of passable/available positions, around a given position.
  */
-Map.getAvailablePositions = function (centerColumn, centerLine, range) {
+export function getAvailablePositions(centerColumn, centerLine, range) {
     var startColumn = centerColumn - range;
     var startLine = centerLine - range;
 
@@ -453,9 +450,9 @@ Map.getAvailablePositions = function (centerColumn, centerLine, range) {
     }
 
     return availablePositions;
-};
+}
 
-Map.getPosition = function (column, line) {
+export function getPosition(column, line) {
     var x = STARTING_X + column * SQUARE_SIZE;
     var y = STARTING_Y + line * SQUARE_SIZE;
 
@@ -463,12 +460,12 @@ Map.getPosition = function (column, line) {
         x: x,
         y: y,
     };
-};
+}
 
 /*
     Gets all units in an area (only ground / only air / both, depending on the tower)
  */
-Map.getUnits = function (x, y, radius, tower) {
+export function getUnits(x, y, radius, tower) {
     var unitsInRange = [];
     var array;
 
@@ -502,9 +499,9 @@ Map.getUnits = function (x, y, radius, tower) {
     }
 
     return unitsInRange;
-};
+}
 
-Map.getUnitInRange = function (tower) {
+export function getUnitInRange(tower) {
     var x = tower.getX();
     var y = tower.getY();
     var rangeRadius = tower.range;
@@ -540,16 +537,16 @@ Map.getUnitInRange = function (tower) {
     }
 
     return null;
-};
+}
 
 /**
  * Check if its possible to add a tower in this position (if it doesn't block the units path).
  * If that is the case, then add the tower at the given position.
  */
-Map.addTower = function (towerClass, column, line) {
-    if (Map.isAvailable(column, line)) {
+export function addTower(towerClass, column, line) {
+    if (isAvailable(column, line)) {
         // check if by filling this position, we're not blocking the units (they need to be always be able to reach the destination)
-        Map.setImpassableBox(column, line, 2);
+        setImpassableBox(column, line, 2);
 
         // check if there is a possible path (if its not going to block a lane)
         var paths = [];
@@ -573,7 +570,7 @@ Map.addTower = function (towerClass, column, line) {
                 GameMenu.showMessage("Can't block the unit's path.");
 
                 // reset the position
-                Map.setPassableBox(column, line, 2);
+                setPassableBox(column, line, 2);
                 return;
             } else {
                 paths.push(path);
@@ -589,15 +586,15 @@ Map.addTower = function (towerClass, column, line) {
             line: line,
         });
     }
-};
+}
 
 /**
  * Remove a tower from the map, and update the pathing of the units.
  */
-Map.removeTower = function (tower) {
-    Map.setPassableBox(tower.column, tower.line, 2);
-    Map.updatePath();
-};
+export function removeTower(tower) {
+    setPassableBox(tower.column, tower.line, 2);
+    updatePath();
+}
 
 /**
  * Check if its possible to reach the destination from a given column/line position.

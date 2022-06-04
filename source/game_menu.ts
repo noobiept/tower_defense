@@ -4,10 +4,8 @@ import { TowerRocket } from "./tower_rocket";
 import { TowerFrost } from "./tower_frost";
 import { TowerAntiAir } from "./tower_anti_air";
 import { TowerBash } from "./tower_bash";
-import { Game } from "./game";
+import * as Game from "./game";
 import { Tooltip } from "./tooltip";
-
-export function GameMenu() {}
 
 // reference to the game menu's html elements
 var START_PAUSED = null;
@@ -30,7 +28,7 @@ var TOWERS = [
 ];
 var TOWER_INFO;
 
-GameMenu.init = function () {
+export function init() {
     var menu = document.querySelector("#GameMenu");
     var a;
 
@@ -43,12 +41,12 @@ GameMenu.init = function () {
         enableEvents: false,
     });
 
-    var timeUntilNext = menu.querySelector(".timeUntilNextWave");
+    var timeUntilNext = menu.querySelector(".timeUntilNextWave") as HTMLElement;
     timeUntilNext.onclick = Game.forceNextWave;
 
     TIME_UNTIL_NEXT_WAVE = timeUntilNext.querySelector("span");
 
-    var quit = menu.querySelector("#quit");
+    var quit = menu.querySelector("#quit") as HTMLElement;
     quit.onclick = function () {
         Game.setEndFlag(false);
     };
@@ -59,7 +57,9 @@ GameMenu.init = function () {
     CURRENT_SCORE = menu.querySelector(".currentScore span");
 
     // wave list
-    WAVE_LIST = menu.querySelectorAll("#GameMenu-waveList > div");
+    WAVE_LIST = menu.querySelectorAll(
+        "#GameMenu-waveList > div"
+    ) as unknown as HTMLElement[];
 
     for (a = 0; a < WAVE_LIST.length; a++) {
         WAVE_LIST[a].tooltip = new Tooltip({
@@ -73,12 +73,12 @@ GameMenu.init = function () {
     MESSAGE_TIMEOUT = new Utilities.Timeout();
 
     // tower selector
-    var basicTower = menu.querySelector("#basicTower");
-    var fastTower = menu.querySelector("#fastTower");
-    var rocketTower = menu.querySelector("#rocketTower");
-    var frostTower = menu.querySelector("#frostTower");
-    var antiAirTower = menu.querySelector("#antiAirTower");
-    var bashTower = menu.querySelector("#bashTower");
+    var basicTower = menu.querySelector("#basicTower") as HTMLElement;
+    var fastTower = menu.querySelector("#fastTower") as HTMLElement;
+    var rocketTower = menu.querySelector("#rocketTower") as HTMLElement;
+    var frostTower = menu.querySelector("#frostTower") as HTMLElement;
+    var antiAirTower = menu.querySelector("#antiAirTower") as HTMLElement;
+    var bashTower = menu.querySelector("#bashTower") as HTMLElement;
 
     var elements = [
         basicTower,
@@ -98,7 +98,7 @@ GameMenu.init = function () {
         $(htmlElement).text($(htmlElement).text() + " - " + towerInitialCost);
         htmlElement.onclick = (function (position) {
             return function () {
-                GameMenu.selectTower(position);
+                selectTower(position);
             };
         })(a);
     }
@@ -129,14 +129,14 @@ GameMenu.init = function () {
         var tower = Game.getSelection();
 
         if (tower) {
-            GameMenu.updateTowerStats(tower, true);
+            updateTowerStats(tower, true);
         }
     };
     TOWER_INFO.upgrade.onmouseout = function () {
         var tower = Game.getSelection();
 
         if (tower) {
-            GameMenu.updateTowerStats(tower, false);
+            updateTowerStats(tower, false);
         }
     };
 
@@ -149,18 +149,18 @@ GameMenu.init = function () {
     };
 
     // start with the basic tower selected
-    GameMenu.selectTower(0);
-};
+    selectTower(0);
+}
 
-GameMenu.show = function () {
+export function show() {
     $("#GameMenu").css("display", "flex");
-};
+}
 
-GameMenu.hide = function () {
+export function hide() {
     $("#GameMenu").css("display", "none");
-};
+}
 
-GameMenu.pause = function (isPaused) {
+export function pause(isPaused) {
     if (isPaused) {
         START_PAUSED.tooltip.show();
 
@@ -170,9 +170,9 @@ GameMenu.pause = function (isPaused) {
 
         $(START_PAUSED).text("Pause");
     }
-};
+}
 
-GameMenu.selectTower = function (position) {
+export function selectTower(position) {
     if (SELECTED_TOWER) {
         // trying to select the same tower
         if (position == SELECTED_TOWER.position) {
@@ -188,34 +188,34 @@ GameMenu.selectTower = function (position) {
     SELECTED_TOWER = TOWERS[position];
 
     $(SELECTED_TOWER.htmlElement).addClass("selectedTower");
-};
+}
 
-GameMenu.showMessage = function (message) {
+export function showMessage(message) {
     $(MESSAGE).css("visibility", "visible");
     $(MESSAGE).text(message);
 
     MESSAGE_TIMEOUT.start(function () {
         $(MESSAGE).css("visibility", "hidden");
     }, 1000);
-};
+}
 
-GameMenu.updateGold = function (gold) {
+export function updateGold(gold) {
     $(CURRENT_GOLD).text(gold);
-};
+}
 
-GameMenu.updateLife = function (life) {
+export function updateLife(life) {
     $(CURRENT_LIFE).text(life);
-};
+}
 
-GameMenu.updateScore = function (score) {
+export function updateScore(score) {
     $(CURRENT_SCORE).text(score);
-};
+}
 
-GameMenu.updateTimeUntilNextWave = function (time) {
+export function updateTimeUntilNextWave(time) {
     $(TIME_UNTIL_NEXT_WAVE).text(time);
-};
+}
 
-GameMenu.updateWave = function (currentWave, allWaves) {
+export function updateWave(currentWave, allWaves) {
     for (var a = 0; a < WAVE_LIST.length; a++) {
         var waveNumber = currentWave + a;
         var waveElement = WAVE_LIST[a];
@@ -254,33 +254,33 @@ GameMenu.updateWave = function (currentWave, allWaves) {
             }
         }
     }
-};
+}
 
-GameMenu.getSelectedTower = function () {
+export function getSelectedTower() {
     return SELECTED_TOWER.tower;
-};
+}
 
-GameMenu.showTowerStats = function (tower) {
+export function showTowerStats(tower) {
     $(TOWER_INFO.container).css("display", "flex");
 
-    GameMenu.updateTowerStats(tower, false);
+    updateTowerStats(tower, false);
 
     // update the info that won't change during the selection
     $(TOWER_INFO.name).text(tower.name);
-};
+}
 
 /**
  * Hide the tower stats html element.
  */
-GameMenu.hideTowerStats = function () {
+export function hideTowerStats() {
     $(TOWER_INFO.container).css("display", "none");
-};
+}
 
 /**
  * Update the selected tower stats. It can show the stats after the next upgrade is completed (next to the current stats).
  */
-GameMenu.updateTowerStats = function (tower, showNextUpgrade) {
-    GameMenu.updateMenuControls(tower);
+export function updateTowerStats(tower, showNextUpgrade) {
+    updateMenuControls(tower);
 
     var damage = tower.damage;
     var attack_speed = tower.attack_speed;
@@ -300,9 +300,9 @@ GameMenu.updateTowerStats = function (tower, showNextUpgrade) {
     $(TOWER_INFO.range).text(range);
     $(TOWER_INFO.upgrade).text("Upgrade (" + current.upgrade_cost + ")");
     $(TOWER_INFO.sell).text("Sell (" + tower.getSellRefund() + ")");
-};
+}
 
-GameMenu.updateMenuControls = function (tower) {
+export function updateMenuControls(tower) {
     if (tower.is_upgrading) {
         $(TOWER_INFO.upgrade).css("display", "none");
         $(TOWER_INFO.sell).css("display", "none");
@@ -324,4 +324,4 @@ GameMenu.updateMenuControls = function (tower) {
             $(TOWER_INFO.upgrade).css("display", "block");
         }
     }
-};
+}

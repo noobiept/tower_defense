@@ -1,5 +1,5 @@
 import { Tower } from "./tower";
-import { Map } from "./map";
+import * as Map from "./map";
 
 export class TowerRocket extends Tower {
     constructor(args) {

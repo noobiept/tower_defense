@@ -1,9 +1,9 @@
 import { G } from "./main";
-import { Map } from "./map";
-import { GameMenu } from "./game_menu";
+import * as Map from "./map";
+import * as GameMenu from "./game_menu";
 import { Tower } from "./tower";
 import { Bullet } from "./bullet";
-import { Unit } from "./unit";
+import { Unit, UnitArgs } from "./unit";
 import { UnitFast } from "./unit_fast";
 import { UnitFly } from "./unit_fly";
 import { UnitGroup } from "./unit_group";
@@ -12,10 +12,9 @@ import { UnitSpawn } from "./unit_spawn";
 import { Tooltip } from "./tooltip";
 import { Message } from "./message";
 import * as MainMenu from "./main_menu";
+import * as HighScore from "./high_score";
 
-export function Game() {}
-
-const UNITS_MAP = {
+let UNITS_MAP = {
     Unit: Unit,
     UnitFast: UnitFast,
     UnitFly: UnitFly,
@@ -53,7 +52,7 @@ var GAME_END = {
     victory: false,
 };
 
-Game.start = function (map) {
+export function start(map) {
     MAP_NAME = map;
 
     var mapInfo = G.PRELOAD.getResult(map);
@@ -70,26 +69,21 @@ Game.start = function (map) {
     for (a = 0; a < mapInfo.waves.length; a++) {
         var waveType = mapInfo.waves[a];
         var stats = UNITS_STATS[waveType];
-        var howMany = parseInt(
-            stats.wave_count_initial * (1 + a * stats.wave_count_increase_rate),
-            10
+        var howMany = Math.floor(
+            stats.wave_count_initial * (1 + a * stats.wave_count_increase_rate)
         );
-        var health = parseInt(
-            stats.health_initial * (1 + a * stats.health_increase_rate),
-            10
+        var health = Math.floor(
+            stats.health_initial * (1 + a * stats.health_increase_rate)
         );
-        var health_regeneration = parseInt(
+        var health_regeneration = Math.floor(
             stats.health_regeneration_initial *
-                (1 + a * stats.health_regeneration_increase_rate),
-            10
+                (1 + a * stats.health_regeneration_increase_rate)
         );
-        var gold = parseInt(
-            stats.gold_initial * (1 + a * stats.gold_increase_rate),
-            10
+        var gold = Math.floor(
+            stats.gold_initial * (1 + a * stats.gold_increase_rate)
         );
-        var score = parseInt(
-            stats.score_initial * (1 + a * stats.score_increase_rate),
-            10
+        var score = Math.floor(
+            stats.score_initial * (1 + a * stats.score_increase_rate)
         );
 
         ALL_WAVES.push({
@@ -135,75 +129,74 @@ Game.start = function (map) {
     $("#MainCanvas").css("display", "block");
     GameMenu.show();
 
-    Game.updateGold(200);
-    Game.updateLife(20);
-    Game.updateScore(0);
-    Game.tick({ delta: 1 }); // run the tick once to initialize the timer and the wave list (passing dummy 'event' argument)
-    Game.pause(true);
+    updateGold(200);
+    updateLife(20);
+    updateScore(0);
+    tick({ delta: 1 }); // run the tick once to initialize the timer and the wave list (passing dummy 'event' argument)
+    pause(true);
 
     // set the events
-    EVENTS.tick = createjs.Ticker.on("tick", Game.tick);
+    EVENTS.tick = createjs.Ticker.on("tick", tick);
     EVENTS.mouseMove = G.STAGE.on("stagemousemove", Map.mouseMoveEvents);
 
-    window.addEventListener("keyup", Game.keyUpEvents);
-    G.CANVAS.addEventListener("mouseup", Game.mouseEvents);
-};
+    window.addEventListener("keyup", keyUpEvents);
+    G.CANVAS.addEventListener("mouseup", mouseEvents);
+}
 
 /*
     When we determine the game has ended, we have to call this function instead of Game.end(), which will set a flag that is going to be dealt with in the end of the Game.tick()
     Only then we'll call Game.end
     The reason is to fix a problem when the game end is triggered during the Unit.tick() loop (the units are cleared in Game.end(), but then the loop will try to continue..)
  */
-
-Game.setEndFlag = function (victory) {
+export function setEndFlag(victory) {
     // if the game is paused, we can safely end the game right away (it will most likely be a defeat)
     if (IS_PAUSED) {
-        Game.end(victory);
+        end(victory);
     }
 
     GAME_END.is_over = true;
     GAME_END.victory = victory;
-};
+}
 
-Game.isPaused = function () {
+export function isPaused() {
     return IS_PAUSED;
-};
+}
 
-Game.updateGold = function (gold) {
+export function updateGold(gold) {
     GOLD += gold;
 
     GameMenu.updateGold(GOLD);
-};
+}
 
-Game.haveEnoughGold = function (price) {
+export function haveEnoughGold(price) {
     if (GOLD < price) {
         return false;
     }
 
     return true;
-};
+}
 
-Game.updateLife = function (life) {
+export function updateLife(life) {
     LIFE += life;
 
     if (LIFE <= 0) {
-        Game.setEndFlag(false);
+        setEndFlag(false);
     }
 
     if (life < 0) {
-        Game.updateScore(-50);
+        updateScore(-50);
     }
 
     GameMenu.updateLife(LIFE);
-};
+}
 
-Game.updateScore = function (score) {
+export function updateScore(score) {
     SCORE += score;
 
     GameMenu.updateScore(SCORE);
-};
+}
 
-Game.keyUpEvents = function (event) {
+function keyUpEvents(event) {
     if (IS_PAUSED && !BEFORE_FIRST_WAVE) {
         return;
     }
@@ -236,11 +229,11 @@ Game.keyUpEvents = function (event) {
             break;
 
         case Utilities.KEY_CODE.n:
-            Game.forceNextWave();
+            forceNextWave();
             break;
 
         case Utilities.KEY_CODE.u:
-            selection = Game.getSelection();
+            selection = getSelection();
 
             if (selection) {
                 selection.startUpgrading();
@@ -248,20 +241,20 @@ Game.keyUpEvents = function (event) {
             break;
 
         case Utilities.KEY_CODE.s:
-            selection = Game.getSelection();
+            selection = getSelection();
 
             if (selection) {
                 selection.startSelling();
             }
             break;
     }
-};
+}
 
-Game.beforeFirstWave = function () {
+export function beforeFirstWave() {
     return BEFORE_FIRST_WAVE;
-};
+}
 
-Game.mouseEvents = function (event) {
+function mouseEvents(event) {
     if (IS_PAUSED && !BEFORE_FIRST_WAVE) {
         return;
     }
@@ -275,7 +268,7 @@ Game.mouseEvents = function (event) {
     var point;
 
     if (ELEMENT_SELECTED) {
-        Game.clearSelection();
+        clearSelection();
     }
 
     // left click
@@ -296,7 +289,7 @@ Game.mouseEvents = function (event) {
         var towerClass = GameMenu.getSelectedTower();
 
         // see if we can afford a tower
-        if (!Game.haveEnoughGold(towerClass.stats[0].initial_cost)) {
+        if (!haveEnoughGold(towerClass.stats[0].initial_cost)) {
             GameMenu.showMessage("Not enough gold.");
             return;
         }
@@ -318,31 +311,31 @@ Game.mouseEvents = function (event) {
             }
         }
     }
-};
+}
 
-Game.clearSelection = function () {
+export function clearSelection() {
     ELEMENT_SELECTED.unselected();
     ELEMENT_SELECTED = null;
-};
+}
 
-Game.getSelection = function () {
+export function getSelection() {
     return ELEMENT_SELECTED;
-};
+}
 
-Game.checkIfSelected = function (element) {
+export function checkIfSelected(element) {
     if (element == ELEMENT_SELECTED) {
         return true;
     }
 
     return false;
-};
+}
 
-Game.clear = function () {
+function clear() {
     createjs.Ticker.off("tick", EVENTS.tick);
     G.STAGE.off("stagemousemove", EVENTS.mouseMove);
 
-    window.removeEventListener("keyup", Game.keyUpEvents);
-    G.CANVAS.removeEventListener("mouseup", Game.mouseEvents);
+    window.removeEventListener("keyup", keyUpEvents);
+    G.CANVAS.removeEventListener("mouseup", mouseEvents);
 
     Unit.removeAll();
     Tower.removeAll();
@@ -356,15 +349,15 @@ Game.clear = function () {
     ALL_WAVES.length = 0;
     CREEP_LANES.length = 0;
     ACTIVE_WAVES.length = 0;
-};
+}
 
 /*
     Call Game.setEndFlag() instead
     This is only called at the end of Game.tick() or in Game.setEndFlag() (when the game is paused)
  */
 
-Game.end = function (victory) {
-    Game.clear();
+function end(victory) {
+    clear();
 
     var message = "";
 
@@ -388,11 +381,11 @@ Game.end = function (victory) {
     });
 
     G.STAGE.update();
-};
+}
 
-Game.forceNextWave = function () {
+export function forceNextWave() {
     if (BEFORE_FIRST_WAVE) {
-        Game.pause();
+        pause();
         return;
     }
 
@@ -408,18 +401,18 @@ Game.forceNextWave = function () {
     var scorePerSecond = 10;
     var waveTimeLeft = WAVE_INTERVAL - WAVE_COUNT;
 
-    var score = parseInt(waveTimeLeft * scorePerSecond, 10);
+    var score = Math.floor(waveTimeLeft * scorePerSecond);
 
-    Game.updateScore(score);
+    updateScore(score);
 
     WAVE_COUNT = WAVE_INTERVAL;
-};
+}
 
 /*
     If called without arguments, it starts the game if its the time before the first wave, or does the opposite of the current state if the game is already running
  */
 
-Game.pause = function (paused) {
+export function pause(paused?: boolean) {
     // if its not provided, just change to the opposite of the current one
     if (typeof paused == "undefined" || !Utilities.isBoolean(paused)) {
         if (BEFORE_FIRST_WAVE) {
@@ -432,9 +425,9 @@ Game.pause = function (paused) {
 
     IS_PAUSED = paused;
     GameMenu.pause(paused);
-};
+}
 
-Game.tick = function (event) {
+function tick(event) {
     if (IS_PAUSED) {
         G.STAGE.update();
         return;
@@ -482,7 +475,7 @@ Game.tick = function (event) {
             for (var b = 0; b < CREEP_LANES.length; b++) {
                 var lane = CREEP_LANES[b];
                 var startLine, startColumn;
-                var halfLength = parseInt(lane.length / 2, 10);
+                var halfLength = Math.floor(lane.length / 2);
 
                 // add units randomly in the start zone
                 if (lane.orientation == "horizontal") {
@@ -499,7 +492,7 @@ Game.tick = function (event) {
                     startLine = lane.start.line;
                 }
 
-                var args = {
+                var args: UnitArgs = {
                     column: startColumn,
                     line: startLine,
                     destination_column: lane.end.column,
@@ -547,12 +540,12 @@ Game.tick = function (event) {
 
     // no more waves or units alive, victory!
     if (NO_MORE_WAVES && ACTIVE_WAVES.length == 0 && Unit.ALL.length == 0) {
-        Game.setEndFlag(true);
+        setEndFlag(true);
     }
 
     if (GAME_END.is_over) {
-        Game.end(GAME_END.victory);
+        end(GAME_END.victory);
     }
 
     G.STAGE.update();
-};
+}

@@ -1,9 +1,7 @@
-import { Unit, UnitArgs } from "./unit";
-
-export interface UnitFastArgs extends UnitArgs {}
+import { Unit } from "./unit";
 
 export class UnitFast extends Unit {
-    constructor(args: UnitFastArgs) {
+    constructor(args) {
         super({
             ...args,
             name: "fast unit",

@@ -1,8 +1,8 @@
-import { Map } from "./map";
+import * as Map from "./map";
 import { G } from "./main";
-import { Game } from "./game";
+import * as Game from "./game";
 import { Bullet } from "./bullet";
-import { GameMenu } from "./game_menu";
+import * as GameMenu from "./game_menu";
 import { Unit } from "./unit";
 
 var CONTAINER; // createjs.Container() which will hold all the tower elements

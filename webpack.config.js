@@ -4,7 +4,7 @@ const Path = require("path");
 const Package = require("./package.json");
 
 module.exports = {
-    entry: "./source/main.js",
+    entry: "./source/main.ts",
     module: {
         rules: [
             {
@@ -30,7 +30,6 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 { from: "libraries", to: "libraries" },
-                { from: "source/**/*.js", to: "./" },
                 { from: "css", to: "css" },
                 { from: "maps", to: "maps" },
                 { from: "images/*.png", to: "./" },

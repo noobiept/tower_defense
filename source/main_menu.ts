@@ -1,4 +1,4 @@
-import { Game } from "./game";
+import * as Game from "./game";
 import * as HighScore from "./high_score";
 
 var MAIN_MENU = null;

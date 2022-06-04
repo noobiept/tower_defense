@@ -1,11 +1,10 @@
-import { Game } from "./game";
-import { Map } from "./map";
+import * as Map from "./map";
 import { Tower } from "./tower";
 import { Unit } from "./unit";
 import { Bullet } from "./bullet";
 import { Message } from "./message";
 import { Tooltip } from "./tooltip";
-import { GameMenu } from "./game_menu";
+import * as GameMenu from "./game_menu";
 import * as MainMenu from "./main_menu";
 import * as HighScore from "./high_score";
 
