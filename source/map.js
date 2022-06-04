@@ -1,6 +1,7 @@
 import { G } from "./main";
 import { PathFinding } from "./path_finding";
 import { Unit } from "./unit";
+import { GameMenu } from "./game_menu";
 
 export function Map() {}
 
