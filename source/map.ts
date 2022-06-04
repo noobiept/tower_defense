@@ -1,7 +1,8 @@
 import { G } from "./main";
 import { breadthFirstSearch } from "./path_finding";
-import { Unit } from "./unit";
+import { Unit } from "./units/unit";
 import * as GameMenu from "./game_menu";
+import { getAsset } from "./assets";
 
 var CONTAINER; // createjs.Container() which will hold all the map elements
 var HIGHLIGHT_CONTAINER;
@@ -190,11 +191,9 @@ export function build(mapInfo) {
     }
 
     // the highlight square which shows where the towers will be added
-    var highlightAvailable = new createjs.Bitmap(
-        G.PRELOAD.getResult("highlight")
-    );
+    var highlightAvailable = new createjs.Bitmap(getAsset("highlight"));
     var highlightNotAvailable = new createjs.Bitmap(
-        G.PRELOAD.getResult("highlight_not_available")
+        getAsset("highlight_not_available")
     );
 
     // start with the available visible first

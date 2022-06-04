@@ -1,5 +1,5 @@
 import { Tower } from "./tower";
-import { Unit } from "./unit";
+import { Unit } from "./units/unit";
 import { Bullet } from "./bullet";
 
 export class TowerAntiAir extends Tower {

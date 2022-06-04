@@ -1,5 +1,5 @@
 import { Unit } from "./unit";
-import * as Map from "./map";
+import * as Map from "../map";
 
 /**
  * The main creep.

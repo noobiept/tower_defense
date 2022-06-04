@@ -3,25 +3,14 @@ import * as Map from "./map";
 import * as GameMenu from "./game_menu";
 import { Tower } from "./tower";
 import { Bullet } from "./bullet";
-import { Unit, UnitArgs } from "./unit";
-import { UnitFast } from "./unit_fast";
-import { UnitFly } from "./unit_fly";
-import { UnitGroup } from "./unit_group";
-import { UnitImmune } from "./unit_immune";
-import { UnitSpawn } from "./unit_spawn";
+import { Unit, UnitArgs } from "./units/unit";
+import { UnitGroup } from "./units/unit_group";
 import { Tooltip } from "./tooltip";
 import { Message } from "./message";
 import * as MainMenu from "./main_menu";
 import * as HighScore from "./high_score";
-
-let UNITS_MAP = {
-    Unit: Unit,
-    UnitFast: UnitFast,
-    UnitFly: UnitFly,
-    UnitGroup: UnitGroup,
-    UnitImmune: UnitImmune,
-    UnitSpawn: UnitSpawn,
-};
+import { mapUnitType } from "./units/units.util";
+import { getAsset } from "./assets";
 
 var MAP_NAME;
 var UNITS_STATS = {};
@@ -55,7 +44,7 @@ var GAME_END = {
 export function start(map) {
     MAP_NAME = map;
 
-    var mapInfo = G.PRELOAD.getResult(map);
+    var mapInfo = getAsset(map);
 
     var a;
     UNITS_STATS["Unit"] = mapInfo["Unit"];
@@ -427,6 +416,24 @@ export function pause(paused?: boolean) {
     GameMenu.pause(paused);
 }
 
+function onReachDestination() {
+    updateLife(-1);
+}
+
+function onUnitRemoved() {
+    if (checkIfSelected(this)) {
+        clearSelection();
+    }
+}
+
+/**
+ * Add the gold earn from killing this unit.
+ */
+function onUnitKilled() {
+    updateGold(this.gold);
+    updateScore(this.score);
+}
+
 function tick(event) {
     if (IS_PAUSED) {
         G.STAGE.update();
@@ -469,7 +476,7 @@ function tick(event) {
         if (wave.count >= wave.spawnInterval) {
             wave.count = 0;
 
-            var className = UNITS_MAP[wave.type];
+            var className = mapUnitType(wave.type);
             var removeWave = false;
 
             for (var b = 0; b < CREEP_LANES.length; b++) {
@@ -502,6 +509,9 @@ function tick(event) {
                     health_regeneration: wave.health_regeneration,
                     gold: wave.gold,
                     score: wave.score,
+                    onReachDestination,
+                    onUnitRemoved,
+                    onUnitKilled,
                 };
 
                 // the group units work a bit differently

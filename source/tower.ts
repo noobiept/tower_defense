@@ -1,9 +1,9 @@
 import * as Map from "./map";
-import { G } from "./main";
 import * as Game from "./game";
 import { Bullet } from "./bullet";
 import * as GameMenu from "./game_menu";
-import { Unit } from "./unit";
+import { Unit } from "./units/unit";
+import { getAsset } from "./assets";
 
 var CONTAINER; // createjs.Container() which will hold all the tower elements
 
@@ -157,13 +157,13 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         var halfHeight = height / 2;
 
         // the tower base
-        var base = new createjs.Bitmap(G.PRELOAD.getResult("tower_base0"));
+        var base = new createjs.Bitmap(getAsset("tower_base0"));
 
         base.regX = halfWidth;
         base.regY = halfHeight;
 
         // the tower
-        var shape = new createjs.Bitmap(G.PRELOAD.getResult(this.image));
+        var shape = new createjs.Bitmap(getAsset(this.image));
 
         shape.regX = halfWidth;
         shape.regY = halfHeight;
@@ -293,9 +293,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         g.endStroke();
 
         // add some visual clue, to differentiate the towers per their upgrade level
-        this.baseElement.image = G.PRELOAD.getResult(
-            "tower_base" + this.upgrade_level
-        );
+        this.baseElement.image = getAsset("tower_base" + this.upgrade_level);
 
         if (Game.checkIfSelected(this)) {
             GameMenu.updateTowerStats(this, false);

@@ -1,6 +1,6 @@
-import { G } from "./main";
-import { Unit } from "./unit";
+import { Unit } from "./units/unit";
 import { Tower } from "./tower";
+import { getAsset } from "./assets";
 
 var CONTAINER; // createjs.Container() which will hold all the bullet elements
 
@@ -57,7 +57,7 @@ export class Bullet {
         var width = this.width;
         var height = this.height;
 
-        var shape = new createjs.Bitmap(G.PRELOAD.getResult("bullet"));
+        var shape = new createjs.Bitmap(getAsset("bullet"));
 
         shape.regX = width / 2;
         shape.regY = height / 2;

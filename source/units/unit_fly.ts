@@ -1,5 +1,5 @@
 import { Unit } from "./unit";
-import * as Game from "./game";
+import * as Game from "../game";
 
 export class UnitFly extends Unit {
     private final_column: number;

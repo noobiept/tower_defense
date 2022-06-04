@@ -1,7 +1,6 @@
-import { G } from "./main";
-import * as Map from "./map";
-import { Message } from "./message";
-import * as Game from "./game";
+import * as Map from "../map";
+import { Message } from "../message";
+import { getAsset } from "../assets";
 
 var CONTAINER; // createjs.Container() which will hold all the unit elements
 
@@ -26,6 +25,10 @@ export interface UnitArgs {
     gold: number;
     health: number;
     health_regeneration: number;
+
+    onReachDestination: () => void;
+    onUnitRemoved: () => void;
+    onUnitKilled: () => void;
 }
 
 export class Unit {
@@ -88,6 +91,10 @@ export class Unit {
     healthBar: createjs.Shape;
     shape: createjs.Bitmap;
 
+    onReachDestination: () => void;
+    onUnitRemoved: () => void;
+    onUnitKilled: () => void;
+
     constructor(args: UnitArgs) {
         var squareSize = Map.getSquareSize();
 
@@ -132,6 +139,10 @@ export class Unit {
         this.healthBar = null;
         this.shape = null;
 
+        this.onReachDestination = args.onReachDestination;
+        this.onUnitRemoved = args.onUnitRemoved;
+        this.onUnitKilled = args.onUnitKilled;
+
         this.setupShape();
         this.tick = this.tick_normal;
 
@@ -154,7 +165,7 @@ export class Unit {
         var g;
 
         // the unit
-        var shape = new createjs.Bitmap(G.PRELOAD.getResult(this.image));
+        var shape = new createjs.Bitmap(getAsset(this.image));
 
         shape.regX = halfWidth;
         shape.regY = halfHeight;
@@ -175,7 +186,7 @@ export class Unit {
         g.endFill();
 
         // the slow circle (is added when the unit is being slowed down)
-        var slow = new createjs.Bitmap(G.PRELOAD.getResult(this.slowImage));
+        var slow = new createjs.Bitmap(getAsset(this.slowImage));
 
         slow.regX = halfWidth;
         slow.regY = halfHeight;
@@ -242,7 +253,7 @@ export class Unit {
         // we reached the destination
         if (nextDest.column === this.column && nextDest.line === this.line) {
             this.remove();
-            Game.updateLife(-1);
+            this.onReachDestination();
         } else {
             this.move(nextDest);
         }
@@ -321,9 +332,7 @@ export class Unit {
             Unit.ALL_AIR.splice(index, 1);
         }
 
-        if (Game.checkIfSelected(this)) {
-            Game.clearSelection();
-        }
+        this.onUnitRemoved();
     }
 
     /*
@@ -396,10 +405,7 @@ export class Unit {
                     y: this.getY() - this.height,
                 });
 
-                // add the gold earn from killing this unit
-                Game.updateGold(this.gold);
-                Game.updateScore(this.score);
-
+                this.onUnitKilled();
                 this.remove();
             }
 

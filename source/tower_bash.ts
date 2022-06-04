@@ -1,6 +1,6 @@
 import { Tower, TowerStats } from "./tower";
 import * as Map from "./map";
-import { G } from "./main";
+import { getAsset } from "./assets";
 
 export type TowerBashStats = TowerStats & {
     slow: number;
@@ -76,7 +76,7 @@ export class TowerBash extends Tower<TowerBashStats> {
         var halfLength = 20; // the attack image is 40x40 px
 
         var attackAnimation = new createjs.Bitmap(
-            G.PRELOAD.getResult("tower_bash_attack")
+            getAsset("tower_bash_attack")
         );
 
         var scale = (this.width + this.range) / this.attack_animation_length; // scale the image according to the tower's range

@@ -1,5 +1,7 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const CircularDependencyPlugin = require("circular-dependency-plugin");
+
 const Path = require("path");
 const Package = require("./package.json");
 
@@ -37,6 +39,9 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: "./index.html",
+        }),
+        new CircularDependencyPlugin({
+            include: /source/,
         }),
     ],
 };
