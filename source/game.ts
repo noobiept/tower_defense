@@ -6,7 +6,6 @@ import { Bullet } from "./bullet";
 import { Unit } from "./units/unit";
 import { Tooltip } from "./tooltip";
 import { Message } from "./message";
-import * as MainMenu from "./main_menu";
 import * as HighScore from "./high_score";
 import { createUnit } from "./units/units.util";
 import { getAsset } from "./assets";
@@ -47,8 +46,9 @@ var GAME_END = {
     is_over: false,
     victory: false,
 };
+let ON_QUIT: () => void;
 
-export function init() {
+export function init(onQuit: () => void) {
     GameMenu.init({
         forceNextWave,
         quit,
@@ -56,7 +56,10 @@ export function init() {
         sellSelection,
         getSelection,
         pause,
+        calculateTowerRefund,
     });
+
+    ON_QUIT = onQuit;
 }
 
 export function start(map) {
@@ -215,8 +218,6 @@ function keyUpEvents(event: KeyboardEvent) {
         return;
     }
 
-    var selection;
-
     switch (event.key) {
         case "1":
             GameMenu.selectTower(0);
@@ -282,7 +283,7 @@ export function sellSelection() {
 
     if (selection) {
         selection.startSelling(BEFORE_FIRST_WAVE);
-        GameMenu.updateMenuControls(this);
+        GameMenu.updateMenuControls(selection);
     }
 }
 
@@ -337,8 +338,7 @@ function mouseEvents(event) {
             highlight.column,
             highlight.line,
             (cost: number) => {
-                const refund = BEFORE_FIRST_WAVE ? cost : cost / 2;
-                updateGold(refund);
+                updateGold(calculateTowerRefund(cost));
             },
             (tower: Tower) => {
                 // remove the selection of this tower
@@ -366,10 +366,14 @@ function mouseEvents(event) {
             const point = tower.baseElement.globalToLocal(x, y);
 
             if (tower.baseElement.hitTest(point.x, point.y)) {
-                tower.startSelling();
+                tower.startSelling(BEFORE_FIRST_WAVE);
             }
         }
     }
+}
+
+function calculateTowerRefund(cost: number) {
+    return BEFORE_FIRST_WAVE ? cost : cost / 2;
 }
 
 export function clearSelection() {
@@ -435,7 +439,7 @@ function end(victory) {
         fontSize: 30,
         onEnd: function () {
             updateStage();
-            MainMenu.open();
+            ON_QUIT();
         },
         timeout: 2000,
     });

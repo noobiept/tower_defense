@@ -7,7 +7,7 @@ import {
     getRandomInt,
     toDegrees,
 } from "@drk4/utilities";
-import { CanvasPosition } from "./types";
+import { CanvasPosition, GridPosition } from "./types";
 
 var CONTAINER; // createjs.Container() which will hold all the tower elements
 
@@ -28,11 +28,18 @@ export interface TowerArgs<Stats extends TowerStats> {
     stats?: Stats[];
     can_target_ground?: boolean;
     can_target_air?: boolean;
-    position: CanvasPosition;
+    canvasPosition: CanvasPosition;
+    gridPosition: GridPosition;
     squareSize: number;
     onRemove: (tower: Tower) => void;
     onSell: (cost: number) => void;
-    getNewTarget: () => Unit | null;
+    getUnitsInRange: (
+        x: number,
+        y: number,
+        radius: number,
+        tower: Tower,
+        limit?: number
+    ) => Unit[];
     onUpgrade: (tower: Tower) => void;
 }
 
@@ -104,9 +111,16 @@ export class Tower<Stats extends TowerStats = TowerStats> {
     progressElement: createjs.Shape;
     baseElement: createjs.Bitmap;
     progress_length: number;
+    position: GridPosition;
 
     private onRemove: (tower: Tower) => void;
-    private getNewTarget: (tower: Tower) => Unit | null;
+    protected getUnitsInRange: (
+        x: number,
+        y: number,
+        radius: number,
+        tower: Tower,
+        limit?: number
+    ) => Unit[];
     private onSell: (cost: number) => void;
     private onUpgrade: (tower: Tower) => void;
 
@@ -144,11 +158,12 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         this.shape = null;
         this.progressElement = null;
         this.progress_length = 3;
+        this.position = args.gridPosition;
 
-        this.setupShape(args.position);
+        this.setupShape(args.canvasPosition);
         this.tick = this.tick_normal;
         this.onRemove = args.onRemove;
-        this.getNewTarget = args.getNewTarget;
+        this.getUnitsInRange = args.getUnitsInRange;
         this.onSell = args.onSell;
         this.onUpgrade = args.onUpgrade;
 
@@ -412,7 +427,14 @@ export class Tower<Stats extends TowerStats = TowerStats> {
 
             // find a target
             else {
-                this.targetUnit = this.getNewTarget(this);
+                const units = this.getUnitsInRange(
+                    this.getX(),
+                    this.getY(),
+                    this.range,
+                    this,
+                    1
+                );
+                this.targetUnit = units.length > 0 ? units[0] : null;
             }
         }
     }

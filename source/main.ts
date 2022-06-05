@@ -22,7 +22,7 @@ window.onload = function () {
     Map.initHighlight(stage);
 
     Tooltip.init();
-    Game.init();
+    Game.init(MainMenu.open);
     MainMenu.init();
     HighScore.load();
 

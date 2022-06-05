@@ -441,12 +441,20 @@ export function getPosition({ column, line }: GridPosition) {
     };
 }
 
-/*
-    Gets all units in an area (only ground / only air / both, depending on the tower)
+/**
+ * Gets all units in an area (only ground / only air / both, depending on the tower).
+ * Can limit the amount of units it looks for.
  */
-export function getUnits(x, y, radius, tower) {
+export function getUnitsInRange(
+    x: number,
+    y: number,
+    radius: number,
+    tower: Tower,
+    limit?: number
+) {
     var unitsInRange = [];
     var array;
+    let count = 0;
 
     if (tower.can_target_ground) {
         if (tower.can_target_air) {
@@ -466,40 +474,15 @@ export function getUnits(x, y, radius, tower) {
 
         if (circlePointCollision(x, y, radius, unit.getX(), unit.getY())) {
             unitsInRange.push(unit);
+            count++;
+
+            if (limit && count >= limit) {
+                break;
+            }
         }
     }
 
     return unitsInRange;
-}
-
-export function getUnitInRange(tower) {
-    var x = tower.getX();
-    var y = tower.getY();
-    var rangeRadius = tower.range;
-    var array;
-
-    if (tower.can_target_ground) {
-        if (tower.can_target_air) {
-            array = Unit.ALL;
-        } else {
-            array = Unit.ALL_GROUND;
-        }
-    }
-
-    // assumes .can_target_air == true
-    else {
-        array = Unit.ALL_AIR;
-    }
-
-    for (var a = 0; a < array.length; a++) {
-        var unit = array[a];
-
-        if (circlePointCollision(x, y, rangeRadius, unit.getX(), unit.getY())) {
-            return unit;
-        }
-    }
-
-    return null;
 }
 
 /**
@@ -551,16 +534,18 @@ export function addTower(
         // update the path and add the tower
         PATHS = paths;
 
-        const position = getPosition({ column, line });
+        const gridPosition = { column, line };
+        const canvasPosition = getPosition(gridPosition);
 
         const tower = new towerClass({
-            position,
+            gridPosition,
+            canvasPosition,
             squareSize: SQUARE_SIZE,
             onRemove: (tower) => {
                 onRemove(tower);
                 removeTower(tower);
             },
-            getNewTarget: getUnitInRange,
+            getUnitsInRange,
             onSell,
             onUpgrade,
         });
@@ -575,8 +560,8 @@ export function addTower(
 /**
  * Remove a tower from the map, and update the pathing of the units.
  */
-export function removeTower(tower) {
-    setPassableBox(tower.column, tower.line, 2);
+export function removeTower(tower: Tower) {
+    setPassableBox(tower.position.column, tower.position.line, 2);
     updatePath();
 }
 

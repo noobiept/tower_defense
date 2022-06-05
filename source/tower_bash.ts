@@ -1,8 +1,8 @@
-import { Tower, TowerStats } from "./tower";
-import * as Map from "./map";
+import { Tower, TowerArgs, TowerStats } from "./tower";
 import { getAsset } from "./assets";
 import { circleCircleCollision, getRandomInt } from "@drk4/utilities";
 import { CanvasPosition } from "./types";
+import { Unit } from "./units/unit";
 
 export type TowerBashStats = TowerStats & {
     slow: number;
@@ -157,7 +157,14 @@ export class TowerBash extends Tower<TowerBashStats> {
 
             // find a target
             else {
-                this.targetUnit = Map.getUnitInRange(this);
+                const units = this.getUnitsInRange(
+                    this.getX(),
+                    this.getY(),
+                    this.range,
+                    this,
+                    1
+                );
+                this.targetUnit = units.length > 0 ? units[0] : null;
             }
         }
     }
@@ -171,7 +178,12 @@ export class TowerBash extends Tower<TowerBashStats> {
         var radius = currentLevel.attack_radius;
         var slow = currentLevel.slow;
 
-        var units = Map.getUnits(this.getX(), this.getY(), radius, this);
+        var units = this.getUnitsInRange(
+            this.getX(),
+            this.getY(),
+            radius,
+            this
+        );
 
         for (var a = 0; a < units.length; a++) {
             var unit = units[a];

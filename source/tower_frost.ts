@@ -1,5 +1,4 @@
 import { Tower, TowerStats } from "./tower";
-import * as Map from "./map";
 
 export type TowerFrostStats = TowerStats & {
     slow: number;
@@ -56,7 +55,7 @@ export class TowerFrost extends Tower<TowerFrostStats> {
         var x = target.getX();
         var y = target.getY();
 
-        var units = Map.getUnits(x, y, attackRadius, this);
+        var units = this.getUnitsInRange(x, y, attackRadius, this);
 
         for (var a = 0; a < units.length; a++) {
             units[a].slowDown(slow);

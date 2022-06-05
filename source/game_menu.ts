@@ -27,6 +27,7 @@ var TOWERS = [
     { tower: TowerBash, htmlElement: null, position: 5 },
 ];
 var TOWER_INFO;
+let CALCULATE_TOWER_REFUND: (cost: number) => number;
 
 export interface GameMenuInitArgs {
     pause: () => void;
@@ -35,11 +36,14 @@ export interface GameMenuInitArgs {
     upgradeSelection: () => void;
     sellSelection: () => void;
     getSelection: () => Tower;
+    calculateTowerRefund: (cost: number) => number;
 }
 
 export function init(args: GameMenuInitArgs) {
     var menu = document.querySelector("#GameMenu");
     var a;
+
+    CALCULATE_TOWER_REFUND = args.calculateTowerRefund;
 
     // game controls
     START_PAUSED = menu.querySelector("#startPause");
@@ -273,12 +277,12 @@ export function hideTowerStats() {
 /**
  * Update the selected tower stats. It can show the stats after the next upgrade is completed (next to the current stats).
  */
-export function updateTowerStats(tower, showNextUpgrade) {
+export function updateTowerStats(tower: Tower, showNextUpgrade: boolean) {
     updateMenuControls(tower);
 
-    var damage = tower.damage;
-    var attack_speed = tower.attack_speed;
-    var range = tower.range;
+    var damage = tower.damage.toString();
+    var attack_speed = tower.attack_speed.toString();
+    var range = tower.range.toString();
     var current = tower.stats[tower.upgrade_level];
 
     if (showNextUpgrade && !tower.maxUpgrade()) {
@@ -289,14 +293,16 @@ export function updateTowerStats(tower, showNextUpgrade) {
         range += " (" + next.range + ")";
     }
 
+    const towerRefund = CALCULATE_TOWER_REFUND(tower.cost);
+
     $(TOWER_INFO.damage).text(damage);
     $(TOWER_INFO.attack_speed).text(attack_speed);
     $(TOWER_INFO.range).text(range);
     $(TOWER_INFO.upgrade).text("Upgrade (" + current.upgrade_cost + ")");
-    $(TOWER_INFO.sell).text("Sell (" + tower.getSellRefund() + ")");
+    $(TOWER_INFO.sell).text("Sell (" + towerRefund + ")");
 }
 
-export function updateMenuControls(tower) {
+export function updateMenuControls(tower: Tower) {
     if (tower.is_upgrading) {
         $(TOWER_INFO.upgrade).css("display", "none");
         $(TOWER_INFO.sell).css("display", "none");
