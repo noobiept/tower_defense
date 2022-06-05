@@ -1,8 +1,8 @@
 import { Tower, TowerArgs, TowerStats } from "./tower";
-import { getAsset } from "./assets";
+import { getAsset } from "../assets";
 import { circleCircleCollision, getRandomInt } from "@drk4/utilities";
-import { CanvasPosition } from "./types";
-import { Unit } from "./units/unit";
+import { CanvasPosition } from "../types";
+import { Unit } from "../units/unit";
 
 export type TowerBashStats = TowerStats & {
     slow: number;

@@ -1,5 +1,5 @@
 import * as Map from "./map";
-import { Tower } from "./tower";
+import { Tower } from "./towers/tower";
 import { Unit } from "./units/unit";
 import { Bullet } from "./bullet";
 import { Message } from "./message";

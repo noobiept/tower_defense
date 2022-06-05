@@ -1,5 +1,5 @@
 import { Unit } from "./units/unit";
-import { Tower } from "./tower";
+import { Tower } from "./towers/tower";
 import { getAsset } from "./assets";
 import {
     calculateAngle,

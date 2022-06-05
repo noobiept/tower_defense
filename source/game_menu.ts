@@ -1,9 +1,9 @@
-import { Tower } from "./tower";
-import { TowerFast } from "./tower_fast";
-import { TowerRocket } from "./tower_rocket";
-import { TowerFrost } from "./tower_frost";
-import { TowerAntiAir } from "./tower_anti_air";
-import { TowerBash } from "./tower_bash";
+import { Tower } from "./towers/tower";
+import { TowerFast } from "./towers/tower_fast";
+import { TowerRocket } from "./towers/tower_rocket";
+import { TowerFrost } from "./towers/tower_frost";
+import { TowerAntiAir } from "./towers/tower_anti_air";
+import { TowerBash } from "./towers/tower_bash";
 import { Tooltip } from "./tooltip";
 import { Timeout } from "@drk4/utilities";
 

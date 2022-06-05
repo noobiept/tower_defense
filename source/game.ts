@@ -1,7 +1,7 @@
 import { getRandomInt, isBoolean, round } from "@drk4/utilities";
 import * as Map from "./map";
 import * as GameMenu from "./game_menu";
-import { Tower } from "./tower";
+import { Tower } from "./towers/tower";
 import { Bullet } from "./bullet";
 import { Unit } from "./units/unit";
 import { Tooltip } from "./tooltip";

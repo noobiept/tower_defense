@@ -1,5 +1,5 @@
 import { Tower, TowerArgs, TowerStats } from "./tower";
-import { Unit } from "./units/unit";
+import { Unit } from "../units/unit";
 
 export type TowerRocketArgs = TowerArgs<TowerStats> & {
     getUnitsInRadius: (

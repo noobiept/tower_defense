@@ -5,7 +5,7 @@ import { getAsset } from "./assets";
 import { circlePointCollision, getRandomInt } from "@drk4/utilities";
 import * as Canvas from "./canvas";
 import { CanvasPosition, GridPosition } from "./types";
-import { Tower } from "./tower";
+import { Tower } from "./towers/tower";
 
 var CONTAINER; // createjs.Container() which will hold all the map elements
 var HIGHLIGHT_CONTAINER;

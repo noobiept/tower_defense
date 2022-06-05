@@ -1,13 +1,13 @@
-import { Bullet } from "./bullet";
-import { Unit } from "./units/unit";
-import { getAsset } from "./assets";
+import { Bullet } from "../bullet";
+import { Unit } from "../units/unit";
+import { getAsset } from "../assets";
 import {
     calculateAngle,
     circleCircleCollision,
     getRandomInt,
     toDegrees,
 } from "@drk4/utilities";
-import { CanvasPosition, GridPosition } from "./types";
+import { CanvasPosition, GridPosition } from "../types";
 
 var CONTAINER; // createjs.Container() which will hold all the tower elements
 

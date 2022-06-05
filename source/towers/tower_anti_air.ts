@@ -1,6 +1,6 @@
 import { Tower } from "./tower";
-import { Unit } from "./units/unit";
-import { Bullet } from "./bullet";
+import { Unit } from "../units/unit";
+import { Bullet } from "../bullet";
 import { circleCircleCollision, circlePointCollision } from "@drk4/utilities";
 
 export class TowerAntiAir extends Tower {
