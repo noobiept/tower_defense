@@ -1,5 +1,4 @@
 import { Unit } from "./unit";
-import * as Game from "../game";
 
 export class UnitFly extends Unit {
     private final_column: number;
@@ -32,7 +31,7 @@ export class UnitFly extends Unit {
             this.final_line === this.line
         ) {
             this.remove();
-            Game.updateLife(-1);
+            this.onReachDestination();
         } else {
             this.move({ column: this.final_column, line: this.final_line });
         }

@@ -1,6 +1,15 @@
-import { Unit } from "./unit";
-import * as Map from "../map";
+import { Unit, UnitArgs } from "./unit";
 import { getRandomInt } from "@drk4/utilities";
+import { CanvasPosition, GridPosition } from "../types";
+
+export interface UnitSpawnArgs extends UnitArgs {
+    canvasToGrid: (position: CanvasPosition) => GridPosition;
+    getAvailablePositions: (
+        column: number,
+        line: number,
+        range: number
+    ) => GridPosition[];
+}
 
 /**
  * The main creep.
@@ -8,8 +17,14 @@ import { getRandomInt } from "@drk4/utilities";
 export class UnitSpawn extends Unit {
     private number_spawned_units: number;
     private already_spawned: boolean;
+    private canvasToGrid: (position: CanvasPosition) => GridPosition;
+    private getAvailablePositions: (
+        column: number,
+        line: number,
+        range: number
+    ) => GridPosition[];
 
-    constructor(args) {
+    constructor(args: UnitSpawnArgs) {
         super({
             ...args,
             name: "spawn creep",
@@ -22,16 +37,21 @@ export class UnitSpawn extends Unit {
 
         this.number_spawned_units = 4;
         this.already_spawned = false;
+        this.canvasToGrid = args.canvasToGrid;
+        this.getAvailablePositions = args.getAvailablePositions;
     }
 
     tookDamage(attacker) {
-        var was_killed = Unit.prototype.tookDamage.call(this, attacker);
+        const was_killed = super.tookDamage(attacker);
 
         if (was_killed && !this.already_spawned) {
             this.already_spawned = true;
 
-            var position = Map.calculatePosition(this.getX(), this.getY());
-            var availablePositions = Map.getAvailablePositions(
+            const position = this.canvasToGrid({
+                x: this.getX(),
+                y: this.getY(),
+            });
+            const availablePositions = this.getAvailablePositions(
                 position.column,
                 position.line,
                 2
@@ -68,6 +88,14 @@ export class UnitSpawn extends Unit {
                     gold: spawnedGold,
                     score: spawnedScore,
                     lane_id: this.lane_id,
+                    size: this.size,
+                    width: this.size,
+                    height: this.size,
+                    onReachDestination: this.onReachDestination,
+                    onUnitKilled: this.onUnitKilled,
+                    onUnitRemoved: this.onUnitRemoved,
+                    getNextDestination: this.getNextDestination,
+                    toCanvasPosition: this.toCanvasPosition,
                 });
             }
         }
@@ -80,7 +108,7 @@ export class UnitSpawn extends Unit {
  * What is spawned when the main creep dies.
  */
 class UnitSpawned extends Unit {
-    constructor(args) {
+    constructor(args: UnitArgs) {
         super({
             ...args,
             name: "spawned creep",

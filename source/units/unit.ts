@@ -17,7 +17,9 @@ export interface UnitArgs {
     lane?: number;
     howMany?: number;
 
-    size: number; // width/height of the unit
+    size: number;
+    width: number;
+    height: number;
     column: number;
     line: number;
     lane_id: number;
@@ -104,8 +106,8 @@ export class Unit {
         this.name = args.name ?? "unit";
         this.image = args.image ?? "creep";
         this.slowImage = args.slowImage ?? "creep_slow";
-        this.width = args.size;
-        this.height = args.size;
+        this.width = args.width;
+        this.height = args.height;
         this.is_ground_unit = args.is_ground_unit ?? true;
         this.is_immune = args.is_immune ?? false;
         this.movement_speed = args.movement_speed ?? 60; // pixels per second

@@ -4,7 +4,7 @@ import * as GameMenu from "./game_menu";
 import { getAsset } from "./assets";
 import { circlePointCollision, getRandomInt } from "@drk4/utilities";
 import * as Canvas from "./canvas";
-import { GridPosition } from "./types";
+import { CanvasPosition, GridPosition } from "./types";
 
 var CONTAINER; // createjs.Container() which will hold all the map elements
 var HIGHLIGHT_CONTAINER;
@@ -306,9 +306,9 @@ export function getSquareSize() {
     return SQUARE_SIZE;
 }
 
-export function calculatePosition(targetX, targetY) {
-    var column = Math.floor((targetX - STARTING_X) / SQUARE_SIZE);
-    var line = Math.floor((targetY - STARTING_Y) / SQUARE_SIZE);
+export function calculatePosition({ x, y }: CanvasPosition) {
+    const column = Math.floor((x - STARTING_X) / SQUARE_SIZE);
+    const line = Math.floor((y - STARTING_Y) / SQUARE_SIZE);
 
     return {
         column: column,
@@ -318,7 +318,7 @@ export function calculatePosition(targetX, targetY) {
 
 export function mouseMoveEvents(event) {
     var towerLength = 2;
-    var position = calculatePosition(event.stageX, event.stageY);
+    var position = calculatePosition({ x: event.stageX, y: event.stageY });
 
     var column = position.column;
     var line = position.line;

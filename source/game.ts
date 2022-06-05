@@ -1,16 +1,15 @@
+import { getRandomInt, isBoolean, round } from "@drk4/utilities";
 import * as Map from "./map";
 import * as GameMenu from "./game_menu";
 import { Tower } from "./tower";
 import { Bullet } from "./bullet";
-import { Unit, UnitArgs } from "./units/unit";
-import { UnitGroup } from "./units/unit_group";
+import { Unit } from "./units/unit";
 import { Tooltip } from "./tooltip";
 import { Message } from "./message";
 import * as MainMenu from "./main_menu";
 import * as HighScore from "./high_score";
-import { mapUnitType } from "./units/units.util";
+import { createUnit } from "./units/units.util";
 import { getAsset } from "./assets";
-import { getRandomInt, isBoolean, round } from "@drk4/utilities";
 import {
     addCanvasEventListener,
     addStageEventListener,
@@ -486,7 +485,6 @@ function tick(event) {
         if (wave.count >= wave.spawnInterval) {
             wave.count = 0;
 
-            var className = mapUnitType(wave.type);
             var removeWave = false;
 
             for (var b = 0; b < CREEP_LANES.length; b++) {
@@ -509,34 +507,21 @@ function tick(event) {
                     startLine = lane.start.line;
                 }
 
-                var args: UnitArgs = {
+                removeWave = createUnit({
                     column: startColumn,
                     line: startLine,
-                    destination_column: lane.end.column,
-                    destination_line: lane.end.line,
+                    wave,
+                    lane,
                     lane_id: b,
                     size: Map.getSquareSize(),
-                    health: wave.health,
-                    health_regeneration: wave.health_regeneration,
-                    gold: wave.gold,
-                    score: wave.score,
                     onReachDestination,
                     onUnitRemoved,
                     onUnitKilled,
                     getNextDestination: Map.getUnitNextDestination,
                     toCanvasPosition: Map.getPosition,
-                };
-
-                // the group units work a bit differently
-                // they are added all at the same time (instead of one at a time)
-                if (className == UnitGroup) {
-                    args.lane = lane;
-                    args.howMany = wave.howMany;
-
-                    removeWave = true;
-                }
-
-                new className(args);
+                    canvasToGrid: Map.calculatePosition,
+                    getAvailablePositions: Map.getAvailablePositions,
+                });
             }
 
             wave.howMany--;
