@@ -1,4 +1,4 @@
-import { CanvasPosition, GridPosition } from "../types";
+import { CanvasPosition, GridPosition, Lane, Wave } from "../types";
 import { Unit, UnitArgs } from "./unit";
 import { UnitFast } from "./unit_fast";
 import { UnitFly } from "./unit_fly";
@@ -9,8 +9,8 @@ import { UnitSpawn } from "./unit_spawn";
 export interface CreateUnitArgs {
     column: number;
     line: number;
-    wave: any; //TODO
-    lane: any; //TODO
+    wave: Wave;
+    lane: Lane;
     size: number;
     lane_id: number;
     onReachDestination: () => void;

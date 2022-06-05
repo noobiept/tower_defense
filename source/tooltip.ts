@@ -1,10 +1,10 @@
-var CONTAINER = null;
+let CONTAINER = null;
 
 export class Tooltip {
     static ALL = [];
 
     static init() {
-        var container = document.createElement("div");
+        const container = document.createElement("div");
 
         container.id = "TooltipContainer";
         document.body.appendChild(container);
@@ -13,8 +13,8 @@ export class Tooltip {
     }
 
     static removeAll() {
-        for (var a = Tooltip.ALL.length - 1; a >= 0; a--) {
-            var tooltip = Tooltip.ALL[a];
+        for (let a = Tooltip.ALL.length - 1; a >= 0; a--) {
+            const tooltip = Tooltip.ALL[a];
 
             tooltip.reference.onmouseover = null;
             tooltip.reference.onmouseout = null;
@@ -26,7 +26,7 @@ export class Tooltip {
     }
 
     static hideAll() {
-        for (var a = 0; a < Tooltip.ALL.length; a++) {
+        for (let a = 0; a < Tooltip.ALL.length; a++) {
             Tooltip.ALL[a].hide();
         }
     }
@@ -37,8 +37,8 @@ export class Tooltip {
     private is_opened: boolean;
 
     constructor(args) {
-        var reference = args.reference;
-        var element = document.createElement("div");
+        const reference = args.reference;
+        const element = document.createElement("div");
 
         element.className = "tooltip";
         $(element).html(args.text);
@@ -72,13 +72,13 @@ export class Tooltip {
 
         this.is_opened = true;
 
-        var reference = this.reference;
-        var element = this.element;
+        const reference = this.reference;
+        const element = this.element;
 
-        var position = $(reference).offset();
+        const position = $(reference).offset();
 
-        var left = position.left;
-        var top = position.top - $(element).outerHeight() - 5;
+        const left = position.left;
+        const top = position.top - $(element).outerHeight() - 5;
 
         $(element).css("top", top + "px");
         $(element).css("left", left + "px");

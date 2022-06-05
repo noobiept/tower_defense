@@ -5,17 +5,17 @@ interface HighScoreData {
 }
 
 // HIGH_SCORE = { mapName: [ score1, score2, ... ] }
-var HIGH_SCORE: HighScoreData = {};
+let HIGH_SCORE: HighScoreData = {};
 
 // max. number of scores saved per map (the top scores)
-var MAX_SCORES_SAVED = 5;
+const MAX_SCORES_SAVED = 5;
 
 export function getMaxScoresSaved() {
     return MAX_SCORES_SAVED;
 }
 
 export function load() {
-    var score = getObject("high_score");
+    const score = getObject("high_score");
 
     if (score !== null) {
         HIGH_SCORE = score;

@@ -7,7 +7,7 @@ import {
     toDegrees,
 } from "@drk4/utilities";
 
-var CONTAINER; // createjs.Container() which will hold all the bullet elements
+let CONTAINER; // createjs.Container() which will hold all the bullet elements
 
 export interface BulletArgs {
     shooter: Tower;
@@ -27,7 +27,7 @@ export class Bullet {
     }
 
     static removeAll() {
-        for (var a = Bullet.ALL.length - 1; a >= 0; a--) {
+        for (let a = Bullet.ALL.length - 1; a >= 0; a--) {
             Bullet.ALL[a].remove();
         }
     }
@@ -59,10 +59,10 @@ export class Bullet {
     }
 
     setupShape() {
-        var width = this.width;
-        var height = this.height;
+        const width = this.width;
+        const height = this.height;
 
-        var shape = new createjs.Bitmap(getAsset("bullet"));
+        const shape = new createjs.Bitmap(getAsset("bullet"));
 
         shape.regX = width / 2;
         shape.regY = height / 2;
@@ -75,7 +75,7 @@ export class Bullet {
     }
 
     tick(deltaTime) {
-        var target = this.target;
+        const target = this.target;
 
         // target already died
         if (target.removed) {
@@ -83,11 +83,11 @@ export class Bullet {
             return;
         }
 
-        var targetX = target.getX();
-        var targetY = target.getY();
-        var targetRadius = target.width / 2;
+        const targetX = target.getX();
+        const targetY = target.getY();
+        const targetRadius = target.width / 2;
 
-        var angle = calculateAngle(
+        const angle = calculateAngle(
             this.shape.x,
             this.shape.y * -1,
             targetX,
@@ -124,7 +124,7 @@ export class Bullet {
 
         CONTAINER.removeChild(this.shape);
 
-        var index = Bullet.ALL.indexOf(this);
+        const index = Bullet.ALL.indexOf(this);
 
         Bullet.ALL.splice(index, 1);
     }

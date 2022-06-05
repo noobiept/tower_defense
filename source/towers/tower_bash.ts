@@ -1,8 +1,7 @@
-import { Tower, TowerArgs, TowerStats } from "./tower";
+import { Tower, TowerStats } from "./tower";
 import { getAsset } from "../assets";
 import { circleCircleCollision, getRandomInt } from "@drk4/utilities";
 import { CanvasPosition } from "../types";
-import { Unit } from "../units/unit";
 
 export type TowerBashStats = TowerStats & {
     slow: number;
@@ -75,13 +74,13 @@ export class TowerBash extends Tower<TowerBashStats> {
         super.setupShape(position);
 
         // add the attack animation
-        var halfLength = 20; // the attack image is 40x40 px
+        const halfLength = 20; // the attack image is 40x40 px
 
-        var attackAnimation = new createjs.Bitmap(
+        const attackAnimation = new createjs.Bitmap(
             getAsset("tower_bash_attack")
         );
 
-        var scale = (this.width + this.range) / this.attack_animation_length; // scale the image according to the tower's range
+        const scale = (this.width + this.range) / this.attack_animation_length; // scale the image according to the tower's range
 
         attackAnimation.regX = halfLength;
         attackAnimation.regY = halfLength;
@@ -108,7 +107,7 @@ export class TowerBash extends Tower<TowerBashStats> {
         // the attack speed may have changed in the upgrade, so need to update this as well
         this.attack_animation_interval = this.attack_limit / 4;
 
-        var scale = (this.width + this.range) / this.attack_animation_length; // scale the image according to the tower's range
+        const scale = (this.width + this.range) / this.attack_animation_length; // scale the image according to the tower's range
 
         this.attack_animation.scaleX = scale;
         this.attack_animation.scaleY = scale;
@@ -125,7 +124,7 @@ export class TowerBash extends Tower<TowerBashStats> {
 
         // see if we can attack right now
         if (this.attack_count <= 0) {
-            var target = this.targetUnit;
+            const target = this.targetUnit;
 
             // check if its currently attacking a unit
             if (target && !target.removed) {
@@ -174,29 +173,29 @@ export class TowerBash extends Tower<TowerBashStats> {
  */
 
     attack() {
-        var currentLevel = this.stats[this.upgrade_level];
-        var radius = currentLevel.attack_radius;
-        var slow = currentLevel.slow;
+        const currentLevel = this.stats[this.upgrade_level];
+        const radius = currentLevel.attack_radius;
+        const slow = currentLevel.slow;
 
-        var units = this.getUnitsInRange(
+        const units = this.getUnitsInRange(
             this.getX(),
             this.getY(),
             radius,
             this
         );
 
-        for (var a = 0; a < units.length; a++) {
-            var unit = units[a];
+        for (let a = 0; a < units.length; a++) {
+            const unit = units[a];
 
             unit.tookDamage(this);
 
-            var slowChance = getRandomInt(0, 100);
+            const slowChance = getRandomInt(0, 100);
 
             if (slowChance <= this.slow_chance) {
                 unit.slowDown(slow);
             }
 
-            var stunChance = getRandomInt(0, 100);
+            const stunChance = getRandomInt(0, 100);
 
             if (stunChance <= this.stun_chance) {
                 unit.stun(this.stun);

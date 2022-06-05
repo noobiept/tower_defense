@@ -8,6 +8,6 @@ module.exports = {
         "prettier",
     ],
     rules: {
-        "no-var": "off",
+        "no-constant-condition": ["error", { checkLoops: false }],
     },
 };

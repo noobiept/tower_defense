@@ -49,15 +49,15 @@ export class TowerFrost extends Tower<TowerFrostStats> {
     }
 
     onBulletHit(target) {
-        var currentLevel = this.stats[this.upgrade_level];
-        var slow = currentLevel.slow;
-        var attackRadius = currentLevel.attack_radius;
-        var x = target.getX();
-        var y = target.getY();
+        const currentLevel = this.stats[this.upgrade_level];
+        const slow = currentLevel.slow;
+        const attackRadius = currentLevel.attack_radius;
+        const x = target.getX();
+        const y = target.getY();
 
-        var units = this.getUnitsInRange(x, y, attackRadius, this);
+        const units = this.getUnitsInRange(x, y, attackRadius, this);
 
-        for (var a = 0; a < units.length; a++) {
+        for (let a = 0; a < units.length; a++) {
             units[a].slowDown(slow);
         }
 

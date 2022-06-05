@@ -17,12 +17,12 @@ export function init() {
 
 export function adjustCanvasDimensions(width: number, height: number) {
     // set the canvas width/height
-    var windowWidth = $(window).outerWidth();
-    var windowHeight = $(window).outerHeight();
-    var canvasWidth, canvasHeight;
-    var padding = 10;
-    var mapWidth = width + padding;
-    var mapHeight = height + padding;
+    const windowWidth = $(window).outerWidth();
+    const windowHeight = $(window).outerHeight();
+    let canvasWidth, canvasHeight;
+    const padding = 10;
+    const mapWidth = width + padding;
+    const mapHeight = height + padding;
 
     // we try to occupy the whole window's dimension, if the map's width/height fits there, otherwise just set the canvas width/height to the same as the map
     if (mapWidth < windowWidth) {

@@ -9,7 +9,7 @@ import {
 } from "@drk4/utilities";
 import { CanvasPosition, GridPosition } from "../types";
 
-var CONTAINER; // createjs.Container() which will hold all the tower elements
+let CONTAINER; // createjs.Container() which will hold all the tower elements
 
 export interface TowerStats {
     damage: number;
@@ -78,7 +78,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
     }
 
     static removeAll() {
-        for (var a = 0; a < Tower.ALL.length; a++) {
+        for (let a = 0; a < Tower.ALL.length; a++) {
             Tower.ALL[a].remove();
 
             a--;
@@ -140,7 +140,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         this.is_selling = false;
         this.sell_count = 0;
 
-        var currentLevel = this.stats[this.upgrade_level];
+        const currentLevel = this.stats[this.upgrade_level];
 
         this.damage = currentLevel.damage;
         this.range = currentLevel.range;
@@ -171,28 +171,28 @@ export class Tower<Stats extends TowerStats = TowerStats> {
     }
 
     setupShape(position: CanvasPosition) {
-        var width = this.width;
-        var height = this.height;
-        var halfWidth = width / 2;
-        var halfHeight = height / 2;
+        const width = this.width;
+        const height = this.height;
+        const halfWidth = width / 2;
+        const halfHeight = height / 2;
 
         // the tower base
-        var base = new createjs.Bitmap(getAsset("tower_base0"));
+        const base = new createjs.Bitmap(getAsset("tower_base0"));
 
         base.regX = halfWidth;
         base.regY = halfHeight;
 
         // the tower
-        var shape = new createjs.Bitmap(getAsset(this.image));
+        const shape = new createjs.Bitmap(getAsset(this.image));
 
         shape.regX = halfWidth;
         shape.regY = halfHeight;
         shape.rotation = getRandomInt(0, 360);
 
         // the range circle
-        var range = new createjs.Shape();
+        const range = new createjs.Shape();
 
-        var g = range.graphics;
+        const g = range.graphics;
 
         g.beginStroke("gray");
         g.drawCircle(0, 0, this.range);
@@ -201,7 +201,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         range.visible = false;
 
         // progress bar (shown when upgrading or selling the tower)
-        var progress = new createjs.Shape();
+        const progress = new createjs.Shape();
 
         progress.x = -halfWidth;
         progress.y = -this.progress_length / 2;
@@ -209,7 +209,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         progress.visible = false;
 
         // the container
-        var container = new createjs.Container();
+        const container = new createjs.Container();
 
         container.addChild(base);
         container.addChild(shape);
@@ -285,7 +285,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         // upgrade a level
         this.upgrade_level++;
 
-        var currentLevel = this.stats[this.upgrade_level];
+        const currentLevel = this.stats[this.upgrade_level];
 
         this.damage = currentLevel.damage;
         this.range = currentLevel.range;
@@ -294,7 +294,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         this.attack_count = 0;
 
         // re-draw the range element (since we may have increased the range in the upgrade)
-        var g = this.rangeElement.graphics;
+        const g = this.rangeElement.graphics;
 
         g.clear();
         g.beginStroke("gray");
@@ -360,7 +360,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         CONTAINER.removeChild(this.container);
 
         // from from the ALL array
-        var index = Tower.ALL.indexOf(this);
+        const index = Tower.ALL.indexOf(this);
 
         Tower.ALL.splice(index, 1);
 
@@ -371,14 +371,14 @@ export class Tower<Stats extends TowerStats = TowerStats> {
      * Rotate the tower (the center part, not the whole element) to point in the direction of a unit
      */
     rotateTower(unit) {
-        var angleRads = calculateAngle(
+        const angleRads = calculateAngle(
             this.getX(),
             this.getY() * -1,
             unit.getX(),
             unit.getY() * -1
         );
 
-        var angleDegrees = toDegrees(angleRads);
+        const angleDegrees = toDegrees(angleRads);
 
         this.shape.rotation = angleDegrees;
     }
@@ -395,7 +395,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
 
         // see if we can attack right now
         if (this.attack_count <= 0) {
-            var target = this.targetUnit;
+            const target = this.targetUnit;
 
             // check if its currently attacking a unit
             if (target && !target.removed) {
@@ -446,12 +446,12 @@ export class Tower<Stats extends TowerStats = TowerStats> {
     tick_upgrade(deltaTime) {
         this.upgrade_count += deltaTime;
 
-        var currentLevel = this.stats[this.upgrade_level];
-        var upgradeTime = currentLevel.upgrade_time;
+        const currentLevel = this.stats[this.upgrade_level];
+        const upgradeTime = currentLevel.upgrade_time;
 
-        var ratio = this.upgrade_count / upgradeTime;
+        const ratio = this.upgrade_count / upgradeTime;
 
-        var g = this.progressElement.graphics;
+        const g = this.progressElement.graphics;
 
         g.beginFill("gray");
         g.drawRect(0, 0, this.width * ratio, this.progress_length);
@@ -475,12 +475,12 @@ export class Tower<Stats extends TowerStats = TowerStats> {
 
         this.sell_count += deltaTime;
 
-        var currentLevel = this.stats[this.upgrade_level];
-        var sellTime = currentLevel.sell_time;
+        const currentLevel = this.stats[this.upgrade_level];
+        const sellTime = currentLevel.sell_time;
 
-        var ratio = this.sell_count / sellTime;
+        const ratio = this.sell_count / sellTime;
 
-        var g = this.progressElement.graphics;
+        const g = this.progressElement.graphics;
 
         g.beginFill("rgb(200,0,0)");
         g.drawRect(0, 0, this.width * ratio, this.progress_length);

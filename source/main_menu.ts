@@ -1,19 +1,19 @@
 import * as Game from "./game";
 import * as HighScore from "./high_score";
 
-var MAIN_MENU = null;
-var HIGH_SCORE = null;
-var TBODY = null;
+let MAIN_MENU = null;
+let HIGH_SCORE = null;
+let TBODY = null;
 
 export function init() {
     MAIN_MENU = document.querySelector("#MainMenu");
     HIGH_SCORE = document.querySelector("#HighScore");
     TBODY = HIGH_SCORE.querySelector("tbody");
 
-    var easy = MAIN_MENU.querySelector("#MainMenu-easy");
-    var medium = MAIN_MENU.querySelector("#MainMenu-medium");
-    var hard = MAIN_MENU.querySelector("#MainMenu-hard");
-    var highScore = MAIN_MENU.querySelector("#MainMenu-highScores");
+    const easy = MAIN_MENU.querySelector("#MainMenu-easy");
+    const medium = MAIN_MENU.querySelector("#MainMenu-medium");
+    const hard = MAIN_MENU.querySelector("#MainMenu-hard");
+    const highScore = MAIN_MENU.querySelector("#MainMenu-highScores");
 
     easy.onclick = function () {
         close();
@@ -33,7 +33,7 @@ export function init() {
     highScore.onclick = openHighScore;
 
     // high-score
-    var back = HIGH_SCORE.querySelector("#HighScore-back");
+    const back = HIGH_SCORE.querySelector("#HighScore-back");
 
     back.onclick = function () {
         $(HIGH_SCORE).css("display", "none");
@@ -47,14 +47,14 @@ export function open() {
     $("#MainCanvas").css("display", "none");
     $(MAIN_MENU).css("display", "block");
 
-    var menuWidth = $(MAIN_MENU).outerWidth();
-    var menuHeight = $(MAIN_MENU).outerHeight();
+    const menuWidth = $(MAIN_MENU).outerWidth();
+    const menuHeight = $(MAIN_MENU).outerHeight();
 
-    var windowWidth = $(window).outerWidth();
-    var windowHeight = $(window).outerHeight();
+    const windowWidth = $(window).outerWidth();
+    const windowHeight = $(window).outerHeight();
 
-    var top = windowHeight / 2 - menuHeight / 2;
-    var left = windowWidth / 2 - menuWidth / 2;
+    const top = windowHeight / 2 - menuHeight / 2;
+    const left = windowWidth / 2 - menuWidth / 2;
 
     $(MAIN_MENU).css("top", top + "px");
     $(MAIN_MENU).css("left", left + "px");
@@ -67,23 +67,23 @@ export function close() {
 export function openHighScore() {
     close();
 
-    var easy = HighScore.get("easy");
-    var medium = HighScore.get("medium");
-    var hard = HighScore.get("hard");
-    var maxScoresSaved = HighScore.getMaxScoresSaved();
+    const easy = HighScore.get("easy");
+    const medium = HighScore.get("medium");
+    const hard = HighScore.get("hard");
+    const maxScoresSaved = HighScore.getMaxScoresSaved();
 
-    var maps = [easy, medium, hard];
+    const maps = [easy, medium, hard];
 
-    var tableRow, tableData;
+    let tableRow, tableData;
 
-    var a, b;
+    let a, b;
 
     for (a = 0; a < maxScoresSaved; a++) {
         tableRow = document.createElement("tr");
 
         for (b = 0; b < maps.length; b++) {
             tableData = document.createElement("td");
-            var map = maps[b];
+            const map = maps[b];
 
             if (map && map[a]) {
                 $(tableData).text(map[a]);
@@ -99,14 +99,14 @@ export function openHighScore() {
 
     $(HIGH_SCORE).css("display", "block");
 
-    var menuWidth = $(HIGH_SCORE).outerWidth();
-    var menuHeight = $(HIGH_SCORE).outerHeight();
+    const menuWidth = $(HIGH_SCORE).outerWidth();
+    const menuHeight = $(HIGH_SCORE).outerHeight();
 
-    var windowWidth = $(window).outerWidth();
-    var windowHeight = $(window).outerHeight();
+    const windowWidth = $(window).outerWidth();
+    const windowHeight = $(window).outerHeight();
 
-    var top = windowHeight / 2 - menuHeight / 2;
-    var left = windowWidth / 2 - menuWidth / 2;
+    const top = windowHeight / 2 - menuHeight / 2;
+    const left = windowWidth / 2 - menuWidth / 2;
 
     $(HIGH_SCORE).css("top", top + "px");
     $(HIGH_SCORE).css("left", left + "px");

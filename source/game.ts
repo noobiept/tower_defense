@@ -17,32 +17,33 @@ import {
     removeStageEventListener,
     updateStage,
 } from "./canvas";
+import { Wave } from "./types";
 
-var MAP_NAME;
-var UNITS_STATS = {};
-var CREEP_LANES = []; // contains the start/end point of each lane
-var ALL_WAVES = [];
-var ACTIVE_WAVES = []; // you may have more than 1 wave active (adding units)
-var NEXT_WAVE = 0;
-var NO_MORE_WAVES = false;
-var WAVE_INTERVAL = 0;
-var WAVE_COUNT = 0;
+let MAP_NAME;
+let UNITS_STATS = {};
+const CREEP_LANES = []; // contains the start/end point of each lane
+const ALL_WAVES: Wave[] = [];
+const ACTIVE_WAVES: Wave[] = []; // you may have more than 1 wave active (adding units)
+let NEXT_WAVE = 0;
+let NO_MORE_WAVES = false;
+let WAVE_INTERVAL = 0;
+let WAVE_COUNT = 0;
 
-var ELEMENT_SELECTED = null;
+let ELEMENT_SELECTED = null;
 
-var GOLD = 0;
-var LIFE = 0;
-var SCORE = 0;
-var IS_PAUSED = false;
-var BEFORE_FIRST_WAVE = false; // before the first wave, the game is paused but we can add towers. once the game starts, pausing the game won't allow you to add/remove towers
+let GOLD = 0;
+let LIFE = 0;
+let SCORE = 0;
+let IS_PAUSED = false;
+let BEFORE_FIRST_WAVE = false; // before the first wave, the game is paused but we can add towers. once the game starts, pausing the game won't allow you to add/remove towers
 
 // this will have the return when setting the events (need to save this so that later we can turn the event off (with createjs, doesn't work passing the function, like it does when setting a normal event)
-var EVENTS = {
+const EVENTS = {
     tick: null,
     mouseMove: null,
 };
 
-var GAME_END = {
+const GAME_END = {
     is_over: false,
     victory: false,
 };
@@ -65,9 +66,9 @@ export function init(onQuit: () => void) {
 export function start(map) {
     MAP_NAME = map;
 
-    var mapInfo = getAsset(map);
+    const mapInfo = getAsset(map);
 
-    var a;
+    let a;
     UNITS_STATS["Unit"] = mapInfo["Unit"];
     UNITS_STATS["UnitFast"] = mapInfo["UnitFast"];
     UNITS_STATS["UnitFly"] = mapInfo["UnitFly"];
@@ -77,22 +78,22 @@ export function start(map) {
 
     // read from the map info and update the appropriate variables
     for (a = 0; a < mapInfo.waves.length; a++) {
-        var waveType = mapInfo.waves[a];
-        var stats = UNITS_STATS[waveType];
-        var howMany = Math.floor(
+        const waveType = mapInfo.waves[a];
+        const stats = UNITS_STATS[waveType];
+        const howMany = Math.floor(
             stats.wave_count_initial * (1 + a * stats.wave_count_increase_rate)
         );
-        var health = Math.floor(
+        const health = Math.floor(
             stats.health_initial * (1 + a * stats.health_increase_rate)
         );
-        var health_regeneration = Math.floor(
+        const health_regeneration = Math.floor(
             stats.health_regeneration_initial *
                 (1 + a * stats.health_regeneration_increase_rate)
         );
-        var gold = Math.floor(
+        const gold = Math.floor(
             stats.gold_initial * (1 + a * stats.gold_increase_rate)
         );
-        var score = Math.floor(
+        const score = Math.floor(
             stats.score_initial * (1 + a * stats.score_increase_rate)
         );
 
@@ -109,7 +110,7 @@ export function start(map) {
     }
 
     for (a = 0; a < mapInfo.creepLanes.length; a++) {
-        var lane = mapInfo.creepLanes[a];
+        const lane = mapInfo.creepLanes[a];
 
         CREEP_LANES.push({
             start: lane.start,
@@ -296,10 +297,10 @@ function mouseEvents(event) {
         return;
     }
 
-    var canvasRect = getCanvasBoundingClientRect();
-    var button = event.button;
-    var x = event.clientX - canvasRect.left;
-    var y = event.clientY - canvasRect.top;
+    const canvasRect = getCanvasBoundingClientRect();
+    const button = event.button;
+    const x = event.clientX - canvasRect.left;
+    const y = event.clientY - canvasRect.top;
 
     if (ELEMENT_SELECTED) {
         clearSelection();
@@ -323,7 +324,7 @@ function mouseEvents(event) {
             }
         }
 
-        var towerClass = GameMenu.getSelectedTower();
+        const towerClass = GameMenu.getSelectedTower();
 
         // see if we can afford a tower
         if (!haveEnoughGold(towerClass.stats[0].initial_cost)) {
@@ -331,7 +332,7 @@ function mouseEvents(event) {
             return;
         }
 
-        var highlight = Map.getHighlightSquare();
+        const highlight = Map.getHighlightSquare();
 
         const tower = Map.addTower(
             towerClass,
@@ -424,7 +425,7 @@ function clear() {
 function end(victory) {
     clear();
 
-    var message = "";
+    let message = "";
 
     if (victory) {
         message += "Victory!\n\nScore: " + SCORE;
@@ -462,10 +463,10 @@ export function forceNextWave() {
         return;
     }
 
-    var scorePerSecond = 10;
-    var waveTimeLeft = WAVE_INTERVAL - WAVE_COUNT;
+    const scorePerSecond = 10;
+    const waveTimeLeft = WAVE_INTERVAL - WAVE_COUNT;
 
-    var score = Math.floor(waveTimeLeft * scorePerSecond);
+    const score = Math.floor(waveTimeLeft * scorePerSecond);
 
     updateScore(score);
 
@@ -515,8 +516,8 @@ function tick(event) {
         return;
     }
 
-    var a;
-    var deltaSeconds = event.delta / 1000;
+    let a;
+    const deltaSeconds = event.delta / 1000;
 
     if (!NO_MORE_WAVES) {
         WAVE_COUNT += deltaSeconds;
@@ -536,7 +537,7 @@ function tick(event) {
             }
         }
 
-        var timeUntilNextWave = WAVE_INTERVAL - WAVE_COUNT;
+        const timeUntilNextWave = WAVE_INTERVAL - WAVE_COUNT;
 
         GameMenu.updateTimeUntilNextWave(
             round(timeUntilNextWave, 2).toFixed(1)
@@ -544,19 +545,19 @@ function tick(event) {
     }
 
     for (a = ACTIVE_WAVES.length - 1; a >= 0; a--) {
-        var wave = ACTIVE_WAVES[a];
+        const wave = ACTIVE_WAVES[a];
 
         wave.count += deltaSeconds;
 
         if (wave.count >= wave.spawnInterval) {
             wave.count = 0;
 
-            var removeWave = false;
+            let removeWave = false;
 
-            for (var b = 0; b < CREEP_LANES.length; b++) {
-                var lane = CREEP_LANES[b];
-                var startLine, startColumn;
-                var halfLength = Math.floor(lane.length / 2);
+            for (let b = 0; b < CREEP_LANES.length; b++) {
+                const lane = CREEP_LANES[b];
+                let startLine, startColumn;
+                const halfLength = Math.floor(lane.length / 2);
 
                 // add units randomly in the start zone
                 if (lane.orientation == "horizontal") {
@@ -593,7 +594,7 @@ function tick(event) {
             wave.howMany--;
 
             if (wave.howMany <= 0 || removeWave === true) {
-                var index = ACTIVE_WAVES.indexOf(wave);
+                const index = ACTIVE_WAVES.indexOf(wave);
 
                 ACTIVE_WAVES.splice(index, 1);
             }

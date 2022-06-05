@@ -49,17 +49,17 @@ export class TowerAntiAir extends Tower {
         if (this.attack_count <= 0) {
             this.getTargets();
 
-            var targets = this.targets;
+            const targets = this.targets;
 
             // check if its currently attacking a unit
             if (this.targets.length > 0) {
                 this.rotateTower(targets[0]);
-                var x = this.getX();
-                var y = this.getY();
-                var radius = this.range;
+                const x = this.getX();
+                const y = this.getY();
+                const radius = this.range;
 
-                for (var a = 0; a < this.targets.length; a++) {
-                    var target = this.targets[a];
+                for (let a = 0; a < this.targets.length; a++) {
+                    const target = this.targets[a];
 
                     if (target.removed) {
                         this.targets.splice(a, 1);
@@ -99,12 +99,12 @@ export class TowerAntiAir extends Tower {
             return;
         }
 
-        var x = this.getX();
-        var y = this.getY();
-        var radius = this.range;
+        const x = this.getX();
+        const y = this.getY();
+        const radius = this.range;
 
-        for (var a = 0; a < Unit.ALL_AIR.length; a++) {
-            var unit = Unit.ALL_AIR[a];
+        for (let a = 0; a < Unit.ALL_AIR.length; a++) {
+            const unit = Unit.ALL_AIR[a];
 
             // check if its a new target
             if (this.targets.indexOf(unit) < 0) {

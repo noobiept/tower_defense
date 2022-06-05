@@ -3,7 +3,7 @@ import { getAsset } from "../assets";
 import { calculateAngle, pointBoxCollision, toDegrees } from "@drk4/utilities";
 import { CanvasPosition, GridPosition } from "../types";
 
-var CONTAINER; // createjs.Container() which will hold all the unit elements
+let CONTAINER; // createjs.Container() which will hold all the unit elements
 
 export interface UnitArgs {
     name?: string;
@@ -49,7 +49,7 @@ export class Unit {
     }
 
     static removeAll() {
-        for (var a = 0; a < Unit.ALL.length; a++) {
+        for (let a = 0; a < Unit.ALL.length; a++) {
             Unit.ALL[a].remove();
 
             a--;
@@ -166,35 +166,34 @@ export class Unit {
     }
 
     setupShape() {
-        var width = this.width;
-        var height = this.height;
-        var halfWidth = width / 2;
-        var halfHeight = height / 2;
-        var g;
+        const width = this.width;
+        const height = this.height;
+        const halfWidth = width / 2;
+        const halfHeight = height / 2;
 
         // the unit
-        var shape = new createjs.Bitmap(getAsset(this.image));
+        const shape = new createjs.Bitmap(getAsset(this.image));
 
         shape.regX = halfWidth;
         shape.regY = halfHeight;
 
         // health bar
 
-        var healthBar = new createjs.Shape();
+        const healthBar = new createjs.Shape();
 
         healthBar.x = 0;
         healthBar.y = -2;
         healthBar.regX = halfWidth;
         healthBar.regY = halfHeight;
 
-        g = healthBar.graphics;
+        const g = healthBar.graphics;
 
         g.beginFill("green");
         g.drawRoundRect(0, 0, width, 2, 1);
         g.endFill();
 
         // the slow circle (is added when the unit is being slowed down)
-        var slow = new createjs.Bitmap(getAsset(this.slowImage));
+        const slow = new createjs.Bitmap(getAsset(this.slowImage));
 
         slow.regX = halfWidth;
         slow.regY = halfHeight;
@@ -243,25 +242,25 @@ export class Unit {
     }
 
     move(next) {
-        var unitX = this.getX();
-        var unitY = this.getY();
+        const unitX = this.getX();
+        const unitY = this.getY();
 
         const position = this.toCanvasPosition(next);
 
         this.destination_column = next.column;
         this.destination_line = next.line;
 
-        var destX = position.x + this.size / 2;
-        var destY = position.y + this.size / 2;
+        const destX = position.x + this.size / 2;
+        const destY = position.y + this.size / 2;
 
-        var angleRads = calculateAngle(unitX, unitY * -1, destX, destY * -1);
+        const angleRads = calculateAngle(unitX, unitY * -1, destX, destY * -1);
 
         // the next position represents a box which is used for the collision detection
         // its position after the destination position
-        var boxLength = 40; // width/height
-        var boxHalfLength = boxLength / 2;
-        var centerX = destX + Math.cos(angleRads) * boxHalfLength;
-        var centerY = destY + Math.sin(angleRads) * boxHalfLength;
+        const boxLength = 40; // width/height
+        const boxHalfLength = boxLength / 2;
+        const centerX = destX + Math.cos(angleRads) * boxHalfLength;
+        const centerY = destY + Math.sin(angleRads) * boxHalfLength;
 
         this.next_x = centerX - boxHalfLength;
         this.next_y = centerY - boxHalfLength;
@@ -271,7 +270,7 @@ export class Unit {
         this.move_x = Math.cos(angleRads) * this.current_movement_speed;
         this.move_y = Math.sin(angleRads) * this.current_movement_speed;
 
-        var rotation = toDegrees(angleRads);
+        const rotation = toDegrees(angleRads);
 
         this.shape.rotation = rotation;
         this.slowElement.rotation = rotation;
@@ -295,7 +294,7 @@ export class Unit {
         CONTAINER.removeChild(this.container);
 
         // remove from 'all' array and 'ground' or 'air' array
-        var index = Unit.ALL.indexOf(this);
+        let index = Unit.ALL.indexOf(this);
 
         Unit.ALL.splice(index, 1);
 
@@ -393,11 +392,11 @@ export class Unit {
     }
 
     updateHealthBar() {
-        var ratio = this.health / this.max_health;
-        var currentHealth = ratio * this.width;
-        var missingHealth = (1 - ratio) * this.width;
+        const ratio = this.health / this.max_health;
+        const currentHealth = ratio * this.width;
+        const missingHealth = (1 - ratio) * this.width;
 
-        var g = this.healthBar.graphics;
+        const g = this.healthBar.graphics;
 
         g.beginFill("red");
         g.drawRoundRect(0, 0, missingHealth, 2, 1);

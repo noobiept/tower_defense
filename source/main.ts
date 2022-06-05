@@ -31,10 +31,10 @@ window.onload = function () {
         return false;
     };
 
-    var loadMessage = document.querySelector("#LoadMessage");
+    const loadMessage = document.querySelector("#LoadMessage");
 
-    var left = $(window).width() / 2;
-    var top = $(window).height() / 2;
+    const left = $(window).width() / 2;
+    const top = $(window).height() / 2;
 
     $(loadMessage).css("top", top + "px");
     $(loadMessage).css("left", left + "px");

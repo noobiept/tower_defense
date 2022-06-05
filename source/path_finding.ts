@@ -37,12 +37,12 @@
  * @param positionType What value in the `map` represents a passable position and what value represents a blocked position.
  */
 export function breadthFirstSearch(map, destination, positionType) {
-    var frontier = [destination];
-    var cameFrom = [];
+    const frontier = [destination];
+    const cameFrom = [];
 
     // figure out the number of columns/lines of the map array
     // have all the useful information in one object
-    var info = {
+    const info = {
         columns: map[0].length,
         lines: map.length,
         map: map,
@@ -50,10 +50,10 @@ export function breadthFirstSearch(map, destination, positionType) {
     };
 
     // construct a 2 dimension array, where the value is a column/line position, which tells the creeps where to go next.
-    for (var line = 0; line < info.lines; line++) {
+    for (let line = 0; line < info.lines; line++) {
         cameFrom[line] = [];
 
-        for (var column = 0; column < info.columns; column++) {
+        for (let column = 0; column < info.columns; column++) {
             cameFrom[line][column] = null;
         }
     }
@@ -62,11 +62,11 @@ export function breadthFirstSearch(map, destination, positionType) {
 
     // go through all the passable positions
     while (frontier.length > 0) {
-        var current = frontier.shift();
-        var neighbors = getNeighbors(current, info);
+        const current = frontier.shift();
+        const neighbors = getNeighbors(current, info);
 
-        for (var a = 0; a < neighbors.length; a++) {
-            var next = neighbors[a];
+        for (let a = 0; a < neighbors.length; a++) {
+            const next = neighbors[a];
 
             // check if we've being through this position
             if (cameFrom[next.line][next.column] === null) {
@@ -84,15 +84,15 @@ export function breadthFirstSearch(map, destination, positionType) {
  * Get the neighbor positions (top/bottom/left/right).
  */
 function getNeighbors(position, info) {
-    var neighbors = [];
-    var column = position.column;
-    var line = position.line;
-    var map = info.map;
+    const neighbors = [];
+    const column = position.column;
+    const line = position.line;
+    const map = info.map;
 
-    var leftColumn = column - 1;
-    var rightColumn = column + 1;
-    var topLine = line - 1;
-    var bottomLine = line + 1;
+    const leftColumn = column - 1;
+    const rightColumn = column + 1;
+    const topLine = line - 1;
+    const bottomLine = line + 1;
 
     // check the position to the left
     if (column > 0 && map[line][leftColumn] === info.passableValue) {

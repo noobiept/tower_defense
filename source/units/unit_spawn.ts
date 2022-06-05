@@ -56,19 +56,19 @@ export class UnitSpawn extends Unit {
                 position.line,
                 2
             );
-            var spawnedPosition;
+            let spawnedPosition;
 
-            var spawnedHealth = Math.floor(
+            const spawnedHealth = Math.floor(
                 this.max_health / this.number_spawned_units
             );
-            var spawnedRegeneration = Math.floor(this.health_regeneration / 2);
-            var spawnedGold = Math.floor(this.gold / 2);
-            var spawnedScore = Math.floor(this.score / 2);
+            const spawnedRegeneration = Math.floor(this.health_regeneration / 2);
+            const spawnedGold = Math.floor(this.gold / 2);
+            const spawnedScore = Math.floor(this.score / 2);
 
-            for (var a = 0; a < this.number_spawned_units; a++) {
+            for (let a = 0; a < this.number_spawned_units; a++) {
                 // position the spawned unit in a random position close to the main one
                 if (availablePositions.length > 0) {
-                    var select = getRandomInt(0, availablePositions.length - 1);
+                    const select = getRandomInt(0, availablePositions.length - 1);
 
                     spawnedPosition = availablePositions.splice(select, 1)[0];
                 }

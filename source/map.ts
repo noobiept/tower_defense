@@ -7,31 +7,31 @@ import * as Canvas from "./canvas";
 import { CanvasPosition, GridPosition } from "./types";
 import { Tower } from "./towers/tower";
 
-var CONTAINER; // createjs.Container() which will hold all the map elements
-var HIGHLIGHT_CONTAINER;
-var CREEP_LANES;
+let CONTAINER; // createjs.Container() which will hold all the map elements
+let HIGHLIGHT_CONTAINER;
+let CREEP_LANES;
 
-var NUMBER_OF_COLUMNS = 0;
-var NUMBER_OF_LINES = 0;
+let NUMBER_OF_COLUMNS = 0;
+let NUMBER_OF_LINES = 0;
 
-var STARTING_X = 0;
-var STARTING_Y = 0;
+let STARTING_X = 0;
+let STARTING_Y = 0;
 
-var SQUARE_SIZE = 10; // in pixels
+const SQUARE_SIZE = 10; // in pixels
 
-var GRID_HIGHLIGHT = {
+const GRID_HIGHLIGHT = {
     shape: null, // this will point to either 'available' or 'not_available'
     available: null, // will have a reference to a Bitmap
     not_available: null, // also a reference to a Bitmap
     column: 0,
     line: 0,
 };
-var WALL_LENGTH = 2;
+const WALL_LENGTH = 2;
 
 // result from the path finding algorithm, with the valid paths to the destination
-var PATHS = [];
-var MAP;
-var POSITION_TYPE = {
+let PATHS = [];
+let MAP;
+const POSITION_TYPE = {
     passable: 1,
     blocked: 0,
 };
@@ -55,11 +55,11 @@ export function initHighlight(parent) {
 }
 
 export function build(mapInfo) {
-    var columns = mapInfo.numberOfColumns;
-    var lines = mapInfo.numberOfLines;
+    const columns = mapInfo.numberOfColumns;
+    const lines = mapInfo.numberOfLines;
 
-    var width = columns * SQUARE_SIZE;
-    var height = lines * SQUARE_SIZE;
+    const width = columns * SQUARE_SIZE;
+    const height = lines * SQUARE_SIZE;
 
     // 2 dimensional array, with all the positions of the map
     // 0 -> wall (impassable square)
@@ -67,10 +67,10 @@ export function build(mapInfo) {
     // main array represents the columns (map[ 0 ], first column, map[ 0 ][ 1 ], first column and second line)
     MAP = [];
 
-    for (var line = 0; line < lines; line++) {
+    for (let line = 0; line < lines; line++) {
         MAP[line] = [];
 
-        for (var column = 0; column < columns; column++) {
+        for (let column = 0; column < columns; column++) {
             MAP[line][column] = 1;
         }
     }
@@ -110,14 +110,14 @@ export function build(mapInfo) {
     }); // bottom
 
     // add the part of the wall where the creeps start/end (new wall with different color)
-    var creepLanes = mapInfo.creepLanes;
+    const creepLanes = mapInfo.creepLanes;
 
-    for (var a = 0; a < creepLanes.length; a++) {
-        var lane = creepLanes[a];
-        var halfLength = Math.floor(lane.length / 2);
-        var startColumn, startLine;
-        var endColumn, endLine;
-        var columnLength, lineLength;
+    for (let a = 0; a < creepLanes.length; a++) {
+        const lane = creepLanes[a];
+        const halfLength = Math.floor(lane.length / 2);
+        let startColumn, startLine;
+        let endColumn, endLine;
+        let columnLength, lineLength;
 
         if (lane.orientation == "horizontal") {
             startColumn = lane.start.column;
@@ -156,11 +156,11 @@ export function build(mapInfo) {
     }
 
     // other obstacles
-    var obstacles = mapInfo.obstacles;
+    const obstacles = mapInfo.obstacles;
 
     if (obstacles) {
-        for (var a = 0; a < obstacles.length; a++) {
-            var obstacle = obstacles[a];
+        for (let a = 0; a < obstacles.length; a++) {
+            const obstacle = obstacles[a];
 
             addObstacle({
                 startColumn: obstacle.startColumn,
@@ -173,8 +173,8 @@ export function build(mapInfo) {
     }
 
     // the highlight square which shows where the towers will be added
-    var highlightAvailable = new createjs.Bitmap(getAsset("highlight"));
-    var highlightNotAvailable = new createjs.Bitmap(
+    const highlightAvailable = new createjs.Bitmap(getAsset("highlight"));
+    const highlightNotAvailable = new createjs.Bitmap(
         getAsset("highlight_not_available")
     );
 
@@ -201,9 +201,9 @@ export function build(mapInfo) {
 function updatePath() {
     PATHS.length = 0;
 
-    for (var a = 0; a < CREEP_LANES.length; a++) {
-        var lane = CREEP_LANES[a];
-        var path = breadthFirstSearch(MAP, lane.end, POSITION_TYPE);
+    for (let a = 0; a < CREEP_LANES.length; a++) {
+        const lane = CREEP_LANES[a];
+        const path = breadthFirstSearch(MAP, lane.end, POSITION_TYPE);
 
         PATHS.push(path);
     }
@@ -219,16 +219,16 @@ export function findNextDestination(column, line, laneId) {
 }
 
 function setImpassableBox(startColumn, startLine, length) {
-    for (var column = startColumn; column < startColumn + length; column++) {
-        for (var line = startLine; line < startLine + length; line++) {
+    for (let column = startColumn; column < startColumn + length; column++) {
+        for (let line = startLine; line < startLine + length; line++) {
             setImpassable(column, line);
         }
     }
 }
 
 function setPassableBox(startColumn, startLine, length) {
-    for (var column = startColumn; column < startColumn + length; column++) {
-        for (var line = startLine; line < startLine + length; line++) {
+    for (let column = startColumn; column < startColumn + length; column++) {
+        for (let line = startLine; line < startLine + length; line++) {
             setPassable(column, line);
         }
     }
@@ -269,13 +269,13 @@ function addObstacle(args) {
         }
     }
 
-    var endColumn = args.startColumn + args.columnLength;
-    var endLine = args.startLine + args.lineLength;
-    var width = args.columnLength * SQUARE_SIZE;
-    var height = args.lineLength * SQUARE_SIZE;
+    const endColumn = args.startColumn + args.columnLength;
+    const endLine = args.startLine + args.lineLength;
+    const width = args.columnLength * SQUARE_SIZE;
+    const height = args.lineLength * SQUARE_SIZE;
 
-    for (var column = args.startColumn; column < endColumn; column++) {
-        for (var line = args.startLine; line < endLine; line++) {
+    for (let column = args.startColumn; column < endColumn; column++) {
+        for (let line = args.startLine; line < endLine; line++) {
             if (args.passable === true) {
                 setPassable(column, line);
             } else {
@@ -284,9 +284,9 @@ function addObstacle(args) {
         }
     }
 
-    var obstacle = new createjs.Shape();
+    const obstacle = new createjs.Shape();
 
-    var g = obstacle.graphics;
+    const g = obstacle.graphics;
 
     g.beginFill(args.fillColor);
     g.drawRect(0, 0, width, height);
@@ -318,11 +318,11 @@ export function calculatePosition({ x, y }: CanvasPosition) {
 }
 
 export function mouseMoveEvents(event) {
-    var towerLength = 2;
-    var position = calculatePosition({ x: event.stageX, y: event.stageY });
+    const towerLength = 2;
+    const position = calculatePosition({ x: event.stageX, y: event.stageY });
 
-    var column = position.column;
-    var line = position.line;
+    let column = position.column;
+    let line = position.line;
 
     // highlight is same size as a tower (2x2), so can't let it go to last position
     // also don't let it go to the walls or the creep start/end
@@ -395,11 +395,11 @@ function isAvailable(column, line) {
  * Get a list of passable/available positions, around a given position.
  */
 export function getAvailablePositions(centerColumn, centerLine, range) {
-    var startColumn = centerColumn - range;
-    var startLine = centerLine - range;
+    let startColumn = centerColumn - range;
+    let startLine = centerLine - range;
 
-    var endColumn = centerColumn + range;
-    var endLine = centerLine + range;
+    let endColumn = centerColumn + range;
+    let endLine = centerLine + range;
 
     if (startColumn < 0) {
         startColumn = 0;
@@ -415,10 +415,10 @@ export function getAvailablePositions(centerColumn, centerLine, range) {
         endLine = NUMBER_OF_LINES - 1;
     }
 
-    var availablePositions = [];
+    const availablePositions = [];
 
-    for (var column = startColumn; column < endColumn; column++) {
-        for (var line = startLine; line < endLine; line++) {
+    for (let column = startColumn; column < endColumn; column++) {
+        for (let line = startLine; line < endLine; line++) {
             if (MAP[line][column] === POSITION_TYPE.passable) {
                 availablePositions.push({
                     column: column,
@@ -432,8 +432,8 @@ export function getAvailablePositions(centerColumn, centerLine, range) {
 }
 
 export function getPosition({ column, line }: GridPosition) {
-    var x = STARTING_X + column * SQUARE_SIZE;
-    var y = STARTING_Y + line * SQUARE_SIZE;
+    const x = STARTING_X + column * SQUARE_SIZE;
+    const y = STARTING_Y + line * SQUARE_SIZE;
 
     return {
         x: x,
@@ -452,8 +452,8 @@ export function getUnitsInRange(
     tower: Tower,
     limit?: number
 ) {
-    var unitsInRange = [];
-    var array;
+    const unitsInRange = [];
+    let array;
     let count = 0;
 
     if (tower.can_target_ground) {
@@ -469,8 +469,8 @@ export function getUnitsInRange(
         array = Unit.ALL_AIR;
     }
 
-    for (var a = 0; a < array.length; a++) {
-        var unit = array[a];
+    for (let a = 0; a < array.length; a++) {
+        const unit = array[a];
 
         if (circlePointCollision(x, y, radius, unit.getX(), unit.getY())) {
             unitsInRange.push(unit);
@@ -502,18 +502,18 @@ export function addTower(
         setImpassableBox(column, line, 2);
 
         // check if there is a possible path (if its not going to block a lane)
-        var paths = [];
+        const paths = [];
 
-        for (var b = 0; b < CREEP_LANES.length; b++) {
-            var lane = CREEP_LANES[b];
-            var path = breadthFirstSearch(
+        for (let b = 0; b < CREEP_LANES.length; b++) {
+            const lane = CREEP_LANES[b];
+            const path = breadthFirstSearch(
                 MAP,
                 CREEP_LANES[b].end,
                 POSITION_TYPE
             );
 
             //HERE need to check each unit as well? or they might get trapped
-            var canReach = canReachDestination(
+            const canReach = canReachDestination(
                 path,
                 lane.start.column,
                 lane.start.line
@@ -569,10 +569,8 @@ export function removeTower(tower: Tower) {
  * Check if its possible to reach the destination from a given column/line position.
  */
 function canReachDestination(path, column, line) {
-    var next;
-
     while (true) {
-        next = path[line][column];
+        const next = path[line][column];
 
         if (next === null) {
             return false;

@@ -8,17 +8,17 @@ import { Tooltip } from "./tooltip";
 import { Timeout } from "@drk4/utilities";
 
 // reference to the game menu's html elements
-var START_PAUSED = null;
-var TIME_UNTIL_NEXT_WAVE = null;
-var CURRENT_GOLD = null;
-var CURRENT_LIFE = null;
-var CURRENT_SCORE = null;
-var WAVE_LIST = [];
-var MESSAGE = null;
-var MESSAGE_TIMEOUT = null;
+let START_PAUSED = null;
+let TIME_UNTIL_NEXT_WAVE = null;
+let CURRENT_GOLD = null;
+let CURRENT_LIFE = null;
+let CURRENT_SCORE = null;
+let WAVE_LIST = [];
+let MESSAGE = null;
+let MESSAGE_TIMEOUT = null;
 
-var SELECTED_TOWER = null;
-var TOWERS = [
+let SELECTED_TOWER = null;
+const TOWERS = [
     { tower: Tower, htmlElement: null, position: 0 },
     { tower: TowerFast, htmlElement: null, position: 1 },
     { tower: TowerRocket, htmlElement: null, position: 2 },
@@ -26,7 +26,7 @@ var TOWERS = [
     { tower: TowerAntiAir, htmlElement: null, position: 4 },
     { tower: TowerBash, htmlElement: null, position: 5 },
 ];
-var TOWER_INFO;
+let TOWER_INFO;
 let CALCULATE_TOWER_REFUND: (cost: number) => number;
 
 export interface GameMenuInitArgs {
@@ -40,8 +40,8 @@ export interface GameMenuInitArgs {
 }
 
 export function init(args: GameMenuInitArgs) {
-    var menu = document.querySelector("#GameMenu");
-    var a;
+    const menu = document.querySelector("#GameMenu");
+    let a;
 
     CALCULATE_TOWER_REFUND = args.calculateTowerRefund;
 
@@ -54,12 +54,12 @@ export function init(args: GameMenuInitArgs) {
         enableEvents: false,
     });
 
-    var timeUntilNext = menu.querySelector(".timeUntilNextWave") as HTMLElement;
+    const timeUntilNext = menu.querySelector(".timeUntilNextWave") as HTMLElement;
     timeUntilNext.onclick = args.forceNextWave;
 
     TIME_UNTIL_NEXT_WAVE = timeUntilNext.querySelector("span");
 
-    var quit = menu.querySelector("#quit") as HTMLElement;
+    const quit = menu.querySelector("#quit") as HTMLElement;
     quit.onclick = args.quit;
 
     // game info stuff
@@ -84,14 +84,14 @@ export function init(args: GameMenuInitArgs) {
     MESSAGE_TIMEOUT = new Timeout();
 
     // tower selector
-    var basicTower = menu.querySelector("#basicTower") as HTMLElement;
-    var fastTower = menu.querySelector("#fastTower") as HTMLElement;
-    var rocketTower = menu.querySelector("#rocketTower") as HTMLElement;
-    var frostTower = menu.querySelector("#frostTower") as HTMLElement;
-    var antiAirTower = menu.querySelector("#antiAirTower") as HTMLElement;
-    var bashTower = menu.querySelector("#bashTower") as HTMLElement;
+    const basicTower = menu.querySelector("#basicTower") as HTMLElement;
+    const fastTower = menu.querySelector("#fastTower") as HTMLElement;
+    const rocketTower = menu.querySelector("#rocketTower") as HTMLElement;
+    const frostTower = menu.querySelector("#frostTower") as HTMLElement;
+    const antiAirTower = menu.querySelector("#antiAirTower") as HTMLElement;
+    const bashTower = menu.querySelector("#bashTower") as HTMLElement;
 
-    var elements = [
+    const elements = [
         basicTower,
         fastTower,
         rocketTower,
@@ -101,10 +101,10 @@ export function init(args: GameMenuInitArgs) {
     ]; // same order as in the TOWERS array
 
     for (a = 0; a < elements.length; a++) {
-        var htmlElement = elements[a];
+        const htmlElement = elements[a];
 
         TOWERS[a].htmlElement = htmlElement;
-        var towerInitialCost = TOWERS[a].tower.stats[0].initial_cost;
+        const towerInitialCost = TOWERS[a].tower.stats[0].initial_cost;
 
         $(htmlElement).text($(htmlElement).text() + " - " + towerInitialCost);
         htmlElement.onclick = (function (position) {
@@ -115,7 +115,7 @@ export function init(args: GameMenuInitArgs) {
     }
 
     // tower info
-    var towerInfo = menu.querySelector("#GameMenu-TowerInfo");
+    const towerInfo = menu.querySelector("#GameMenu-TowerInfo");
 
     TOWER_INFO = {
         container: towerInfo,
@@ -131,14 +131,14 @@ export function init(args: GameMenuInitArgs) {
 
     TOWER_INFO.upgrade.onclick = args.upgradeSelection;
     TOWER_INFO.upgrade.onmouseover = () => {
-        var tower = args.getSelection();
+        const tower = args.getSelection();
 
         if (tower) {
             updateTowerStats(tower, true);
         }
     };
     TOWER_INFO.upgrade.onmouseout = () => {
-        var tower = args.getSelection();
+        const tower = args.getSelection();
 
         if (tower) {
             updateTowerStats(tower, false);
@@ -214,15 +214,15 @@ export function updateTimeUntilNextWave(time) {
 }
 
 export function updateWave(currentWave, allWaves) {
-    for (var a = 0; a < WAVE_LIST.length; a++) {
-        var waveNumber = currentWave + a;
-        var waveElement = WAVE_LIST[a];
+    for (let a = 0; a < WAVE_LIST.length; a++) {
+        const waveNumber = currentWave + a;
+        const waveElement = WAVE_LIST[a];
 
         if (waveNumber < allWaves.length) {
-            var wave = allWaves[waveNumber];
-            var type = wave.type;
-            var text = "wave " + (waveNumber + 1) + "<br/>" + type;
-            var tooltip =
+            const wave = allWaves[waveNumber];
+            const type = wave.type;
+            const text = "wave " + (waveNumber + 1) + "<br/>" + type;
+            const tooltip =
                 wave.howMany +
                 "x<br/>health: " +
                 wave.health +
@@ -280,13 +280,13 @@ export function hideTowerStats() {
 export function updateTowerStats(tower: Tower, showNextUpgrade: boolean) {
     updateMenuControls(tower);
 
-    var damage = tower.damage.toString();
-    var attack_speed = tower.attack_speed.toString();
-    var range = tower.range.toString();
-    var current = tower.stats[tower.upgrade_level];
+    let damage = tower.damage.toString();
+    let attack_speed = tower.attack_speed.toString();
+    let range = tower.range.toString();
+    const current = tower.stats[tower.upgrade_level];
 
     if (showNextUpgrade && !tower.maxUpgrade()) {
-        var next = tower.stats[tower.upgrade_level + 1];
+        const next = tower.stats[tower.upgrade_level + 1];
 
         damage += " (" + next.damage + ")";
         attack_speed += " (" + next.attack_speed + ")";

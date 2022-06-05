@@ -60,14 +60,14 @@ export class TowerRocket extends Tower {
     ];
 
     onBulletHit(target) {
-        var x = target.getX();
-        var y = target.getY();
+        const x = target.getX();
+        const y = target.getY();
 
-        var attack_radius = this.stats[this.upgrade_level].attack_radius;
+        const attack_radius = this.stats[this.upgrade_level].attack_radius;
 
-        var units = this.getUnitsInRadius(x, y, attack_radius, this);
+        const units = this.getUnitsInRadius(x, y, attack_radius, this);
 
-        for (var a = 0; a < units.length; a++) {
+        for (let a = 0; a < units.length; a++) {
             units[a].tookDamage(this);
         }
 

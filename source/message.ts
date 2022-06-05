@@ -1,6 +1,6 @@
 import { getCanvasCenterPosition } from "./canvas";
 
-var CONTAINER; // createjs.Container() which will hold all the text elements
+let CONTAINER; // createjs.Container() which will hold all the text elements
 
 export interface MessageArgs {
     text: string;
@@ -29,7 +29,7 @@ export class Message {
     }
 
     static removeAll() {
-        for (var a = Message.ALL.length - 1; a >= 0; a--) {
+        for (let a = Message.ALL.length - 1; a >= 0; a--) {
             Message.ALL[a].remove();
         }
     }
@@ -39,7 +39,7 @@ export class Message {
     private timeout: number;
 
     constructor(args: MessageArgs) {
-        var fontSize, fillColor, strokeColor;
+        let fontSize, fillColor, strokeColor;
 
         if (typeof args.fontSize == "undefined") {
             fontSize = 16;
@@ -74,7 +74,7 @@ export class Message {
             args.y = center.y;
         }
 
-        var stroke = new createjs.Text(
+        const stroke = new createjs.Text(
             args.text,
             fontSize + "px monospace",
             strokeColor
@@ -85,7 +85,7 @@ export class Message {
         stroke.y = args.y;
         stroke.outline = fontSize / 5;
 
-        var fill = stroke.clone();
+        const fill = stroke.clone();
 
         fill.outline = 0;
         fill.color = fillColor;
@@ -116,7 +116,7 @@ export class Message {
         CONTAINER.removeChild(this.stroke);
         CONTAINER.removeChild(this.fill);
 
-        var index = Message.ALL.indexOf(this);
+        const index = Message.ALL.indexOf(this);
 
         Message.ALL.splice(index, 1);
     }

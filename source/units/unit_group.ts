@@ -3,9 +3,9 @@ import { Unit } from "./unit";
 
 export class UnitGroup {
     constructor(args) {
-        var a;
-        var lane = args.lane;
-        var halfLength = Math.floor(lane.length / 2);
+        let a;
+        const lane = args.lane;
+        const halfLength = Math.floor(lane.length / 2);
 
         // add units randomly in the start zone
         if (lane.orientation == "horizontal") {
