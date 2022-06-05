@@ -4,7 +4,7 @@ import { Unit } from "./units/unit";
 import { Bullet } from "./bullet";
 import { Message } from "./message";
 import { Tooltip } from "./tooltip";
-import * as GameMenu from "./game_menu";
+import * as Game from "./game";
 import * as MainMenu from "./main_menu";
 import * as HighScore from "./high_score";
 import { preloadAssets } from "./assets";
@@ -22,7 +22,7 @@ window.onload = function () {
     Map.initHighlight(stage);
 
     Tooltip.init();
-    GameMenu.init();
+    Game.init();
     MainMenu.init();
     HighScore.load();
 

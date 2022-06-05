@@ -1,6 +1,4 @@
-import * as Game from "./game";
 import { Bullet } from "./bullet";
-import * as GameMenu from "./game_menu";
 import { Unit } from "./units/unit";
 import { getAsset } from "./assets";
 import {
@@ -33,7 +31,9 @@ export interface TowerArgs<Stats extends TowerStats> {
     position: CanvasPosition;
     squareSize: number;
     onRemove: (tower: Tower) => void;
+    onSell: (cost: number) => void;
     getNewTarget: () => Unit | null;
+    onUpgrade: (tower: Tower) => void;
 }
 
 export class Tower<Stats extends TowerStats = TowerStats> {
@@ -107,6 +107,8 @@ export class Tower<Stats extends TowerStats = TowerStats> {
 
     private onRemove: (tower: Tower) => void;
     private getNewTarget: (tower: Tower) => Unit | null;
+    private onSell: (cost: number) => void;
+    private onUpgrade: (tower: Tower) => void;
 
     constructor(args: TowerArgs<Stats>) {
         this.name = args.name ?? "tower";
@@ -147,10 +149,10 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         this.tick = this.tick_normal;
         this.onRemove = args.onRemove;
         this.getNewTarget = args.getNewTarget;
+        this.onSell = args.onSell;
+        this.onUpgrade = args.onUpgrade;
 
         Tower.ALL.push(this);
-
-        Game.updateGold(-this.cost);
     }
 
     setupShape(position: CanvasPosition) {
@@ -213,61 +215,52 @@ export class Tower<Stats extends TowerStats = TowerStats> {
     selected() {
         // show the range
         this.rangeElement.visible = true;
-
-        // show the stats in the game menu
-        GameMenu.showTowerStats(this);
     }
 
     unselected() {
         this.rangeElement.visible = false;
-
-        GameMenu.hideTowerStats();
     }
 
-    startUpgrading() {
+    getUpgradeCost() {
+        const currentLevel = this.stats[this.upgrade_level];
+        return currentLevel.upgrade_cost;
+    }
+
+    startUpgrading(immediately: boolean) {
         if (this.is_upgrading || this.is_selling) {
-            return;
+            return {
+                ok: false,
+            };
         }
 
         // no more upgrades
         if (this.upgrade_level + 1 >= this.stats.length) {
-            GameMenu.showMessage("No more upgrades.");
-            return;
+            return {
+                ok: false,
+                message: "No more upgrades.",
+            };
         }
 
-        var currentLevel = this.stats[this.upgrade_level];
-        var upgradeCost = currentLevel.upgrade_cost;
-
-        if (!Game.haveEnoughGold(upgradeCost)) {
-            GameMenu.showMessage("Not enough gold.");
-            return;
-        }
-
-        if (Game.beforeFirstWave()) {
-            Game.updateGold(-currentLevel.upgrade_cost);
+        if (immediately) {
             this.upgrade();
-            return;
+            return { ok: true };
         }
 
         this.is_upgrading = true;
-
-        Game.updateGold(-currentLevel.upgrade_cost);
-
         this.upgrade_count = 0;
 
         this.progressElement.graphics.clear();
         this.progressElement.visible = true;
         this.shape.visible = false;
 
-        GameMenu.updateMenuControls(this);
-
         this.tick = this.tick_upgrade;
+
+        return { ok: true };
     }
 
     upgrade() {
         // no more upgrades
         if (this.upgrade_level + 1 >= this.stats.length) {
-            GameMenu.showMessage("No more upgrades.");
             return;
         }
 
@@ -296,9 +289,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         // add some visual clue, to differentiate the towers per their upgrade level
         this.baseElement.image = getAsset("tower_base" + this.upgrade_level);
 
-        if (Game.checkIfSelected(this)) {
-            GameMenu.updateTowerStats(this, false);
-        }
+        this.onUpgrade(this);
     }
 
     maxUpgrade() {
@@ -317,12 +308,12 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         return this.container.y;
     }
 
-    startSelling() {
+    startSelling(immediately: boolean) {
         if (this.is_selling || this.is_upgrading) {
             return;
         }
 
-        if (Game.beforeFirstWave()) {
+        if (immediately) {
             this.sell();
             return;
         }
@@ -335,24 +326,12 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         this.progressElement.visible = true;
         this.shape.visible = false;
 
-        GameMenu.updateMenuControls(this);
-
         this.tick = this.tick_sell;
     }
 
     sell() {
-        // recover half the cost
-        Game.updateGold(this.getSellRefund());
-
+        this.onSell(this.cost);
         this.remove();
-    }
-
-    getSellRefund() {
-        if (Game.beforeFirstWave()) {
-            return this.cost;
-        } else {
-            return this.cost / 2;
-        }
     }
 
     remove() {
@@ -369,11 +348,6 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         var index = Tower.ALL.indexOf(this);
 
         Tower.ALL.splice(index, 1);
-
-        // remove the selection of this tower
-        if (Game.checkIfSelected(this)) {
-            Game.clearSelection();
-        }
 
         this.onRemove(this);
     }

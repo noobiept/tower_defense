@@ -48,6 +48,17 @@ var GAME_END = {
     victory: false,
 };
 
+export function init() {
+    GameMenu.init({
+        forceNextWave,
+        quit,
+        upgradeSelection,
+        sellSelection,
+        getSelection,
+        pause,
+    });
+}
+
 export function start(map) {
     MAP_NAME = map;
 
@@ -142,6 +153,10 @@ export function start(map) {
     addCanvasEventListener("mouseup", mouseEvents);
 }
 
+function quit() {
+    setEndFlag(false);
+}
+
 /*
     When we determine the game has ended, we have to call this function instead of Game.end(), which will set a flag that is going to be dealt with in the end of the Game.tick()
     Only then we'll call Game.end
@@ -161,7 +176,7 @@ export function isPaused() {
     return IS_PAUSED;
 }
 
-export function updateGold(gold) {
+function updateGold(gold: number) {
     GOLD += gold;
 
     GameMenu.updateGold(GOLD);
@@ -232,20 +247,42 @@ function keyUpEvents(event: KeyboardEvent) {
             break;
 
         case "u":
-            selection = getSelection();
-
-            if (selection) {
-                selection.startUpgrading();
-            }
+            upgradeSelection();
             break;
 
         case "s":
-            selection = getSelection();
-
-            if (selection) {
-                selection.startSelling();
-            }
+            sellSelection();
             break;
+    }
+}
+
+export function upgradeSelection() {
+    const selection = getSelection();
+
+    if (selection) {
+        const upgradeCost = selection.getUpgradeCost();
+
+        if (!haveEnoughGold(upgradeCost)) {
+            GameMenu.showMessage("Not enough gold.");
+            return;
+        }
+
+        const upgraded = selection.startUpgrading(BEFORE_FIRST_WAVE);
+        if (upgraded.ok) {
+            updateGold(-upgradeCost);
+            GameMenu.updateMenuControls(selection);
+        } else if (upgraded.message) {
+            GameMenu.showMessage(upgraded.message);
+        }
+    }
+}
+
+export function sellSelection() {
+    const selection = getSelection();
+
+    if (selection) {
+        selection.startSelling(BEFORE_FIRST_WAVE);
+        GameMenu.updateMenuControls(this);
     }
 }
 
@@ -262,9 +299,6 @@ function mouseEvents(event) {
     var button = event.button;
     var x = event.clientX - canvasRect.left;
     var y = event.clientY - canvasRect.top;
-    var a;
-    var tower;
-    var point;
 
     if (ELEMENT_SELECTED) {
         clearSelection();
@@ -273,12 +307,15 @@ function mouseEvents(event) {
     // left click
     if (button == 0) {
         // see if we're selecting a tower
-        for (a = 0; a < Tower.ALL.length; a++) {
-            tower = Tower.ALL[a];
-            point = tower.baseElement.globalToLocal(x, y);
+        for (let a = 0; a < Tower.ALL.length; a++) {
+            const tower = Tower.ALL[a];
+            const point = tower.baseElement.globalToLocal(x, y);
 
             if (tower.baseElement.hitTest(point.x, point.y)) {
                 tower.selected();
+
+                // show the stats in the game menu
+                GameMenu.showTowerStats(tower);
 
                 ELEMENT_SELECTED = tower;
                 return;
@@ -295,15 +332,38 @@ function mouseEvents(event) {
 
         var highlight = Map.getHighlightSquare();
 
-        Map.addTower(towerClass, highlight.column, highlight.line);
+        const tower = Map.addTower(
+            towerClass,
+            highlight.column,
+            highlight.line,
+            (cost: number) => {
+                const refund = BEFORE_FIRST_WAVE ? cost : cost / 2;
+                updateGold(refund);
+            },
+            (tower: Tower) => {
+                // remove the selection of this tower
+                if (checkIfSelected(tower)) {
+                    clearSelection();
+                }
+            },
+            (tower: Tower) => {
+                if (checkIfSelected(tower)) {
+                    GameMenu.updateTowerStats(tower, false);
+                }
+            }
+        );
+
+        if (tower) {
+            updateGold(-tower.cost);
+        }
     }
 
     // right click
     else if (button == 2) {
         // see if we're selecting a tower
-        for (a = 0; a < Tower.ALL.length; a++) {
-            tower = Tower.ALL[a];
-            point = tower.baseElement.globalToLocal(x, y);
+        for (let a = 0; a < Tower.ALL.length; a++) {
+            const tower = Tower.ALL[a];
+            const point = tower.baseElement.globalToLocal(x, y);
 
             if (tower.baseElement.hitTest(point.x, point.y)) {
                 tower.startSelling();
@@ -315,6 +375,8 @@ function mouseEvents(event) {
 export function clearSelection() {
     ELEMENT_SELECTED.unselected();
     ELEMENT_SELECTED = null;
+
+    GameMenu.hideTowerStats();
 }
 
 export function getSelection() {

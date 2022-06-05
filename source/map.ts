@@ -5,6 +5,7 @@ import { getAsset } from "./assets";
 import { circlePointCollision, getRandomInt } from "@drk4/utilities";
 import * as Canvas from "./canvas";
 import { CanvasPosition, GridPosition } from "./types";
+import { Tower } from "./tower";
 
 var CONTAINER; // createjs.Container() which will hold all the map elements
 var HIGHLIGHT_CONTAINER;
@@ -505,7 +506,14 @@ export function getUnitInRange(tower) {
  * Check if its possible to add a tower in this position (if it doesn't block the units path).
  * If that is the case, then add the tower at the given position.
  */
-export function addTower(towerClass, column, line) {
+export function addTower(
+    towerClass,
+    column,
+    line,
+    onSell: (cost) => void,
+    onRemove: (tower: Tower) => void,
+    onUpgrade: (tower: Tower) => void
+) {
     if (isAvailable(column, line)) {
         // check if by filling this position, we're not blocking the units (they need to be always be able to reach the destination)
         setImpassableBox(column, line, 2);
@@ -545,15 +553,22 @@ export function addTower(towerClass, column, line) {
 
         const position = getPosition({ column, line });
 
-        new towerClass({
+        const tower = new towerClass({
             position,
             squareSize: SQUARE_SIZE,
-            onRemove: removeTower,
+            onRemove: (tower) => {
+                onRemove(tower);
+                removeTower(tower);
+            },
             getNewTarget: getUnitInRange,
+            onSell,
+            onUpgrade,
         });
 
         // tower occupies 2x2 squares
         setImpassableBox(column, line, 2);
+
+        return tower;
     }
 }
 

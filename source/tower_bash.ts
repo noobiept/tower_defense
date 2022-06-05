@@ -95,10 +95,11 @@ export class TowerBash extends Tower<TowerBashStats> {
         this.attack_animation = attackAnimation;
     }
 
-    startUpgrading() {
-        super.startUpgrading();
-
+    startUpgrading(immediately: boolean) {
+        const upgraded = super.startUpgrading(immediately);
         this.attack_animation.visible = false;
+
+        return upgraded;
     }
 
     upgrade() {

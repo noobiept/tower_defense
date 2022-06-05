@@ -4,7 +4,6 @@ import { TowerRocket } from "./tower_rocket";
 import { TowerFrost } from "./tower_frost";
 import { TowerAntiAir } from "./tower_anti_air";
 import { TowerBash } from "./tower_bash";
-import * as Game from "./game";
 import { Tooltip } from "./tooltip";
 import { Timeout } from "@drk4/utilities";
 
@@ -29,13 +28,22 @@ var TOWERS = [
 ];
 var TOWER_INFO;
 
-export function init() {
+export interface GameMenuInitArgs {
+    pause: () => void;
+    forceNextWave: () => void;
+    quit: () => void;
+    upgradeSelection: () => void;
+    sellSelection: () => void;
+    getSelection: () => Tower;
+}
+
+export function init(args: GameMenuInitArgs) {
     var menu = document.querySelector("#GameMenu");
     var a;
 
     // game controls
     START_PAUSED = menu.querySelector("#startPause");
-    START_PAUSED.onclick = Game.pause;
+    START_PAUSED.onclick = args.pause;
     START_PAUSED.tooltip = new Tooltip({
         text: "Click to start",
         reference: START_PAUSED,
@@ -43,14 +51,12 @@ export function init() {
     });
 
     var timeUntilNext = menu.querySelector(".timeUntilNextWave") as HTMLElement;
-    timeUntilNext.onclick = Game.forceNextWave;
+    timeUntilNext.onclick = args.forceNextWave;
 
     TIME_UNTIL_NEXT_WAVE = timeUntilNext.querySelector("span");
 
     var quit = menu.querySelector("#quit") as HTMLElement;
-    quit.onclick = function () {
-        Game.setEndFlag(false);
-    };
+    quit.onclick = args.quit;
 
     // game info stuff
     CURRENT_GOLD = menu.querySelector(".currentGold span");
@@ -119,35 +125,22 @@ export function init() {
         sell_message: towerInfo.querySelector(".sellMessage"),
     };
 
-    TOWER_INFO.upgrade.onclick = function () {
-        var tower = Game.getSelection();
-
-        if (tower) {
-            tower.startUpgrading();
-        }
-    };
-    TOWER_INFO.upgrade.onmouseover = function () {
-        var tower = Game.getSelection();
+    TOWER_INFO.upgrade.onclick = args.upgradeSelection;
+    TOWER_INFO.upgrade.onmouseover = () => {
+        var tower = args.getSelection();
 
         if (tower) {
             updateTowerStats(tower, true);
         }
     };
-    TOWER_INFO.upgrade.onmouseout = function () {
-        var tower = Game.getSelection();
+    TOWER_INFO.upgrade.onmouseout = () => {
+        var tower = args.getSelection();
 
         if (tower) {
             updateTowerStats(tower, false);
         }
     };
-
-    TOWER_INFO.sell.onclick = function () {
-        var tower = Game.getSelection();
-
-        if (tower) {
-            tower.startSelling();
-        }
-    };
+    TOWER_INFO.sell.onclick = args.sellSelection;
 
     // start with the basic tower selected
     selectTower(0);
