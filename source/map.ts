@@ -1,9 +1,9 @@
-import { G } from "./main";
 import { breadthFirstSearch } from "./path_finding";
 import { Unit } from "./units/unit";
 import * as GameMenu from "./game_menu";
 import { getAsset } from "./assets";
 import { circlePointCollision } from "@drk4/utilities";
+import * as Canvas from "./canvas";
 
 var CONTAINER; // createjs.Container() which will hold all the map elements
 var HIGHLIGHT_CONTAINER;
@@ -73,29 +73,10 @@ export function build(mapInfo) {
         }
     }
 
-    // set the canvas width/height
-    var windowWidth = $(window).outerWidth();
-    var windowHeight = $(window).outerHeight();
-    var canvasWidth, canvasHeight;
-    var padding = 10;
-    var mapWidth = width + padding;
-    var mapHeight = height + padding;
-
-    // we try to occupy the whole window's dimension, if the map's width/height fits there, otherwise just set the canvas width/height to the same as the map
-    if (mapWidth < windowWidth) {
-        canvasWidth = windowWidth;
-    } else {
-        canvasWidth = mapWidth;
-    }
-
-    if (mapHeight < windowHeight - G.GAME_MENU_HEIGHT) {
-        canvasHeight = windowHeight - G.GAME_MENU_HEIGHT;
-    } else {
-        canvasHeight = mapHeight;
-    }
-
-    G.CANVAS.width = canvasWidth;
-    G.CANVAS.height = canvasHeight;
+    const { canvasWidth, canvasHeight } = Canvas.adjustCanvasDimensions(
+        width,
+        height
+    );
 
     STARTING_X = canvasWidth / 2 - (columns * SQUARE_SIZE) / 2;
     STARTING_Y = canvasHeight / 2 - (lines * SQUARE_SIZE) / 2;

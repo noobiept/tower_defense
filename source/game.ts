@@ -1,4 +1,3 @@
-import { G } from "./main";
 import * as Map from "./map";
 import * as GameMenu from "./game_menu";
 import { Tower } from "./tower";
@@ -12,6 +11,14 @@ import * as HighScore from "./high_score";
 import { mapUnitType } from "./units/units.util";
 import { getAsset } from "./assets";
 import { getRandomInt, isBoolean, round } from "@drk4/utilities";
+import {
+    addCanvasEventListener,
+    addStageEventListener,
+    getCanvasBoundingClientRect,
+    removeCanvasEventListener,
+    removeStageEventListener,
+    updateStage,
+} from "./canvas";
 
 var MAP_NAME;
 var UNITS_STATS = {};
@@ -127,10 +134,13 @@ export function start(map) {
 
     // set the events
     EVENTS.tick = createjs.Ticker.on("tick", tick);
-    EVENTS.mouseMove = G.STAGE.on("stagemousemove", Map.mouseMoveEvents);
+    EVENTS.mouseMove = addStageEventListener(
+        "stagemousemove",
+        Map.mouseMoveEvents
+    );
 
     window.addEventListener("keyup", keyUpEvents);
-    G.CANVAS.addEventListener("mouseup", mouseEvents);
+    addCanvasEventListener("mouseup", mouseEvents);
 }
 
 /*
@@ -249,7 +259,7 @@ function mouseEvents(event) {
         return;
     }
 
-    var canvasRect = G.CANVAS.getBoundingClientRect();
+    var canvasRect = getCanvasBoundingClientRect();
     var button = event.button;
     var x = event.clientX - canvasRect.left;
     var y = event.clientY - canvasRect.top;
@@ -322,10 +332,10 @@ export function checkIfSelected(element) {
 
 function clear() {
     createjs.Ticker.off("tick", EVENTS.tick);
-    G.STAGE.off("stagemousemove", EVENTS.mouseMove);
+    removeStageEventListener("stagemousemove", EVENTS.mouseMove);
 
     window.removeEventListener("keyup", keyUpEvents);
-    G.CANVAS.removeEventListener("mouseup", mouseEvents);
+    removeCanvasEventListener("mouseup", mouseEvents);
 
     Unit.removeAll();
     Tower.removeAll();
@@ -363,14 +373,13 @@ function end(victory) {
         text: message,
         fontSize: 30,
         onEnd: function () {
-            G.STAGE.update();
-
+            updateStage();
             MainMenu.open();
         },
         timeout: 2000,
     });
 
-    G.STAGE.update();
+    updateStage();
 }
 
 export function forceNextWave() {
@@ -437,7 +446,7 @@ function onUnitKilled() {
 
 function tick(event) {
     if (IS_PAUSED) {
-        G.STAGE.update();
+        updateStage();
         return;
     }
 
@@ -558,5 +567,5 @@ function tick(event) {
         end(GAME_END.victory);
     }
 
-    G.STAGE.update();
+    updateStage();
 }

@@ -1,4 +1,4 @@
-import { G } from "./main";
+import { getCanvasCenterPosition } from "./canvas";
 
 var CONTAINER; // createjs.Container() which will hold all the text elements
 
@@ -64,12 +64,14 @@ export class Message {
         }
 
         // center in the middle of the canvas
+        const center = getCanvasCenterPosition();
+
         if (typeof args.x == "undefined") {
-            args.x = G.CANVAS.width / 2;
+            args.x = center.x;
         }
 
         if (typeof args.y == "undefined") {
-            args.y = G.CANVAS.height / 2;
+            args.y = center.y;
         }
 
         var stroke = new createjs.Text(
