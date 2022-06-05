@@ -2,8 +2,9 @@ import { breadthFirstSearch } from "./path_finding";
 import { Unit } from "./units/unit";
 import * as GameMenu from "./game_menu";
 import { getAsset } from "./assets";
-import { circlePointCollision } from "@drk4/utilities";
+import { circlePointCollision, getRandomInt } from "@drk4/utilities";
 import * as Canvas from "./canvas";
+import { GridPosition } from "./types";
 
 var CONTAINER; // createjs.Container() which will hold all the map elements
 var HIGHLIGHT_CONTAINER;
@@ -216,7 +217,7 @@ export function findNextDestination(column, line, laneId) {
     return PATHS[laneId][line][column];
 }
 
-export function setImpassableBox(startColumn, startLine, length) {
+function setImpassableBox(startColumn, startLine, length) {
     for (var column = startColumn; column < startColumn + length; column++) {
         for (var line = startLine; line < startLine + length; line++) {
             setImpassable(column, line);
@@ -429,7 +430,7 @@ export function getAvailablePositions(centerColumn, centerLine, range) {
     return availablePositions;
 }
 
-export function getPosition(column, line) {
+export function getPosition({ column, line }: GridPosition) {
     var x = STARTING_X + column * SQUARE_SIZE;
     var y = STARTING_Y + line * SQUARE_SIZE;
 
@@ -542,10 +543,17 @@ export function addTower(towerClass, column, line) {
         // update the path and add the tower
         PATHS = paths;
 
+        const position = getPosition({ column, line });
+
         new towerClass({
-            column: column,
-            line: line,
+            position,
+            squareSize: SQUARE_SIZE,
+            onRemove: removeTower,
+            getNewTarget: getUnitInRange,
         });
+
+        // tower occupies 2x2 squares
+        setImpassableBox(column, line, 2);
     }
 }
 
@@ -577,5 +585,26 @@ function canReachDestination(path, column, line) {
             column = next.column;
             line = next.line;
         }
+    }
+}
+
+export function getUnitNextDestination(unit: Unit) {
+    const nextDest = findNextDestination(unit.column, unit.line, unit.lane_id);
+
+    if (nextDest) {
+        return nextDest;
+    }
+
+    // can happen if we place a tower on top of a unit
+    // just move the unit to a close valid position
+    const positions = getAvailablePositions(unit.column, unit.line, 2);
+
+    if (positions.length > 0) {
+        const index = getRandomInt(0, positions.length - 1);
+        const nextDest = positions[index];
+
+        unit.column = nextDest.column; //TODO
+        unit.line = nextDest.line;
+        return nextDest;
     }
 }

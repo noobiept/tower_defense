@@ -515,6 +515,7 @@ function tick(event) {
                     destination_column: lane.end.column,
                     destination_line: lane.end.line,
                     lane_id: b,
+                    size: Map.getSquareSize(),
                     health: wave.health,
                     health_regeneration: wave.health_regeneration,
                     gold: wave.gold,
@@ -522,6 +523,8 @@ function tick(event) {
                     onReachDestination,
                     onUnitRemoved,
                     onUnitKilled,
+                    getNextDestination: Map.getUnitNextDestination,
+                    toCanvasPosition: Map.getPosition,
                 };
 
                 // the group units work a bit differently

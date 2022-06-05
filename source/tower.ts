@@ -1,4 +1,3 @@
-import * as Map from "./map";
 import * as Game from "./game";
 import { Bullet } from "./bullet";
 import * as GameMenu from "./game_menu";
@@ -10,6 +9,7 @@ import {
     getRandomInt,
     toDegrees,
 } from "@drk4/utilities";
+import { CanvasPosition } from "./types";
 
 var CONTAINER; // createjs.Container() which will hold all the tower elements
 
@@ -30,8 +30,10 @@ export interface TowerArgs<Stats extends TowerStats> {
     stats?: Stats[];
     can_target_ground?: boolean;
     can_target_air?: boolean;
-    column: number;
-    line: number;
+    position: CanvasPosition;
+    squareSize: number;
+    onRemove: (tower: Tower) => void;
+    getNewTarget: () => Unit | null;
 }
 
 export class Tower<Stats extends TowerStats = TowerStats> {
@@ -81,8 +83,6 @@ export class Tower<Stats extends TowerStats = TowerStats> {
     stats: Stats[];
     can_target_ground: boolean;
     can_target_air: boolean;
-    column: number;
-    line: number;
     width: number;
     height: number;
     upgrade_level: number;
@@ -105,20 +105,18 @@ export class Tower<Stats extends TowerStats = TowerStats> {
     baseElement: createjs.Bitmap;
     progress_length: number;
 
-    constructor(args: TowerArgs<Stats>) {
-        var squareSize = Map.getSquareSize();
+    private onRemove: (tower: Tower) => void;
+    private getNewTarget: (tower: Tower) => Unit | null;
 
+    constructor(args: TowerArgs<Stats>) {
         this.name = args.name ?? "tower";
         this.image = args.image ?? "tower_basic";
         this.stats = args.stats ?? (Tower.stats as Stats[]);
         this.can_target_ground = args.can_target_ground ?? true;
         this.can_target_air = args.can_target_air ?? true;
 
-        this.column = args.column;
-        this.line = args.line;
-
-        this.width = squareSize * 2;
-        this.height = squareSize * 2;
+        this.width = args.squareSize * 2;
+        this.height = args.squareSize * 2;
 
         this.upgrade_level = 0;
         this.is_upgrading = false;
@@ -145,18 +143,17 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         this.progressElement = null;
         this.progress_length = 3;
 
-        this.setupShape();
+        this.setupShape(args.position);
         this.tick = this.tick_normal;
+        this.onRemove = args.onRemove;
+        this.getNewTarget = args.getNewTarget;
 
         Tower.ALL.push(this);
 
         Game.updateGold(-this.cost);
-
-        // tower occupies 2x2 squares
-        Map.setImpassableBox(this.column, this.line, 2);
     }
 
-    setupShape() {
+    setupShape(position: CanvasPosition) {
         var width = this.width;
         var height = this.height;
         var halfWidth = width / 2;
@@ -196,8 +193,6 @@ export class Tower<Stats extends TowerStats = TowerStats> {
 
         // the container
         var container = new createjs.Container();
-
-        var position = Map.getPosition(this.column, this.line);
 
         container.addChild(base);
         container.addChild(shape);
@@ -380,8 +375,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
             Game.clearSelection();
         }
 
-        // remove the tower from the map (and update the pathing)
-        Map.removeTower(this);
+        this.onRemove(this);
     }
 
     /**
@@ -444,7 +438,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
 
             // find a target
             else {
-                this.targetUnit = Map.getUnitInRange(this);
+                this.targetUnit = this.getNewTarget(this);
             }
         }
     }

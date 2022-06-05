@@ -2,6 +2,7 @@ import { Tower, TowerStats } from "./tower";
 import * as Map from "./map";
 import { getAsset } from "./assets";
 import { circleCircleCollision, getRandomInt } from "@drk4/utilities";
+import { CanvasPosition } from "./types";
 
 export type TowerBashStats = TowerStats & {
     slow: number;
@@ -70,8 +71,8 @@ export class TowerBash extends Tower<TowerBashStats> {
         this.attack_animation_alpha_step = 1 / this.attack_animation_interval;
     }
 
-    setupShape() {
-        super.setupShape();
+    setupShape(position: CanvasPosition) {
+        super.setupShape(position);
 
         // add the attack animation
         var halfLength = 20; // the attack image is 40x40 px

@@ -1,12 +1,7 @@
-import * as Map from "../map";
 import { Message } from "../message";
 import { getAsset } from "../assets";
-import {
-    calculateAngle,
-    getRandomInt,
-    pointBoxCollision,
-    toDegrees,
-} from "@drk4/utilities";
+import { calculateAngle, pointBoxCollision, toDegrees } from "@drk4/utilities";
+import { CanvasPosition, GridPosition } from "../types";
 
 var CONTAINER; // createjs.Container() which will hold all the unit elements
 
@@ -14,8 +9,6 @@ export interface UnitArgs {
     name?: string;
     image?: string;
     slowImage?: string;
-    width?: number;
-    height?: number;
     is_ground_unit?: boolean;
     is_immune?: boolean;
     movement_speed?: number;
@@ -24,6 +17,7 @@ export interface UnitArgs {
     lane?: number;
     howMany?: number;
 
+    size: number; // width/height of the unit
     column: number;
     line: number;
     lane_id: number;
@@ -35,6 +29,8 @@ export interface UnitArgs {
     onReachDestination: () => void;
     onUnitRemoved: () => void;
     onUnitKilled: () => void;
+    getNextDestination: (unit: Unit) => GridPosition;
+    toCanvasPosition: (position: GridPosition) => CanvasPosition;
 }
 
 export class Unit {
@@ -96,19 +92,20 @@ export class Unit {
     slowElement: createjs.Bitmap;
     healthBar: createjs.Shape;
     shape: createjs.Bitmap;
+    size: number;
 
     onReachDestination: () => void;
     onUnitRemoved: () => void;
     onUnitKilled: () => void;
+    getNextDestination: (unit: Unit) => GridPosition;
+    toCanvasPosition: (position: GridPosition) => CanvasPosition;
 
     constructor(args: UnitArgs) {
-        var squareSize = Map.getSquareSize();
-
         this.name = args.name ?? "unit";
         this.image = args.image ?? "creep";
         this.slowImage = args.slowImage ?? "creep_slow";
-        this.width = args.width ?? squareSize;
-        this.height = args.height ?? squareSize;
+        this.width = args.size;
+        this.height = args.size;
         this.is_ground_unit = args.is_ground_unit ?? true;
         this.is_immune = args.is_immune ?? false;
         this.movement_speed = args.movement_speed ?? 60; // pixels per second
@@ -124,6 +121,7 @@ export class Unit {
         this.stun_count = 0;
         this.stun_time = 0;
         this.current_movement_speed = this.movement_speed;
+        this.size = args.size;
 
         this.max_health = args.health;
         this.health = this.max_health;
@@ -148,6 +146,8 @@ export class Unit {
         this.onReachDestination = args.onReachDestination;
         this.onUnitRemoved = args.onUnitRemoved;
         this.onUnitKilled = args.onUnitKilled;
+        this.getNextDestination = args.getNextDestination;
+        this.toCanvasPosition = args.toCanvasPosition;
 
         this.setupShape();
         this.tick = this.tick_normal;
@@ -200,9 +200,11 @@ export class Unit {
         slow.visible = false;
 
         // container of all the elements
-        var container = new createjs.Container();
-
-        var position = Map.getPosition(this.column, this.line);
+        const container = new createjs.Container();
+        const position = this.toCanvasPosition({
+            column: this.column,
+            line: this.line,
+        });
 
         container.addChild(shape);
         container.addChild(healthBar);
@@ -222,38 +224,11 @@ export class Unit {
      * See where to go next.
      */
     checkNextDestination() {
-        var nextDest = Map.findNextDestination(
-            this.column,
-            this.line,
-            this.lane_id
-        );
+        const nextDest = this.getNextDestination(this);
 
-        // can happen if we place a tower on top of a unit
-        // just move the unit to a close valid position
-        if (nextDest === null) {
-            var positions = Map.getAvailablePositions(
-                this.column,
-                this.line,
-                2
-            );
-
-            // move to a random available position nearby
-            if (positions.length > 0) {
-                var index = getRandomInt(0, positions.length - 1);
-
-                nextDest = positions[index];
-
-                this.column = nextDest.column;
-                this.line = nextDest.line;
-                this.move(nextDest);
-            }
-
-            // if there isn't a place to go to, just remove the unit
-            else {
-                this.remove();
-            }
-
-            return;
+        // there isn't a place to go
+        if (!nextDest) {
+            this.remove();
         }
 
         // we reached the destination
@@ -268,15 +243,14 @@ export class Unit {
     move(next) {
         var unitX = this.getX();
         var unitY = this.getY();
-        var squareSize = Map.getSquareSize();
 
-        var position = Map.getPosition(next.column, next.line);
+        const position = this.toCanvasPosition(next);
 
         this.destination_column = next.column;
         this.destination_line = next.line;
 
-        var destX = position.x + squareSize / 2;
-        var destY = position.y + squareSize / 2;
+        var destX = position.x + this.size / 2;
+        var destY = position.y + this.size / 2;
 
         var angleRads = calculateAngle(unitX, unitY * -1, destX, destY * -1);
 
