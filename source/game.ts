@@ -11,6 +11,7 @@ import * as MainMenu from "./main_menu";
 import * as HighScore from "./high_score";
 import { mapUnitType } from "./units/units.util";
 import { getAsset } from "./assets";
+import { getRandomInt, isBoolean, round } from "@drk4/utilities";
 
 var MAP_NAME;
 var UNITS_STATS = {};
@@ -185,43 +186,43 @@ export function updateScore(score) {
     GameMenu.updateScore(SCORE);
 }
 
-function keyUpEvents(event) {
+function keyUpEvents(event: KeyboardEvent) {
     if (IS_PAUSED && !BEFORE_FIRST_WAVE) {
         return;
     }
 
     var selection;
 
-    switch (event.keyCode) {
-        case Utilities.KEY_CODE["1"]:
+    switch (event.key) {
+        case "1":
             GameMenu.selectTower(0);
             break;
 
-        case Utilities.KEY_CODE["2"]:
+        case "2":
             GameMenu.selectTower(1);
             break;
 
-        case Utilities.KEY_CODE["3"]:
+        case "3":
             GameMenu.selectTower(2);
             break;
 
-        case Utilities.KEY_CODE["4"]:
+        case "4":
             GameMenu.selectTower(3);
             break;
 
-        case Utilities.KEY_CODE["5"]:
+        case "5":
             GameMenu.selectTower(4);
             break;
 
-        case Utilities.KEY_CODE["6"]:
+        case "6":
             GameMenu.selectTower(5);
             break;
 
-        case Utilities.KEY_CODE.n:
+        case "n":
             forceNextWave();
             break;
 
-        case Utilities.KEY_CODE.u:
+        case "u":
             selection = getSelection();
 
             if (selection) {
@@ -229,7 +230,7 @@ function keyUpEvents(event) {
             }
             break;
 
-        case Utilities.KEY_CODE.s:
+        case "s":
             selection = getSelection();
 
             if (selection) {
@@ -403,7 +404,7 @@ export function forceNextWave() {
 
 export function pause(paused?: boolean) {
     // if its not provided, just change to the opposite of the current one
-    if (typeof paused == "undefined" || !Utilities.isBoolean(paused)) {
+    if (typeof paused == "undefined" || !isBoolean(paused)) {
         if (BEFORE_FIRST_WAVE) {
             BEFORE_FIRST_WAVE = false;
             paused = false;
@@ -464,7 +465,7 @@ function tick(event) {
         var timeUntilNextWave = WAVE_INTERVAL - WAVE_COUNT;
 
         GameMenu.updateTimeUntilNextWave(
-            Utilities.round(timeUntilNextWave, 2).toFixed(1)
+            round(timeUntilNextWave, 2).toFixed(1)
         );
     }
 
@@ -487,12 +488,12 @@ function tick(event) {
                 // add units randomly in the start zone
                 if (lane.orientation == "horizontal") {
                     startColumn = lane.start.column;
-                    startLine = Utilities.getRandomInt(
+                    startLine = getRandomInt(
                         lane.start.line - halfLength,
                         lane.start.line + halfLength - 1
                     );
                 } else {
-                    startColumn = Utilities.getRandomInt(
+                    startColumn = getRandomInt(
                         lane.start.column - halfLength,
                         lane.start.column + halfLength - 1
                     );

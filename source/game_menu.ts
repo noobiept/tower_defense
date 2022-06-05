@@ -6,6 +6,7 @@ import { TowerAntiAir } from "./tower_anti_air";
 import { TowerBash } from "./tower_bash";
 import * as Game from "./game";
 import { Tooltip } from "./tooltip";
+import { Timeout } from "@drk4/utilities";
 
 // reference to the game menu's html elements
 var START_PAUSED = null;
@@ -70,7 +71,7 @@ export function init() {
 
     // game menu's message
     MESSAGE = document.querySelector("#Message");
-    MESSAGE_TIMEOUT = new Utilities.Timeout();
+    MESSAGE_TIMEOUT = new Timeout();
 
     // tower selector
     var basicTower = menu.querySelector("#basicTower") as HTMLElement;

@@ -36,7 +36,7 @@ window.onload = function () {
     HighScore.load();
 
     // disable the context menu (when right-clicking)
-    window.oncontextmenu = function (event) {
+    window.oncontextmenu = function () {
         return false;
     };
 

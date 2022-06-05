@@ -1,6 +1,7 @@
 import { Tower } from "./tower";
 import { Unit } from "./units/unit";
 import { Bullet } from "./bullet";
+import { circleCircleCollision, circlePointCollision } from "@drk4/utilities";
 
 export class TowerAntiAir extends Tower {
     static stats = [
@@ -66,7 +67,7 @@ export class TowerAntiAir extends Tower {
                     } else {
                         // check if the unit is within the tower's range
                         if (
-                            Utilities.circleCircleCollision(
+                            circleCircleCollision(
                                 x,
                                 y,
                                 radius,
@@ -109,13 +110,7 @@ export class TowerAntiAir extends Tower {
             if (this.targets.indexOf(unit) < 0) {
                 // check if its in range
                 if (
-                    Utilities.circlePointCollision(
-                        x,
-                        y,
-                        radius,
-                        unit.getX(),
-                        unit.getY()
-                    )
+                    circlePointCollision(x, y, radius, unit.getX(), unit.getY())
                 ) {
                     this.targets.push(unit);
 

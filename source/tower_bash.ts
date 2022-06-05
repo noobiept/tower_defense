@@ -1,6 +1,7 @@
 import { Tower, TowerStats } from "./tower";
 import * as Map from "./map";
 import { getAsset } from "./assets";
+import { circleCircleCollision, getRandomInt } from "@drk4/utilities";
 
 export type TowerBashStats = TowerStats & {
     slow: number;
@@ -130,7 +131,7 @@ export class TowerBash extends Tower<TowerBashStats> {
 
                 // check if the unit is within the tower's range
                 if (
-                    Utilities.circleCircleCollision(
+                    circleCircleCollision(
                         this.getX(),
                         this.getY(),
                         this.range,
@@ -175,13 +176,13 @@ export class TowerBash extends Tower<TowerBashStats> {
 
             unit.tookDamage(this);
 
-            var slowChance = Utilities.getRandomInt(0, 100);
+            var slowChance = getRandomInt(0, 100);
 
             if (slowChance <= this.slow_chance) {
                 unit.slowDown(slow);
             }
 
-            var stunChance = Utilities.getRandomInt(0, 100);
+            var stunChance = getRandomInt(0, 100);
 
             if (stunChance <= this.stun_chance) {
                 unit.stun(this.stun);

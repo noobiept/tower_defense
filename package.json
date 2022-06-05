@@ -1,6 +1,9 @@
 {
     "name": "tower_defense",
     "version": "2.0.0",
+    "dependencies": {
+        "@drk4/utilities": "^6.0.0"
+    },
     "devDependencies": {
         "@types/easeljs": "^1.0.1",
         "@types/jquery": "^3.5.14",

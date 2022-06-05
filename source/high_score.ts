@@ -1,3 +1,5 @@
+import { getObject, saveObject } from "@drk4/utilities";
+
 interface HighScoreData {
     [mapName: string]: number[];
 }
@@ -13,7 +15,7 @@ export function getMaxScoresSaved() {
 }
 
 export function load() {
-    var score = Utilities.getObject("high_score");
+    var score = getObject("high_score");
 
     if (score !== null) {
         HIGH_SCORE = score;
@@ -21,7 +23,7 @@ export function load() {
 }
 
 export function save() {
-    Utilities.saveObject("high_score", HIGH_SCORE);
+    saveObject("high_score", HIGH_SCORE);
 }
 
 /**

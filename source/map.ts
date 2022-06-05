@@ -3,6 +3,7 @@ import { breadthFirstSearch } from "./path_finding";
 import { Unit } from "./units/unit";
 import * as GameMenu from "./game_menu";
 import { getAsset } from "./assets";
+import { circlePointCollision } from "@drk4/utilities";
 
 var CONTAINER; // createjs.Container() which will hold all the map elements
 var HIGHLIGHT_CONTAINER;
@@ -480,15 +481,7 @@ export function getUnits(x, y, radius, tower) {
     for (var a = 0; a < array.length; a++) {
         var unit = array[a];
 
-        if (
-            Utilities.circlePointCollision(
-                x,
-                y,
-                radius,
-                unit.getX(),
-                unit.getY()
-            )
-        ) {
+        if (circlePointCollision(x, y, radius, unit.getX(), unit.getY())) {
             unitsInRange.push(unit);
         }
     }
@@ -518,15 +511,7 @@ export function getUnitInRange(tower) {
     for (var a = 0; a < array.length; a++) {
         var unit = array[a];
 
-        if (
-            Utilities.circlePointCollision(
-                x,
-                y,
-                rangeRadius,
-                unit.getX(),
-                unit.getY()
-            )
-        ) {
+        if (circlePointCollision(x, y, rangeRadius, unit.getX(), unit.getY())) {
             return unit;
         }
     }

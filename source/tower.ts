@@ -4,6 +4,12 @@ import { Bullet } from "./bullet";
 import * as GameMenu from "./game_menu";
 import { Unit } from "./units/unit";
 import { getAsset } from "./assets";
+import {
+    calculateAngle,
+    circleCircleCollision,
+    getRandomInt,
+    toDegrees,
+} from "@drk4/utilities";
 
 var CONTAINER; // createjs.Container() which will hold all the tower elements
 
@@ -167,7 +173,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
 
         shape.regX = halfWidth;
         shape.regY = halfHeight;
-        shape.rotation = Utilities.getRandomInt(0, 360);
+        shape.rotation = getRandomInt(0, 360);
 
         // the range circle
         var range = new createjs.Shape();
@@ -382,14 +388,14 @@ export class Tower<Stats extends TowerStats = TowerStats> {
      * Rotate the tower (the center part, not the whole element) to point in the direction of a unit
      */
     rotateTower(unit) {
-        var angleRads = Utilities.calculateAngle(
+        var angleRads = calculateAngle(
             this.getX(),
             this.getY() * -1,
             unit.getX(),
             unit.getY() * -1
         );
 
-        var angleDegrees = Utilities.toDegrees(angleRads);
+        var angleDegrees = toDegrees(angleRads);
 
         this.shape.rotation = angleDegrees;
     }
@@ -414,7 +420,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
 
                 // check if the unit is within the tower's range
                 if (
-                    Utilities.circleCircleCollision(
+                    circleCircleCollision(
                         this.getX(),
                         this.getY(),
                         this.range,

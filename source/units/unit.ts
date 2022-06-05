@@ -1,6 +1,12 @@
 import * as Map from "../map";
 import { Message } from "../message";
 import { getAsset } from "../assets";
+import {
+    calculateAngle,
+    getRandomInt,
+    pointBoxCollision,
+    toDegrees,
+} from "@drk4/utilities";
 
 var CONTAINER; // createjs.Container() which will hold all the unit elements
 
@@ -233,7 +239,7 @@ export class Unit {
 
             // move to a random available position nearby
             if (positions.length > 0) {
-                var index = Utilities.getRandomInt(0, positions.length - 1);
+                var index = getRandomInt(0, positions.length - 1);
 
                 nextDest = positions[index];
 
@@ -272,12 +278,7 @@ export class Unit {
         var destX = position.x + squareSize / 2;
         var destY = position.y + squareSize / 2;
 
-        var angleRads = Utilities.calculateAngle(
-            unitX,
-            unitY * -1,
-            destX,
-            destY * -1
-        );
+        var angleRads = calculateAngle(unitX, unitY * -1, destX, destY * -1);
 
         // the next position represents a box which is used for the collision detection
         // its position after the destination position
@@ -294,7 +295,7 @@ export class Unit {
         this.move_x = Math.cos(angleRads) * this.current_movement_speed;
         this.move_y = Math.sin(angleRads) * this.current_movement_speed;
 
-        var rotation = Utilities.toDegrees(angleRads);
+        var rotation = toDegrees(angleRads);
 
         this.shape.rotation = rotation;
         this.slowElement.rotation = rotation;
@@ -444,7 +445,7 @@ export class Unit {
         this.container.y += this.move_y * deltaTime;
 
         if (
-            Utilities.pointBoxCollision(
+            pointBoxCollision(
                 this.getX(),
                 this.getY(),
                 this.next_x,

@@ -1,3 +1,4 @@
+import { getRandomInt } from "@drk4/utilities";
 import { Unit } from "./unit";
 
 export class UnitGroup {
@@ -9,7 +10,7 @@ export class UnitGroup {
         // add units randomly in the start zone
         if (lane.orientation == "horizontal") {
             for (a = 0; a < args.howMany; a++) {
-                args.line = Utilities.getRandomInt(
+                args.line = getRandomInt(
                     lane.start.line - halfLength,
                     lane.start.line + halfLength - 1
                 );
@@ -18,7 +19,7 @@ export class UnitGroup {
             }
         } else {
             for (a = 0; a < args.howMany; a++) {
-                args.column = Utilities.getRandomInt(
+                args.column = getRandomInt(
                     lane.start.column - halfLength,
                     lane.start.column + halfLength - 1
                 );

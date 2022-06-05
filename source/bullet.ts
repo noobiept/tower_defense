@@ -1,6 +1,11 @@
 import { Unit } from "./units/unit";
 import { Tower } from "./tower";
 import { getAsset } from "./assets";
+import {
+    calculateAngle,
+    circleCircleCollision,
+    toDegrees,
+} from "@drk4/utilities";
 
 var CONTAINER; // createjs.Container() which will hold all the bullet elements
 
@@ -82,7 +87,7 @@ export class Bullet {
         var targetY = target.getY();
         var targetRadius = target.width / 2;
 
-        var angle = Utilities.calculateAngle(
+        var angle = calculateAngle(
             this.shape.x,
             this.shape.y * -1,
             targetX,
@@ -92,10 +97,10 @@ export class Bullet {
         this.shape.x += Math.cos(angle) * this.movement_speed * deltaTime;
         this.shape.y += Math.sin(angle) * this.movement_speed * deltaTime;
 
-        this.shape.rotation = Utilities.toDegrees(angle);
+        this.shape.rotation = toDegrees(angle);
 
         if (
-            Utilities.circleCircleCollision(
+            circleCircleCollision(
                 this.shape.x,
                 this.shape.y,
                 this.radius,

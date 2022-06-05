@@ -1,5 +1,6 @@
 import { Unit } from "./unit";
 import * as Map from "../map";
+import { getRandomInt } from "@drk4/utilities";
 
 /**
  * The main creep.
@@ -47,10 +48,7 @@ export class UnitSpawn extends Unit {
             for (var a = 0; a < this.number_spawned_units; a++) {
                 // position the spawned unit in a random position close to the main one
                 if (availablePositions.length > 0) {
-                    var select = Utilities.getRandomInt(
-                        0,
-                        availablePositions.length - 1
-                    );
+                    var select = getRandomInt(0, availablePositions.length - 1);
 
                     spawnedPosition = availablePositions.splice(select, 1)[0];
                 }
