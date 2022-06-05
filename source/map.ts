@@ -8,8 +8,6 @@ var CONTAINER; // createjs.Container() which will hold all the map elements
 var HIGHLIGHT_CONTAINER;
 var CREEP_LANES;
 
-var MAP_WIDTH = 0;
-var MAP_HEIGHT = 0;
 var NUMBER_OF_COLUMNS = 0;
 var NUMBER_OF_LINES = 0;
 
@@ -205,8 +203,6 @@ export function build(mapInfo) {
     GRID_HIGHLIGHT.shape = highlightAvailable;
     GRID_HIGHLIGHT.available = highlightAvailable;
     GRID_HIGHLIGHT.not_available = highlightNotAvailable;
-    MAP_WIDTH = width;
-    MAP_HEIGHT = height;
     NUMBER_OF_COLUMNS = columns;
     NUMBER_OF_LINES = lines;
     CREEP_LANES = creepLanes;

@@ -37,7 +37,6 @@ export class Tooltip {
     private is_opened: boolean;
 
     constructor(args) {
-        var _this = this;
         var reference = args.reference;
         var element = document.createElement("div");
 
@@ -57,11 +56,11 @@ export class Tooltip {
             typeof args.enableEvents == "undefined" ||
             args.enableEvents === true
         ) {
-            reference.onmouseover = function () {
-                _this.show();
+            reference.onmouseover = () => {
+                this.show();
             };
-            reference.onmouseout = function () {
-                _this.hide();
+            reference.onmouseout = () => {
+                this.hide();
             };
         }
     }
