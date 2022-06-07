@@ -1,9 +1,9 @@
 import { Message } from "../message";
 import { getAsset } from "../assets";
 import { calculateAngle, pointBoxCollision, toDegrees } from "@drk4/utilities";
-import { CanvasPosition, GridPosition } from "../types";
+import { CanvasPosition, GridPosition, Lane } from "../types";
 
-let CONTAINER; // createjs.Container() which will hold all the unit elements
+let CONTAINER: createjs.Container; // createjs.Container() which will hold all the unit elements
 
 export interface UnitArgs {
     name?: string;
@@ -14,7 +14,7 @@ export interface UnitArgs {
     movement_speed?: number;
     destination_column?: number;
     destination_line?: number;
-    lane?: number;
+    lane?: Lane;
     howMany?: number;
 
     size: number;
@@ -30,20 +30,20 @@ export interface UnitArgs {
 
     onReachDestination: () => void;
     onUnitRemoved: () => void;
-    onUnitKilled: () => void;
+    onUnitKilled: (unit: Unit) => void;
     getNextDestination: (unit: Unit) => GridPosition;
     toCanvasPosition: (position: GridPosition) => CanvasPosition;
 }
 
 export class Unit {
-    static ALL = [];
-    static ALL_GROUND = [];
-    static ALL_AIR = [];
+    static ALL: Unit[] = [];
+    static ALL_GROUND: Unit[] = [];
+    static ALL_AIR: Unit[] = [];
 
     /**
      * Create the container which will hold all the unit elements.
      */
-    static init(parent) {
+    static init(parent: createjs.Container) {
         CONTAINER = new createjs.Container();
         parent.addChild(CONTAINER);
     }
@@ -66,8 +66,8 @@ export class Unit {
     movement_speed: number;
     column: number;
     line: number;
-    destination_column: number;
-    destination_line: number;
+    destination_column = 0;
+    destination_line = 0;
     lane_id: number;
     score: number;
     gold: number;
@@ -98,7 +98,7 @@ export class Unit {
 
     onReachDestination: () => void;
     onUnitRemoved: () => void;
-    onUnitKilled: () => void;
+    onUnitKilled: (unit: Unit) => void;
     getNextDestination: (unit: Unit) => GridPosition;
     toCanvasPosition: (position: GridPosition) => CanvasPosition;
 
@@ -381,7 +381,7 @@ export class Unit {
                     y: this.getY() - this.height,
                 });
 
-                this.onUnitKilled();
+                this.onUnitKilled(this);
                 this.remove();
             }
 

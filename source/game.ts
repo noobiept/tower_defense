@@ -7,7 +7,7 @@ import { Unit } from "./units/unit";
 import { Tooltip } from "./tooltip";
 import { Message } from "./message";
 import * as HighScore from "./high_score";
-import { createUnit } from "./units/units.util";
+import { createUnit, UnitKey } from "./units/units.util";
 import { getAsset } from "./assets";
 import {
     addCanvasEventListener,
@@ -17,11 +17,13 @@ import {
     removeStageEventListener,
     updateStage,
 } from "./canvas";
-import { Wave } from "./types";
+import { MapData, Wave, MapUnitData, Lane } from "./types";
 
-let MAP_NAME;
-let UNITS_STATS = {};
-const CREEP_LANES = []; // contains the start/end point of each lane
+let MAP_NAME: string;
+let UNITS_STATS: {
+    [unitName in UnitKey]?: MapUnitData;
+} = {};
+const CREEP_LANES: Lane[] = []; // contains the start/end point of each lane
 const ALL_WAVES: Wave[] = [];
 const ACTIVE_WAVES: Wave[] = []; // you may have more than 1 wave active (adding units)
 let NEXT_WAVE = 0;
@@ -29,7 +31,7 @@ let NO_MORE_WAVES = false;
 let WAVE_INTERVAL = 0;
 let WAVE_COUNT = 0;
 
-let ELEMENT_SELECTED = null;
+let ELEMENT_SELECTED: Tower | null = null;
 
 let GOLD = 0;
 let LIFE = 0;
@@ -38,7 +40,10 @@ let IS_PAUSED = false;
 let BEFORE_FIRST_WAVE = false; // before the first wave, the game is paused but we can add towers. once the game starts, pausing the game won't allow you to add/remove towers
 
 // this will have the return when setting the events (need to save this so that later we can turn the event off (with createjs, doesn't work passing the function, like it does when setting a normal event)
-const EVENTS = {
+const EVENTS: {
+    tick: (() => void) | null;
+    mouseMove: (() => void) | null;
+} = {
     tick: null,
     mouseMove: null,
 };
@@ -63,21 +68,22 @@ export function init(onQuit: () => void) {
     ON_QUIT = onQuit;
 }
 
-export function start(map) {
+export function start(map: string) {
     MAP_NAME = map;
 
-    const mapInfo = getAsset(map);
+    const mapInfo = getAsset(map) as MapData;
 
-    let a;
-    UNITS_STATS["Unit"] = mapInfo["Unit"];
-    UNITS_STATS["UnitFast"] = mapInfo["UnitFast"];
-    UNITS_STATS["UnitFly"] = mapInfo["UnitFly"];
-    UNITS_STATS["UnitGroup"] = mapInfo["UnitGroup"];
-    UNITS_STATS["UnitImmune"] = mapInfo["UnitImmune"];
-    UNITS_STATS["UnitSpawn"] = mapInfo["UnitSpawn"];
+    UNITS_STATS = {
+        Unit: mapInfo.Unit,
+        UnitFast: mapInfo.UnitFast,
+        UnitFly: mapInfo.UnitFly,
+        UnitGroup: mapInfo.UnitGroup,
+        UnitImmune: mapInfo.UnitImmune,
+        UnitSpawn: mapInfo.UnitSpawn,
+    };
 
     // read from the map info and update the appropriate variables
-    for (a = 0; a < mapInfo.waves.length; a++) {
+    for (let a = 0; a < mapInfo.waves.length; a++) {
         const waveType = mapInfo.waves[a];
         const stats = UNITS_STATS[waveType];
         const howMany = Math.floor(
@@ -109,7 +115,7 @@ export function start(map) {
         });
     }
 
-    for (a = 0; a < mapInfo.creepLanes.length; a++) {
+    for (let a = 0; a < mapInfo.creepLanes.length; a++) {
         const lane = mapInfo.creepLanes[a];
 
         CREEP_LANES.push({
@@ -147,11 +153,11 @@ export function start(map) {
     pause(true);
 
     // set the events
-    EVENTS.tick = createjs.Ticker.on("tick", tick);
+    EVENTS.tick = createjs.Ticker.on("tick", tick) as () => void;
     EVENTS.mouseMove = addStageEventListener(
         "stagemousemove",
-        Map.mouseMoveEvents
-    );
+        Map.mouseMoveEvents as () => void
+    ) as () => void;
 
     window.addEventListener("keyup", keyUpEvents);
     addCanvasEventListener("mouseup", mouseEvents);
@@ -378,7 +384,7 @@ function calculateTowerRefund(cost: number) {
 }
 
 export function clearSelection() {
-    ELEMENT_SELECTED.unselected();
+    ELEMENT_SELECTED?.unselected();
     ELEMENT_SELECTED = null;
 
     GameMenu.hideTowerStats();
@@ -388,7 +394,7 @@ export function getSelection() {
     return ELEMENT_SELECTED;
 }
 
-export function checkIfSelected(element) {
+export function checkIfSelected(element: Tower) {
     if (element == ELEMENT_SELECTED) {
         return true;
     }
@@ -397,8 +403,12 @@ export function checkIfSelected(element) {
 }
 
 function clear() {
-    createjs.Ticker.off("tick", EVENTS.tick);
-    removeStageEventListener("stagemousemove", EVENTS.mouseMove);
+    if (EVENTS.tick) {
+        createjs.Ticker.off("tick", EVENTS.tick);
+    }
+    if (EVENTS.mouseMove) {
+        removeStageEventListener("stagemousemove", EVENTS.mouseMove);
+    }
 
     window.removeEventListener("keyup", keyUpEvents);
     removeCanvasEventListener("mouseup", mouseEvents);
@@ -422,7 +432,7 @@ function clear() {
     This is only called at the end of Game.tick() or in Game.setEndFlag() (when the game is paused)
  */
 
-function end(victory) {
+function end(victory: boolean) {
     clear();
 
     let message = "";
@@ -505,9 +515,9 @@ function onUnitRemoved() {
 /**
  * Add the gold earn from killing this unit.
  */
-function onUnitKilled() {
-    updateGold(this.gold);
-    updateScore(this.score);
+function onUnitKilled(unit: Unit) {
+    updateGold(unit.gold);
+    updateScore(unit.score);
 }
 
 function tick(event) {

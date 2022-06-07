@@ -17,8 +17,8 @@ export function init() {
 
 export function adjustCanvasDimensions(width: number, height: number) {
     // set the canvas width/height
-    const windowWidth = $(window).outerWidth();
-    const windowHeight = $(window).outerHeight();
+    const windowWidth = $(window).outerWidth()!;
+    const windowHeight = $(window).outerHeight()!;
     let canvasWidth, canvasHeight;
     const padding = 10;
     const mapWidth = width + padding;
@@ -57,16 +57,13 @@ export function updateStage() {
     STAGE.update();
 }
 
-export function addStageEventListener(
-    eventName: string,
-    listener: (event) => void
-) {
+export function addStageEventListener(eventName: string, listener: () => void) {
     return STAGE.on(eventName, listener);
 }
 
 export function removeStageEventListener(
     eventName: string,
-    listener: (event) => void
+    listener: () => void
 ) {
     STAGE.off(eventName, listener);
 }

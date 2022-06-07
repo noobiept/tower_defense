@@ -31,7 +31,7 @@ export function save() {
     @param {Number} score
  */
 
-export function add(mapName, score) {
+export function add(mapName: string, score: number) {
     if (typeof HIGH_SCORE[mapName] == "undefined") {
         HIGH_SCORE[mapName] = [];
     }
@@ -55,7 +55,7 @@ export function getAll() {
     return HIGH_SCORE;
 }
 
-export function get(mapName) {
+export function get(mapName: string) {
     if (typeof HIGH_SCORE[mapName] == "undefined") {
         return null;
     }

@@ -1,3 +1,12 @@
+import { GridPosition, MapPositionType } from "./types";
+
+interface PathFindingInfo {
+    columns: number;
+    lines: number;
+    map: number[][];
+    passableValue: number;
+}
+
 /**
  * Calculate the path that an element needs to take to reach the destination, from any valid position.
  *
@@ -36,9 +45,13 @@
  * @param destination The destination position.
  * @param positionType What value in the `map` represents a passable position and what value represents a blocked position.
  */
-export function breadthFirstSearch(map, destination, positionType) {
+export function breadthFirstSearch(
+    map: number[][],
+    destination: GridPosition,
+    positionType: MapPositionType
+) {
     const frontier = [destination];
-    const cameFrom = [];
+    const cameFrom: (GridPosition | null)[][] = [];
 
     // figure out the number of columns/lines of the map array
     // have all the useful information in one object
@@ -62,7 +75,7 @@ export function breadthFirstSearch(map, destination, positionType) {
 
     // go through all the passable positions
     while (frontier.length > 0) {
-        const current = frontier.shift();
+        const current = frontier.shift()!;
         const neighbors = getNeighbors(current, info);
 
         for (let a = 0; a < neighbors.length; a++) {
@@ -83,7 +96,7 @@ export function breadthFirstSearch(map, destination, positionType) {
 /**
  * Get the neighbor positions (top/bottom/left/right).
  */
-function getNeighbors(position, info) {
+function getNeighbors(position: GridPosition, info: PathFindingInfo) {
     const neighbors = [];
     const column = position.column;
     const line = position.line;

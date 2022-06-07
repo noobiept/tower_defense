@@ -1,6 +1,6 @@
 import { getCanvasCenterPosition } from "./canvas";
 
-let CONTAINER; // createjs.Container() which will hold all the text elements
+let CONTAINER: createjs.Container; // createjs.Container() which will hold all the text elements
 
 export interface MessageArgs {
     text: string;
@@ -17,12 +17,12 @@ export interface MessageArgs {
  * In-game message.
  */
 export class Message {
-    static ALL = [];
+    static ALL: Message[] = [];
 
     /**
      * Create the container which will hold all the text elements.
      */
-    static init(parent) {
+    static init(parent: createjs.Container) {
         CONTAINER = new createjs.Container();
 
         parent.addChild(CONTAINER);

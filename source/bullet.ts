@@ -7,7 +7,7 @@ import {
     toDegrees,
 } from "@drk4/utilities";
 
-let CONTAINER; // createjs.Container() which will hold all the bullet elements
+let CONTAINER: createjs.Container; // createjs.Container() which will hold all the bullet elements
 
 export interface BulletArgs {
     shooter: Tower;
@@ -15,12 +15,12 @@ export interface BulletArgs {
 }
 
 export class Bullet {
-    static ALL = [];
+    static ALL: Bullet[] = [];
 
     /**
      * Create the container which will hold all the bullet elements.
      */
-    static init(parent) {
+    static init(parent: createjs.Container) {
         CONTAINER = new createjs.Container();
 
         parent.addChild(CONTAINER);
@@ -74,7 +74,7 @@ export class Bullet {
         this.shape = shape;
     }
 
-    tick(deltaTime) {
+    tick(deltaTime: number) {
         const target = this.target;
 
         // target already died

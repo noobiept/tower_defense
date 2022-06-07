@@ -15,7 +15,7 @@ export interface CreateUnitArgs {
     lane_id: number;
     onReachDestination: () => void;
     onUnitRemoved: () => void;
-    onUnitKilled: () => void;
+    onUnitKilled: (unit: Unit) => void;
     getNextDestination: (unit: Unit) => GridPosition;
     toCanvasPosition: (position: GridPosition) => CanvasPosition;
     canvasToGrid: (position: CanvasPosition) => GridPosition;
@@ -34,8 +34,9 @@ const UNITS_MAP = {
     UnitImmune: UnitImmune,
     UnitSpawn: UnitSpawn,
 };
+export type UnitKey = keyof typeof UNITS_MAP;
 
-export function mapUnitType(type: string) {
+export function mapUnitType(type: UnitKey) {
     return UNITS_MAP[type];
 }
 

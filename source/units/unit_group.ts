@@ -1,8 +1,14 @@
 import { getRandomInt } from "@drk4/utilities";
-import { Unit } from "./unit";
+import { Lane } from "../types";
+import { Unit, UnitArgs } from "./unit";
+
+export interface UnitGroupArgs extends UnitArgs {
+    lane: Lane;
+    howMany: number;
+}
 
 export class UnitGroup {
-    constructor(args) {
+    constructor(args: UnitGroupArgs) {
         let a;
         const lane = args.lane;
         const halfLength = Math.floor(lane.length / 2);

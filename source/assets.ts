@@ -1,4 +1,4 @@
-let PRELOAD;
+let PRELOAD: createjs.LoadQueue;
 
 const BASE_URL = "";
 const MANIFEST = [
@@ -52,8 +52,8 @@ export interface PreloadAssetsArgs {
 export function preloadAssets(args: PreloadAssetsArgs) {
     PRELOAD = new createjs.LoadQueue();
 
-    PRELOAD.addEventListener("progress", function (event) {
-        args.onProgress((event.progress * 100) | 0);
+    PRELOAD.addEventListener("progress", (event) => {
+        args.onProgress(((event as createjs.ProgressEvent).progress * 100) | 0);
     });
     PRELOAD.addEventListener("complete", args.onComplete);
     PRELOAD.loadManifest(MANIFEST, true);

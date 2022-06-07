@@ -4,12 +4,12 @@ import * as GameMenu from "./game_menu";
 import { getAsset } from "./assets";
 import { circlePointCollision, getRandomInt } from "@drk4/utilities";
 import * as Canvas from "./canvas";
-import { CanvasPosition, GridPosition } from "./types";
+import { CanvasPosition, GridPosition, Lane, MapData } from "./types";
 import { Tower } from "./towers/tower";
 
-let CONTAINER; // createjs.Container() which will hold all the map elements
-let HIGHLIGHT_CONTAINER;
-let CREEP_LANES;
+let CONTAINER: createjs.Container; // createjs.Container() which will hold all the map elements
+let HIGHLIGHT_CONTAINER: createjs.Container;
+let CREEP_LANES: Lane[];
 
 let NUMBER_OF_COLUMNS = 0;
 let NUMBER_OF_LINES = 0;
@@ -30,7 +30,7 @@ const WALL_LENGTH = 2;
 
 // result from the path finding algorithm, with the valid paths to the destination
 let PATHS = [];
-let MAP;
+let MAP: number[][] = [];
 const POSITION_TYPE = {
     passable: 1,
     blocked: 0,
@@ -39,7 +39,7 @@ const POSITION_TYPE = {
 /**
  * Create the container for all the shape elements that are part of the map.
  */
-export function init(parent) {
+export function init(parent: createjs.Container) {
     CONTAINER = new createjs.Container();
 
     parent.addChild(CONTAINER);
@@ -48,13 +48,13 @@ export function init(parent) {
 /**
  * The highlight element has a separate container, so that it can be drawn last (so it appears on top of the rest of the elements)
  */
-export function initHighlight(parent) {
+export function initHighlight(parent: createjs.Container) {
     HIGHLIGHT_CONTAINER = new createjs.Container();
 
     parent.addChild(HIGHLIGHT_CONTAINER);
 }
 
-export function build(mapInfo) {
+export function build(mapInfo: MapData) {
     const columns = mapInfo.numberOfColumns;
     const lines = mapInfo.numberOfLines;
 
@@ -317,7 +317,7 @@ export function calculatePosition({ x, y }: CanvasPosition) {
     };
 }
 
-export function mouseMoveEvents(event) {
+export function mouseMoveEvents(event: createjs.MouseEvent) {
     const towerLength = 2;
     const position = calculatePosition({ x: event.stageX, y: event.stageY });
 

@@ -1,7 +1,13 @@
-let CONTAINER = null;
+let CONTAINER: HTMLElement;
+
+export interface TooltipArgs {
+    text: string;
+    reference: HTMLElement;
+    enableEvents?: boolean;
+}
 
 export class Tooltip {
-    static ALL = [];
+    static ALL: Tooltip[] = [];
 
     static init() {
         const container = document.createElement("div");
@@ -36,7 +42,7 @@ export class Tooltip {
     private reference: HTMLElement;
     private is_opened: boolean;
 
-    constructor(args) {
+    constructor(args: TooltipArgs) {
         const reference = args.reference;
         const element = document.createElement("div");
 
@@ -75,10 +81,10 @@ export class Tooltip {
         const reference = this.reference;
         const element = this.element;
 
-        const position = $(reference).offset();
+        const position = $(reference).offset()!;
 
         const left = position.left;
-        const top = position.top - $(element).outerHeight() - 5;
+        const top = position.top - $(element).outerHeight()! - 5;
 
         $(element).css("top", top + "px");
         $(element).css("left", left + "px");
@@ -96,7 +102,7 @@ export class Tooltip {
         return this.is_opened;
     }
 
-    updateText(text) {
+    updateText(text: string) {
         this.text = text;
 
         $(this.element).html(text);

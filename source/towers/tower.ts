@@ -9,7 +9,7 @@ import {
 } from "@drk4/utilities";
 import { CanvasPosition, GridPosition } from "../types";
 
-let CONTAINER; // createjs.Container() which will hold all the tower elements
+let CONTAINER: createjs.Container; // createjs.Container() which will hold all the tower elements
 
 export interface TowerStats {
     damage: number;
@@ -44,7 +44,7 @@ export interface TowerArgs<Stats extends TowerStats> {
 }
 
 export class Tower<Stats extends TowerStats = TowerStats> {
-    static ALL = []; // has all the 'Tower' objects
+    static ALL: Tower[] = []; // has all the 'Tower' objects
 
     // each array position corresponds to the upgrade level of the tower
     static stats = [
@@ -71,7 +71,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
     /**
      * Create the container which will hold all the tower elements.
      */
-    static init(parent) {
+    static init(parent: createjs.Container) {
         CONTAINER = new createjs.Container();
 
         parent.addChild(CONTAINER);
@@ -153,6 +153,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         this.targetUnit = null;
         this.removed = false;
 
+        this.baseElement = null;
         this.container = null;
         this.rangeElement = null;
         this.shape = null;
@@ -302,7 +303,9 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         g.endStroke();
 
         // add some visual clue, to differentiate the towers per their upgrade level
-        this.baseElement.image = getAsset("tower_base" + this.upgrade_level);
+        this.baseElement.image = getAsset(
+            "tower_base" + this.upgrade_level
+        ) as HTMLImageElement;
 
         this.onUpgrade(this);
     }
@@ -370,7 +373,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
     /**
      * Rotate the tower (the center part, not the whole element) to point in the direction of a unit
      */
-    rotateTower(unit) {
+    rotateTower(unit: Unit) {
         const angleRads = calculateAngle(
             this.getX(),
             this.getY() * -1,
@@ -383,14 +386,14 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         this.shape.rotation = angleDegrees;
     }
 
-    onBulletHit(target) {
+    onBulletHit(target: Unit) {
         // deal damage, and see if the unit died from this attack or not
         if (target.tookDamage(this)) {
             this.targetUnit = null;
         }
     }
 
-    tick_attack(deltaTime) {
+    tick_attack(deltaTime: number) {
         this.attack_count -= deltaTime;
 
         // see if we can attack right now
@@ -439,11 +442,11 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         }
     }
 
-    tick_normal(deltaTime) {
+    tick_normal(deltaTime: number) {
         this.tick_attack(deltaTime);
     }
 
-    tick_upgrade(deltaTime) {
+    tick_upgrade(deltaTime: number) {
         this.upgrade_count += deltaTime;
 
         const currentLevel = this.stats[this.upgrade_level];
@@ -468,7 +471,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         }
     }
 
-    tick_sell(deltaTime) {
+    tick_sell(deltaTime: number) {
         if (!this.is_selling) {
             return;
         }
@@ -492,7 +495,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         }
     }
 
-    tick(deltaTime) {
+    tick(deltaTime: number) {
         // this will be overridden to either tick_normal(), tick_upgrade() or tick_sell() depending on the tower's current state
     }
 }
