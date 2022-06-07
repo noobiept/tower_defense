@@ -37,7 +37,7 @@ export class UnitGroup {
 }
 
 class UnitGroup1 extends Unit {
-    constructor(args) {
+    constructor(args: UnitArgs) {
         super({
             ...args,
             name: "group unit",

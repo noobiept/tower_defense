@@ -27,16 +27,16 @@ export interface CreateUnitArgs {
 }
 
 const UNITS_MAP = {
-    Unit: Unit,
-    UnitFast: UnitFast,
-    UnitFly: UnitFly,
-    UnitGroup: UnitGroup,
-    UnitImmune: UnitImmune,
-    UnitSpawn: UnitSpawn,
-};
+    Unit: { type: "Unit", class: Unit },
+    UnitFast: { type: "UnitFast", class: UnitFast },
+    UnitFly: { type: "UnitFly", class: UnitFly },
+    UnitGroup: { type: "UnitGroup", class: UnitGroup },
+    UnitImmune: { type: "UnitImmune", class: UnitImmune },
+    UnitSpawn: { type: "UnitSpawn", class: UnitSpawn },
+} as const;
 export type UnitKey = keyof typeof UNITS_MAP;
 
-export function mapUnitType(type: UnitKey) {
+function mapUnitType(type: UnitKey) {
     return UNITS_MAP[type];
 }
 
@@ -61,26 +61,33 @@ export function createUnit({
         ...args,
     };
     let removeWave = false;
-    const unitClass = mapUnitType(wave.type);
+    const type = wave.type;
+    const unitInfo = mapUnitType(type);
 
-    // the group units work a bit differently //TODO
-    // they are added all at the same time (instead of one at a time)
-    if (unitClass === UnitGroup) {
-        removeWave = true;
+    switch (unitInfo.type) {
+        // the group units work a bit differently //TODO
+        // they are added all at the same time (instead of one at a time)
+        case "UnitGroup":
+            removeWave = true;
 
-        new unitClass({
-            ...unitArgs,
-            lane,
-            howMany: wave.howMany,
-        });
-    } else if (unitClass === UnitSpawn) {
-        new unitClass({
-            ...unitArgs,
-            canvasToGrid,
-            getAvailablePositions,
-        });
-    } else {
-        new unitClass(unitArgs);
+            new unitInfo.class({
+                ...unitArgs,
+                lane,
+                howMany: wave.howMany,
+            });
+            break;
+
+        case "UnitSpawn":
+            new unitInfo.class({
+                ...unitArgs,
+                canvasToGrid,
+                getAvailablePositions,
+            });
+            break;
+
+        default:
+            new unitInfo.class(unitArgs);
+            break;
     }
 
     return removeWave;

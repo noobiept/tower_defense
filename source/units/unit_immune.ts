@@ -1,7 +1,7 @@
-import { Unit } from "./unit";
+import { Unit, UnitArgs } from "./unit";
 
 export class UnitImmune extends Unit {
-    constructor(args) {
+    constructor(args: UnitArgs) {
         super({
             ...args,
             name: "immune unit",

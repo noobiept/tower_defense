@@ -76,3 +76,5 @@ export interface MapPositionType {
     passable: number;
     blocked: number;
 }
+
+export type MapPosition = GridPosition | null;

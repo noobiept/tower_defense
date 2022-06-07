@@ -85,6 +85,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         }
     }
 
+    tick: (delta: number) => void;
     name: string;
     image: string;
     stats: Stats[];
@@ -493,9 +494,5 @@ export class Tower<Stats extends TowerStats = TowerStats> {
             this.sell();
             this.is_selling = false;
         }
-    }
-
-    tick(deltaTime: number) {
-        // this will be overridden to either tick_normal(), tick_upgrade() or tick_sell() depending on the tower's current state
     }
 }

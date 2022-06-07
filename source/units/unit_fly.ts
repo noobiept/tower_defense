@@ -1,10 +1,10 @@
-import { Unit } from "./unit";
+import { Unit, UnitArgs } from "./unit";
 
 export class UnitFly extends Unit {
     private final_column: number;
     private final_line: number;
 
-    constructor(args) {
+    constructor(args: UnitArgs) {
         super({
             ...args,
             name: "flying unit",

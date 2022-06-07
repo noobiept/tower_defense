@@ -4,8 +4,31 @@ import * as GameMenu from "./game_menu";
 import { getAsset } from "./assets";
 import { circlePointCollision, getRandomInt } from "@drk4/utilities";
 import * as Canvas from "./canvas";
-import { CanvasPosition, GridPosition, Lane, MapData } from "./types";
+import {
+    CanvasPosition,
+    GridPosition,
+    Lane,
+    MapData,
+    MapPosition,
+} from "./types";
 import { Tower } from "./towers/tower";
+
+interface AddObstacleArgs {
+    passable?: boolean;
+    fillColor?: string;
+    startColumn: number;
+    columnLength: number;
+    startLine: number;
+    lineLength: number;
+}
+
+interface GridHighlight {
+    shape: createjs.Bitmap | null;
+    available: createjs.Bitmap | null;
+    not_available: createjs.Bitmap | null;
+    column: number;
+    line: number;
+}
 
 let CONTAINER: createjs.Container; // createjs.Container() which will hold all the map elements
 let HIGHLIGHT_CONTAINER: createjs.Container;
@@ -19,7 +42,7 @@ let STARTING_Y = 0;
 
 const SQUARE_SIZE = 10; // in pixels
 
-const GRID_HIGHLIGHT = {
+const GRID_HIGHLIGHT: GridHighlight = {
     shape: null, // this will point to either 'available' or 'not_available'
     available: null, // will have a reference to a Bitmap
     not_available: null, // also a reference to a Bitmap
@@ -29,7 +52,7 @@ const GRID_HIGHLIGHT = {
 const WALL_LENGTH = 2;
 
 // result from the path finding algorithm, with the valid paths to the destination
-let PATHS = [];
+let PATHS: MapPosition[][][] = [];
 let MAP: number[][] = [];
 const POSITION_TYPE = {
     passable: 1,
@@ -214,11 +237,19 @@ function updatePath() {
  *
  * Returns { column: number; line: number; }
  */
-export function findNextDestination(column, line, laneId) {
+export function findNextDestination(
+    column: number,
+    line: number,
+    laneId: number
+) {
     return PATHS[laneId][line][column];
 }
 
-function setImpassableBox(startColumn, startLine, length) {
+function setImpassableBox(
+    startColumn: number,
+    startLine: number,
+    length: number
+) {
     for (let column = startColumn; column < startColumn + length; column++) {
         for (let line = startLine; line < startLine + length; line++) {
             setImpassable(column, line);
@@ -226,7 +257,11 @@ function setImpassableBox(startColumn, startLine, length) {
     }
 }
 
-function setPassableBox(startColumn, startLine, length) {
+function setPassableBox(
+    startColumn: number,
+    startLine: number,
+    length: number
+) {
     for (let column = startColumn; column < startColumn + length; column++) {
         for (let line = startLine; line < startLine + length; line++) {
             setPassable(column, line);
@@ -238,11 +273,11 @@ function setPassableBox(startColumn, startLine, length) {
     Sets a single square
  */
 
-export function setImpassable(column, line) {
+export function setImpassable(column: number, line: number) {
     MAP[line][column] = POSITION_TYPE.blocked;
 }
 
-function setPassable(column, line) {
+function setPassable(column: number, line: number) {
     MAP[line][column] = POSITION_TYPE.passable;
 }
 
@@ -256,7 +291,7 @@ function setPassable(column, line) {
         fillColor: String (optional -- default: 'black' if passable, else +- 'green'),
     }
  */
-function addObstacle(args) {
+function addObstacle(args: AddObstacleArgs) {
     if (typeof args.passable === "undefined") {
         args.passable = false;
     }

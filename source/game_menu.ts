@@ -1,3 +1,4 @@
+import { Timeout } from "@drk4/utilities";
 import { Tower } from "./towers/tower";
 import { TowerFast } from "./towers/tower_fast";
 import { TowerRocket } from "./towers/tower_rocket";
@@ -5,7 +6,22 @@ import { TowerFrost } from "./towers/tower_frost";
 import { TowerAntiAir } from "./towers/tower_anti_air";
 import { TowerBash } from "./towers/tower_bash";
 import { Tooltip } from "./tooltip";
-import { Timeout } from "@drk4/utilities";
+
+// in same order as it appears on the menu
+const TOWERS_LIST = [
+    Tower,
+    TowerFast,
+    TowerRocket,
+    TowerFrost,
+    TowerAntiAir,
+    TowerBash,
+] as const;
+
+interface TowerType {
+    tower: typeof TOWERS_LIST[number];
+    htmlElement: HTMLElement | null;
+    position: number;
+}
 
 // reference to the game menu's html elements
 let START_PAUSED = null;
@@ -17,15 +33,13 @@ let WAVE_LIST = [];
 let MESSAGE = null;
 let MESSAGE_TIMEOUT = null;
 
-let SELECTED_TOWER = null;
-const TOWERS = [
-    { tower: Tower, htmlElement: null, position: 0 },
-    { tower: TowerFast, htmlElement: null, position: 1 },
-    { tower: TowerRocket, htmlElement: null, position: 2 },
-    { tower: TowerFrost, htmlElement: null, position: 3 },
-    { tower: TowerAntiAir, htmlElement: null, position: 4 },
-    { tower: TowerBash, htmlElement: null, position: 5 },
-];
+let SELECTED_TOWER: TowerType | null = null;
+const TOWERS: TowerType[] = TOWERS_LIST.map((tower, index) => ({
+    tower,
+    htmlElement: null,
+    position: index,
+}));
+
 let TOWER_INFO;
 let CALCULATE_TOWER_REFUND: (cost: number) => number;
 
@@ -54,7 +68,9 @@ export function init(args: GameMenuInitArgs) {
         enableEvents: false,
     });
 
-    const timeUntilNext = menu.querySelector(".timeUntilNextWave") as HTMLElement;
+    const timeUntilNext = menu.querySelector(
+        ".timeUntilNextWave"
+    ) as HTMLElement;
     timeUntilNext.onclick = args.forceNextWave;
 
     TIME_UNTIL_NEXT_WAVE = timeUntilNext.querySelector("span");
@@ -158,7 +174,7 @@ export function hide() {
     $("#GameMenu").css("display", "none");
 }
 
-export function pause(isPaused) {
+export function pause(isPaused: boolean) {
     if (isPaused) {
         START_PAUSED.tooltip.show();
 
@@ -170,7 +186,7 @@ export function pause(isPaused) {
     }
 }
 
-export function selectTower(position) {
+export function selectTower(position: number) {
     if (SELECTED_TOWER) {
         // trying to select the same tower
         if (position == SELECTED_TOWER.position) {
@@ -184,7 +200,6 @@ export function selectTower(position) {
     }
 
     SELECTED_TOWER = TOWERS[position];
-
     $(SELECTED_TOWER.htmlElement).addClass("selectedTower");
 }
 

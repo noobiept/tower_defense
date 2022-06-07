@@ -1,6 +1,7 @@
 import { Unit, UnitArgs } from "./unit";
 import { getRandomInt } from "@drk4/utilities";
 import { CanvasPosition, GridPosition } from "../types";
+import { Tower } from "../towers/tower";
 
 export interface UnitSpawnArgs extends UnitArgs {
     canvasToGrid: (position: CanvasPosition) => GridPosition;
@@ -41,7 +42,7 @@ export class UnitSpawn extends Unit {
         this.getAvailablePositions = args.getAvailablePositions;
     }
 
-    tookDamage(attacker) {
+    tookDamage(attacker: Tower) {
         const was_killed = super.tookDamage(attacker);
 
         if (was_killed && !this.already_spawned) {
@@ -61,14 +62,19 @@ export class UnitSpawn extends Unit {
             const spawnedHealth = Math.floor(
                 this.max_health / this.number_spawned_units
             );
-            const spawnedRegeneration = Math.floor(this.health_regeneration / 2);
+            const spawnedRegeneration = Math.floor(
+                this.health_regeneration / 2
+            );
             const spawnedGold = Math.floor(this.gold / 2);
             const spawnedScore = Math.floor(this.score / 2);
 
             for (let a = 0; a < this.number_spawned_units; a++) {
                 // position the spawned unit in a random position close to the main one
                 if (availablePositions.length > 0) {
-                    const select = getRandomInt(0, availablePositions.length - 1);
+                    const select = getRandomInt(
+                        0,
+                        availablePositions.length - 1
+                    );
 
                     spawnedPosition = availablePositions.splice(select, 1)[0];
                 }

@@ -1,4 +1,4 @@
-import { Tower, TowerStats } from "./tower";
+import { Tower, TowerArgs, TowerStats } from "./tower";
 import { getAsset } from "../assets";
 import { circleCircleCollision, getRandomInt } from "@drk4/utilities";
 import { CanvasPosition } from "../types";

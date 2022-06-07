@@ -2,6 +2,7 @@ import { Message } from "../message";
 import { getAsset } from "../assets";
 import { calculateAngle, pointBoxCollision, toDegrees } from "@drk4/utilities";
 import { CanvasPosition, GridPosition, Lane } from "../types";
+import { Tower } from "../towers/tower";
 
 let CONTAINER: createjs.Container; // createjs.Container() which will hold all the unit elements
 
@@ -12,8 +13,8 @@ export interface UnitArgs {
     is_ground_unit?: boolean;
     is_immune?: boolean;
     movement_speed?: number;
-    destination_column?: number;
-    destination_line?: number;
+    destination_column: number;
+    destination_line: number;
     lane?: Lane;
     howMany?: number;
 
@@ -56,6 +57,7 @@ export class Unit {
         }
     }
 
+    tick: (delta: number) => void;
     name: string;
     image: string;
     slowImage: string;
@@ -241,7 +243,7 @@ export class Unit {
         }
     }
 
-    move(next) {
+    move(next: GridPosition) {
         const unitX = this.getX();
         const unitY = this.getY();
 
@@ -315,7 +317,7 @@ export class Unit {
     Slows down the unit for a certain time (subtract the argument to the current .movement_speed)
  */
 
-    slowDown(minusMovementSpeed) {
+    slowDown(minusMovementSpeed: number) {
         // immune units aren't affected by slow
         if (this.is_immune) {
             return;
@@ -349,7 +351,7 @@ export class Unit {
             Math.sin(this.movement_angle) * this.current_movement_speed;
     }
 
-    stun(time) {
+    stun(time: number) {
         if (this.is_immune) {
             return;
         }
@@ -362,7 +364,7 @@ export class Unit {
         this.tick = this.tick_stunned;
     }
 
-    tookDamage(attacker) {
+    tookDamage(attacker: Tower) {
         this.health -= attacker.damage;
 
         if (this.health < 0) {
@@ -406,7 +408,7 @@ export class Unit {
         g.endFill();
     }
 
-    tick_move(deltaTime) {
+    tick_move(deltaTime: number) {
         if (this.is_slow_down) {
             this.slow_count += deltaTime;
 
@@ -435,7 +437,7 @@ export class Unit {
         }
     }
 
-    tick_regeneration(deltaTime) {
+    tick_regeneration(deltaTime: number) {
         this.regeneration_count += deltaTime;
 
         // deal with the health regeneration
@@ -448,12 +450,12 @@ export class Unit {
         }
     }
 
-    tick_normal(deltaTime) {
+    tick_normal(deltaTime: number) {
         this.tick_move(deltaTime);
         this.tick_regeneration(deltaTime);
     }
 
-    tick_stunned(deltaTime) {
+    tick_stunned(deltaTime: number) {
         if (!this.is_stunned) {
             return;
         }
@@ -466,9 +468,5 @@ export class Unit {
         }
 
         this.tick_regeneration(deltaTime);
-    }
-
-    tick(deltaTime) {
-        // this will be overridden by tick_normal(), or tick_stunned()
     }
 }

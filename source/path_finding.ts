@@ -1,4 +1,4 @@
-import { GridPosition, MapPositionType } from "./types";
+import { GridPosition, MapPosition, MapPositionType } from "./types";
 
 interface PathFindingInfo {
     columns: number;
@@ -51,7 +51,7 @@ export function breadthFirstSearch(
     positionType: MapPositionType
 ) {
     const frontier = [destination];
-    const cameFrom: (GridPosition | null)[][] = [];
+    const cameFrom: MapPosition[][] = [];
 
     // figure out the number of columns/lines of the map array
     // have all the useful information in one object
