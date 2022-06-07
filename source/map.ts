@@ -12,6 +12,7 @@ import {
     MapPosition,
 } from "./types";
 import { Tower } from "./towers/tower";
+import { createTower, TowerKey } from "./towers/tower.util";
 
 interface AddObstacleArgs {
     passable?: boolean;
@@ -525,9 +526,9 @@ export function getUnitsInRange(
  * If that is the case, then add the tower at the given position.
  */
 export function addTower(
-    towerClass,
-    column,
-    line,
+    towerKey: TowerKey,
+    column: number,
+    line: number,
     onSell: (cost) => void,
     onRemove: (tower: Tower) => void,
     onUpgrade: (tower: Tower) => void
@@ -572,7 +573,8 @@ export function addTower(
         const gridPosition = { column, line };
         const canvasPosition = getPosition(gridPosition);
 
-        const tower = new towerClass({
+        const tower = createTower({
+            type: towerKey,
             gridPosition,
             canvasPosition,
             squareSize: SQUARE_SIZE,

@@ -1,21 +1,17 @@
 import { Timeout } from "@drk4/utilities";
 import { Tower } from "./towers/tower";
-import { TowerFast } from "./towers/tower_fast";
-import { TowerRocket } from "./towers/tower_rocket";
-import { TowerFrost } from "./towers/tower_frost";
-import { TowerAntiAir } from "./towers/tower_anti_air";
-import { TowerBash } from "./towers/tower_bash";
 import { Tooltip } from "./tooltip";
+import { getTowerInitialCost, TowerKey } from "./towers/tower.util";
 
 // in same order as it appears on the menu
-const TOWERS_LIST = [
-    Tower,
-    TowerFast,
-    TowerRocket,
-    TowerFrost,
-    TowerAntiAir,
-    TowerBash,
-] as const;
+const TOWERS_LIST: TowerKey[] = [
+    "Tower",
+    "TowerFast",
+    "TowerRocket",
+    "TowerFrost",
+    "TowerAntiAir",
+    "TowerBash",
+];
 
 interface TowerType {
     tower: typeof TOWERS_LIST[number];
@@ -120,7 +116,7 @@ export function init(args: GameMenuInitArgs) {
         const htmlElement = elements[a];
 
         TOWERS[a].htmlElement = htmlElement;
-        const towerInitialCost = TOWERS[a].tower.stats[0].initial_cost;
+        const towerInitialCost = getTowerInitialCost(TOWERS[a].tower);
 
         $(htmlElement).text($(htmlElement).text() + " - " + towerInitialCost);
         htmlElement.onclick = (function (position) {

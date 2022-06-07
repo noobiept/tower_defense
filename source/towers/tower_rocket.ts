@@ -1,24 +1,7 @@
-import { Tower, TowerArgs, TowerStats } from "./tower";
-import { Unit } from "../units/unit";
-
-export type TowerRocketArgs = TowerArgs<TowerStats> & {
-    getUnitsInRadius: (
-        x: number,
-        y: number,
-        radius: number,
-        tower: Tower
-    ) => Unit[];
-};
+import { Tower } from "./tower";
 
 export class TowerRocket extends Tower {
-    private getUnitsInRadius: (
-        x: number,
-        y: number,
-        radius: number,
-        tower: Tower
-    ) => Unit[];
-
-    constructor(args: TowerRocketArgs) {
+    constructor(args) {
         super({
             ...args,
             name: "rocket tower",
@@ -27,7 +10,6 @@ export class TowerRocket extends Tower {
             can_target_air: false,
             stats: TowerRocket.stats,
         });
-        this.getUnitsInRadius = args.getUnitsInRadius;
     }
 
     static stats = [
@@ -65,7 +47,7 @@ export class TowerRocket extends Tower {
 
         const attack_radius = this.stats[this.upgrade_level].attack_radius;
 
-        const units = this.getUnitsInRadius(x, y, attack_radius, this);
+        const units = this.getUnitsInRange(x, y, attack_radius, this);
 
         for (let a = 0; a < units.length; a++) {
             units[a].tookDamage(this);

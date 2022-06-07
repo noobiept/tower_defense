@@ -7,7 +7,7 @@ import { Unit } from "./units/unit";
 import { Tooltip } from "./tooltip";
 import { Message } from "./message";
 import * as HighScore from "./high_score";
-import { createUnit, UnitKey } from "./units/units.util";
+import { createUnit, UnitKey } from "./units/unit.util";
 import { getAsset } from "./assets";
 import {
     addCanvasEventListener,
@@ -18,6 +18,7 @@ import {
     updateStage,
 } from "./canvas";
 import { MapData, Wave, MapUnitData, Lane } from "./types";
+import { getTowerInitialCost } from "./towers/tower.util";
 
 let MAP_NAME: string;
 let UNITS_STATS: {
@@ -330,10 +331,11 @@ function mouseEvents(event) {
             }
         }
 
-        const towerClass = GameMenu.getSelectedTower();
+        const towerKey = GameMenu.getSelectedTower();
+        const initialCost = getTowerInitialCost(towerKey);
 
         // see if we can afford a tower
-        if (!haveEnoughGold(towerClass.stats[0].initial_cost)) {
+        if (!haveEnoughGold(initialCost)) {
             GameMenu.showMessage("Not enough gold.");
             return;
         }
@@ -341,7 +343,7 @@ function mouseEvents(event) {
         const highlight = Map.getHighlightSquare();
 
         const tower = Map.addTower(
-            towerClass,
+            towerKey,
             highlight.column,
             highlight.line,
             (cost: number) => {

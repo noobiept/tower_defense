@@ -1,4 +1,4 @@
-import { UnitKey } from "./units/units.util";
+import { UnitKey } from "./units/unit.util";
 
 export interface CanvasPosition {
     x: number;
