@@ -70,14 +70,14 @@ export function removeStageEventListener(
 
 export function addCanvasEventListener(
     eventName: string,
-    listener: (event) => void
+    listener: (event: Event) => void
 ) {
     CANVAS.addEventListener(eventName, listener);
 }
 
 export function removeCanvasEventListener(
     eventName: string,
-    listener: (event) => void
+    listener: (event: Event) => void
 ) {
     CANVAS.removeEventListener(eventName, listener);
 }

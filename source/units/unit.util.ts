@@ -14,9 +14,9 @@ export interface CreateUnitArgs {
     size: number;
     lane_id: number;
     onReachDestination: () => void;
-    onUnitRemoved: () => void;
+    onUnitRemoved: (unit: Unit) => void;
     onUnitKilled: (unit: Unit) => void;
-    getNextDestination: (unit: Unit) => GridPosition;
+    getNextDestination: (unit: Unit) => GridPosition | undefined;
     toCanvasPosition: (position: GridPosition) => CanvasPosition;
     canvasToGrid: (position: CanvasPosition) => GridPosition;
     getAvailablePositions: (

@@ -49,5 +49,5 @@ export function createTower({ type, ...args }: CreateTowerArgs) {
 export function getTowerInitialCost(key: TowerKey) {
     const info = mapTowerType(key);
 
-    return info.class.stats[0].initial_cost;
+    return info.class.stats[0].initial_cost ?? 0;
 }

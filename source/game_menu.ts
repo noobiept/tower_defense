@@ -2,6 +2,11 @@ import { Timeout } from "@drk4/utilities";
 import { Tower } from "./towers/tower";
 import { Tooltip } from "./tooltip";
 import { getTowerInitialCost, TowerKey } from "./towers/tower.util";
+import { Wave } from "./types";
+
+type HTMLElementWithTooltip = HTMLElement & {
+    tooltip: Tooltip;
+};
 
 // in same order as it appears on the menu
 const TOWERS_LIST: TowerKey[] = [
@@ -20,23 +25,33 @@ interface TowerType {
 }
 
 // reference to the game menu's html elements
-let START_PAUSED = null;
-let TIME_UNTIL_NEXT_WAVE = null;
-let CURRENT_GOLD = null;
-let CURRENT_LIFE = null;
-let CURRENT_SCORE = null;
-let WAVE_LIST = [];
-let MESSAGE = null;
-let MESSAGE_TIMEOUT = null;
+let START_PAUSED: HTMLElementWithTooltip;
+let TIME_UNTIL_NEXT_WAVE: HTMLElement;
+let CURRENT_GOLD: HTMLElement;
+let CURRENT_LIFE: HTMLElement;
+let CURRENT_SCORE: HTMLElement;
+let WAVE_LIST: HTMLElementWithTooltip[] = [];
+let MESSAGE: HTMLElement;
+let MESSAGE_TIMEOUT: Timeout;
 
-let SELECTED_TOWER: TowerType | null = null;
+let SELECTED_TOWER: TowerType;
 const TOWERS: TowerType[] = TOWERS_LIST.map((tower, index) => ({
     tower,
     htmlElement: null,
     position: index,
 }));
 
-let TOWER_INFO;
+let TOWER_INFO: {
+    container: HTMLElement;
+    name: HTMLElement;
+    damage: HTMLElement;
+    attack_speed: HTMLElement;
+    range: HTMLElement;
+    upgrade: HTMLElement;
+    sell: HTMLElement;
+    upgrade_message: HTMLElement;
+    sell_message: HTMLElement;
+};
 let CALCULATE_TOWER_REFUND: (cost: number) => number;
 
 export interface GameMenuInitArgs {
@@ -45,18 +60,17 @@ export interface GameMenuInitArgs {
     quit: () => void;
     upgradeSelection: () => void;
     sellSelection: () => void;
-    getSelection: () => Tower;
+    getSelection: () => Tower | null;
     calculateTowerRefund: (cost: number) => number;
 }
 
 export function init(args: GameMenuInitArgs) {
-    const menu = document.querySelector("#GameMenu");
-    let a;
+    const menu = document.querySelector("#GameMenu")!;
 
     CALCULATE_TOWER_REFUND = args.calculateTowerRefund;
 
     // game controls
-    START_PAUSED = menu.querySelector("#startPause");
+    START_PAUSED = menu.querySelector("#startPause")!;
     START_PAUSED.onclick = args.pause;
     START_PAUSED.tooltip = new Tooltip({
         text: "Click to start",
@@ -69,22 +83,22 @@ export function init(args: GameMenuInitArgs) {
     ) as HTMLElement;
     timeUntilNext.onclick = args.forceNextWave;
 
-    TIME_UNTIL_NEXT_WAVE = timeUntilNext.querySelector("span");
+    TIME_UNTIL_NEXT_WAVE = timeUntilNext.querySelector("span")!;
 
     const quit = menu.querySelector("#quit") as HTMLElement;
     quit.onclick = args.quit;
 
     // game info stuff
-    CURRENT_GOLD = menu.querySelector(".currentGold span");
-    CURRENT_LIFE = menu.querySelector(".currentLife span");
-    CURRENT_SCORE = menu.querySelector(".currentScore span");
+    CURRENT_GOLD = menu.querySelector(".currentGold span")!;
+    CURRENT_LIFE = menu.querySelector(".currentLife span")!;
+    CURRENT_SCORE = menu.querySelector(".currentScore span")!;
 
     // wave list
     WAVE_LIST = menu.querySelectorAll(
         "#GameMenu-waveList > div"
-    ) as unknown as HTMLElement[];
+    ) as unknown as HTMLElementWithTooltip[];
 
-    for (a = 0; a < WAVE_LIST.length; a++) {
+    for (let a = 0; a < WAVE_LIST.length; a++) {
         WAVE_LIST[a].tooltip = new Tooltip({
             text: "",
             reference: WAVE_LIST[a],
@@ -92,7 +106,7 @@ export function init(args: GameMenuInitArgs) {
     }
 
     // game menu's message
-    MESSAGE = document.querySelector("#Message");
+    MESSAGE = document.querySelector("#Message")!;
     MESSAGE_TIMEOUT = new Timeout();
 
     // tower selector
@@ -112,7 +126,7 @@ export function init(args: GameMenuInitArgs) {
         bashTower,
     ]; // same order as in the TOWERS array
 
-    for (a = 0; a < elements.length; a++) {
+    for (let a = 0; a < elements.length; a++) {
         const htmlElement = elements[a];
 
         TOWERS[a].htmlElement = htmlElement;
@@ -127,18 +141,18 @@ export function init(args: GameMenuInitArgs) {
     }
 
     // tower info
-    const towerInfo = menu.querySelector("#GameMenu-TowerInfo");
+    const towerInfo = document.getElementById("GameMenu-TowerInfo")!;
 
     TOWER_INFO = {
         container: towerInfo,
-        name: towerInfo.querySelector(".name span"),
-        damage: towerInfo.querySelector(".damage span"),
-        attack_speed: towerInfo.querySelector(".attack_speed span"),
-        range: towerInfo.querySelector(".range span"),
-        upgrade: towerInfo.querySelector("#GameMenu-Upgrade"),
-        sell: towerInfo.querySelector("#GameMenu-Sell"),
-        upgrade_message: towerInfo.querySelector(".upgradeMessage"),
-        sell_message: towerInfo.querySelector(".sellMessage"),
+        name: towerInfo.querySelector(".name span")!,
+        damage: towerInfo.querySelector(".damage span")!,
+        attack_speed: towerInfo.querySelector(".attack_speed span")!,
+        range: towerInfo.querySelector(".range span")!,
+        upgrade: towerInfo.querySelector("#GameMenu-Upgrade")!,
+        sell: towerInfo.querySelector("#GameMenu-Sell")!,
+        upgrade_message: towerInfo.querySelector(".upgradeMessage")!,
+        sell_message: towerInfo.querySelector(".sellMessage")!,
     };
 
     TOWER_INFO.upgrade.onclick = args.upgradeSelection;
@@ -191,15 +205,15 @@ export function selectTower(position: number) {
 
         // remove the css class from the previous selection
         else {
-            $(SELECTED_TOWER.htmlElement).removeClass("selectedTower");
+            $(SELECTED_TOWER.htmlElement!).removeClass("selectedTower");
         }
     }
 
     SELECTED_TOWER = TOWERS[position];
-    $(SELECTED_TOWER.htmlElement).addClass("selectedTower");
+    $(SELECTED_TOWER.htmlElement!).addClass("selectedTower");
 }
 
-export function showMessage(message) {
+export function showMessage(message: string) {
     $(MESSAGE).css("visibility", "visible");
     $(MESSAGE).text(message);
 
@@ -208,23 +222,23 @@ export function showMessage(message) {
     }, 1000);
 }
 
-export function updateGold(gold) {
+export function updateGold(gold: number) {
     $(CURRENT_GOLD).text(gold);
 }
 
-export function updateLife(life) {
+export function updateLife(life: number) {
     $(CURRENT_LIFE).text(life);
 }
 
-export function updateScore(score) {
+export function updateScore(score: number) {
     $(CURRENT_SCORE).text(score);
 }
 
-export function updateTimeUntilNextWave(time) {
+export function updateTimeUntilNextWave(time: string) {
     $(TIME_UNTIL_NEXT_WAVE).text(time);
 }
 
-export function updateWave(currentWave, allWaves) {
+export function updateWave(currentWave: number, allWaves: Wave[]) {
     for (let a = 0; a < WAVE_LIST.length; a++) {
         const waveNumber = currentWave + a;
         const waveElement = WAVE_LIST[a];
@@ -244,7 +258,7 @@ export function updateWave(currentWave, allWaves) {
 
             if (waveElement.hasAttribute("data-cssClass")) {
                 $(waveElement).removeClass(
-                    waveElement.getAttribute("data-cssClass")
+                    waveElement.getAttribute("data-cssClass")!
                 );
             }
 
@@ -258,7 +272,7 @@ export function updateWave(currentWave, allWaves) {
 
             if (waveElement.hasAttribute("data-cssClass")) {
                 $(waveElement).removeClass(
-                    waveElement.getAttribute("data-cssClass")
+                    waveElement.getAttribute("data-cssClass")!
                 );
             }
         }
@@ -269,7 +283,7 @@ export function getSelectedTower() {
     return SELECTED_TOWER.tower;
 }
 
-export function showTowerStats(tower) {
+export function showTowerStats(tower: Tower) {
     $(TOWER_INFO.container).css("display", "flex");
 
     updateTowerStats(tower, false);

@@ -30,9 +30,9 @@ export interface UnitArgs {
     health_regeneration: number;
 
     onReachDestination: () => void;
-    onUnitRemoved: () => void;
+    onUnitRemoved: (unit: Unit) => void;
     onUnitKilled: (unit: Unit) => void;
-    getNextDestination: (unit: Unit) => GridPosition;
+    getNextDestination: (unit: Unit) => GridPosition | undefined;
     toCanvasPosition: (position: GridPosition) => CanvasPosition;
 }
 
@@ -99,9 +99,9 @@ export class Unit {
     size: number;
 
     onReachDestination: () => void;
-    onUnitRemoved: () => void;
+    onUnitRemoved: (unit: Unit) => void;
     onUnitKilled: (unit: Unit) => void;
-    getNextDestination: (unit: Unit) => GridPosition;
+    getNextDestination: (unit: Unit) => GridPosition | undefined;
     toCanvasPosition: (position: GridPosition) => CanvasPosition;
 
     constructor(args: UnitArgs) {
@@ -142,18 +142,19 @@ export class Unit {
         this.next_y = 0;
         this.next_length = 0;
 
-        this.container = null;
-        this.slowElement = null;
-        this.healthBar = null;
-        this.shape = null;
-
         this.onReachDestination = args.onReachDestination;
         this.onUnitRemoved = args.onUnitRemoved;
         this.onUnitKilled = args.onUnitKilled;
         this.getNextDestination = args.getNextDestination;
         this.toCanvasPosition = args.toCanvasPosition;
 
-        this.setupShape();
+        const { container, healthBar, slow, shape } = this.setupShape();
+
+        this.container = container;
+        this.healthBar = healthBar;
+        this.slowElement = slow;
+        this.shape = shape;
+
         this.tick = this.tick_normal;
 
         Unit.ALL.push(this);
@@ -217,10 +218,12 @@ export class Unit {
 
         CONTAINER.addChild(container);
 
-        this.container = container;
-        this.healthBar = healthBar;
-        this.slowElement = slow;
-        this.shape = shape;
+        return {
+            container,
+            healthBar,
+            slow,
+            shape,
+        };
     }
 
     /**
@@ -232,6 +235,7 @@ export class Unit {
         // there isn't a place to go
         if (!nextDest) {
             this.remove();
+            return;
         }
 
         // we reached the destination
@@ -310,7 +314,7 @@ export class Unit {
             Unit.ALL_AIR.splice(index, 1);
         }
 
-        this.onUnitRemoved();
+        this.onUnitRemoved(this);
     }
 
     /*

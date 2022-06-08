@@ -50,10 +50,9 @@ export class Bullet {
         this.radius = 2;
         this.movement_speed = 140;
 
-        this.shape = null;
+        const { shape } = this.setupShape();
+        this.shape = shape;
         this.removed = false;
-
-        this.setupShape();
 
         Bullet.ALL.push(this);
     }
@@ -71,7 +70,7 @@ export class Bullet {
 
         CONTAINER.addChild(shape);
 
-        this.shape = shape;
+        return { shape };
     }
 
     tick(deltaTime: number) {

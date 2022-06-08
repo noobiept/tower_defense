@@ -1,7 +1,10 @@
-import { Tower } from "./tower";
+import { Unit } from "../units/unit";
+import { Tower, TowerArgs } from "./tower";
 
-export class TowerRocket extends Tower {
-    constructor(args) {
+type RocketStats = typeof TowerRocket.stats[number];
+
+export class TowerRocket extends Tower<RocketStats> {
+    constructor(args: TowerArgs<RocketStats>) {
         super({
             ...args,
             name: "rocket tower",
@@ -41,12 +44,11 @@ export class TowerRocket extends Tower {
         },
     ];
 
-    onBulletHit(target) {
+    onBulletHit(target: Unit) {
         const x = target.getX();
         const y = target.getY();
 
         const attack_radius = this.stats[this.upgrade_level].attack_radius;
-
         const units = this.getUnitsInRange(x, y, attack_radius, this);
 
         for (let a = 0; a < units.length; a++) {

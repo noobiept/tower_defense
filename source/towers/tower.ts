@@ -145,7 +145,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
 
         this.damage = currentLevel.damage;
         this.range = currentLevel.range;
-        this.cost = currentLevel.initial_cost;
+        this.cost = currentLevel.initial_cost ?? 0;
 
         this.attack_speed = currentLevel.attack_speed;
         this.attack_interval = 1 / this.attack_speed;
@@ -154,15 +154,19 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         this.targetUnit = null;
         this.removed = false;
 
-        this.baseElement = null;
-        this.container = null;
-        this.rangeElement = null;
-        this.shape = null;
-        this.progressElement = null;
         this.progress_length = 3;
         this.position = args.gridPosition;
 
-        this.setupShape(args.canvasPosition);
+        const { container, range, base, progress, shape } = this.setupShape(
+            args.canvasPosition
+        );
+
+        this.container = container;
+        this.rangeElement = range;
+        this.baseElement = base;
+        this.progressElement = progress;
+        this.shape = shape;
+
         this.tick = this.tick_normal;
         this.onRemove = args.onRemove;
         this.getUnitsInRange = args.getUnitsInRange;
@@ -222,11 +226,13 @@ export class Tower<Stats extends TowerStats = TowerStats> {
 
         CONTAINER.addChild(container);
 
-        this.container = container;
-        this.rangeElement = range;
-        this.baseElement = base;
-        this.progressElement = progress;
-        this.shape = shape;
+        return {
+            container,
+            range,
+            base,
+            progress,
+            shape,
+        };
     }
 
     selected() {
@@ -240,7 +246,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
 
     getUpgradeCost() {
         const currentLevel = this.stats[this.upgrade_level];
-        return currentLevel.upgrade_cost;
+        return currentLevel.upgrade_cost ?? 0;
     }
 
     startUpgrading(immediately: boolean) {
@@ -282,7 +288,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         }
 
         // update the overall cost of the tower
-        this.cost += this.stats[this.upgrade_level].upgrade_cost;
+        this.cost += this.stats[this.upgrade_level].upgrade_cost ?? 0;
 
         // upgrade a level
         this.upgrade_level++;
@@ -451,7 +457,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
         this.upgrade_count += deltaTime;
 
         const currentLevel = this.stats[this.upgrade_level];
-        const upgradeTime = currentLevel.upgrade_time;
+        const upgradeTime = currentLevel.upgrade_time ?? 0;
 
         const ratio = this.upgrade_count / upgradeTime;
 

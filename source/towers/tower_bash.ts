@@ -1,11 +1,9 @@
-import { Tower, TowerArgs, TowerStats } from "./tower";
+import { Tower, TowerArgs } from "./tower";
 import { getAsset } from "../assets";
 import { circleCircleCollision, getRandomInt } from "@drk4/utilities";
 import { CanvasPosition } from "../types";
 
-export type TowerBashStats = TowerStats & {
-    slow: number;
-};
+export type TowerBashStats = typeof TowerBash.stats[number];
 
 export class TowerBash extends Tower<TowerBashStats> {
     static stats = [
@@ -44,12 +42,11 @@ export class TowerBash extends Tower<TowerBashStats> {
     private stun_chance: number;
     private slow_chance: number;
     private stun: number;
-    private attack_animation: createjs.Bitmap;
+    private attack_animation!: createjs.Bitmap;
     private attack_animation_interval: number;
     private attack_animation_alpha_step: number;
-    private attack_limit: number;
 
-    constructor(args) {
+    constructor(args: TowerArgs<TowerBashStats>) {
         super({
             ...args,
             name: "bash tower",
@@ -60,7 +57,6 @@ export class TowerBash extends Tower<TowerBashStats> {
         });
 
         this.attack_animation_length = 40; // the image is 40x40 px
-
         this.stun_chance = 30;
         this.slow_chance = 30;
         this.stun = 1;
@@ -68,11 +64,11 @@ export class TowerBash extends Tower<TowerBashStats> {
         // have the attack animation depend on the attack speed
         this.attack_animation_interval = this.attack_interval / 4;
         this.attack_animation_alpha_step = 1 / this.attack_animation_interval;
+
+        this.extraSetupShape();
     }
 
-    setupShape(position: CanvasPosition) {
-        super.setupShape(position);
-
+    extraSetupShape() {
         // add the attack animation
         const halfLength = 20; // the attack image is 40x40 px
 
@@ -90,7 +86,6 @@ export class TowerBash extends Tower<TowerBashStats> {
         attackAnimation.visible = false;
 
         this.container.addChild(attackAnimation);
-
         this.attack_animation = attackAnimation;
     }
 
@@ -105,7 +100,7 @@ export class TowerBash extends Tower<TowerBashStats> {
         super.upgrade();
 
         // the attack speed may have changed in the upgrade, so need to update this as well
-        this.attack_animation_interval = this.attack_limit / 4;
+        this.attack_animation_interval = this.attack_interval / 4;
 
         const scale = (this.width + this.range) / this.attack_animation_length; // scale the image according to the tower's range
 
@@ -113,7 +108,7 @@ export class TowerBash extends Tower<TowerBashStats> {
         this.attack_animation.scaleY = scale;
     }
 
-    tick_attack(deltaTime) {
+    tick_attack(deltaTime: number) {
         this.attack_count -= deltaTime;
 
         if (this.attack_count <= this.attack_animation_interval) {
@@ -202,7 +197,7 @@ export class TowerBash extends Tower<TowerBashStats> {
             }
         }
 
-        if (this.targetUnit.removed) {
+        if (this.targetUnit?.removed) {
             this.targetUnit = null;
         }
     }

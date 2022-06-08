@@ -86,7 +86,7 @@ export function start(map: string) {
     // read from the map info and update the appropriate variables
     for (let a = 0; a < mapInfo.waves.length; a++) {
         const waveType = mapInfo.waves[a];
-        const stats = UNITS_STATS[waveType];
+        const stats = UNITS_STATS[waveType]!;
         const howMany = Math.floor(
             stats.wave_count_initial * (1 + a * stats.wave_count_increase_rate)
         );
@@ -150,18 +150,18 @@ export function start(map: string) {
     updateGold(200);
     updateLife(20);
     updateScore(0);
-    tick({ delta: 1 }); // run the tick once to initialize the timer and the wave list (passing dummy 'event' argument)
+    tick({ delta: 1 } as createjs.TickerEvent); // run the tick once to initialize the timer and the wave list (passing dummy 'event' argument) //TODO improve
     pause(true);
 
     // set the events
-    EVENTS.tick = createjs.Ticker.on("tick", tick) as () => void;
+    EVENTS.tick = createjs.Ticker.on("tick", tick as () => void) as () => void;
     EVENTS.mouseMove = addStageEventListener(
         "stagemousemove",
         Map.mouseMoveEvents as () => void
     ) as () => void;
 
     window.addEventListener("keyup", keyUpEvents);
-    addCanvasEventListener("mouseup", mouseEvents);
+    addCanvasEventListener("mouseup", mouseEvents as (e: Event) => void);
 }
 
 function quit() {
@@ -173,7 +173,7 @@ function quit() {
     Only then we'll call Game.end
     The reason is to fix a problem when the game end is triggered during the Unit.tick() loop (the units are cleared in Game.end(), but then the loop will try to continue..)
  */
-export function setEndFlag(victory) {
+export function setEndFlag(victory: boolean) {
     // if the game is paused, we can safely end the game right away (it will most likely be a defeat)
     if (IS_PAUSED) {
         end(victory);
@@ -193,7 +193,7 @@ function updateGold(gold: number) {
     GameMenu.updateGold(GOLD);
 }
 
-export function haveEnoughGold(price) {
+export function haveEnoughGold(price: number) {
     if (GOLD < price) {
         return false;
     }
@@ -201,7 +201,7 @@ export function haveEnoughGold(price) {
     return true;
 }
 
-export function updateLife(life) {
+export function updateLife(life: number) {
     LIFE += life;
 
     if (LIFE <= 0) {
@@ -215,7 +215,7 @@ export function updateLife(life) {
     GameMenu.updateLife(LIFE);
 }
 
-export function updateScore(score) {
+export function updateScore(score: number) {
     SCORE += score;
 
     GameMenu.updateScore(SCORE);
@@ -299,7 +299,7 @@ export function beforeFirstWave() {
     return BEFORE_FIRST_WAVE;
 }
 
-function mouseEvents(event) {
+function mouseEvents(event: MouseEvent) {
     if (IS_PAUSED && !BEFORE_FIRST_WAVE) {
         return;
     }
@@ -396,7 +396,7 @@ export function getSelection() {
     return ELEMENT_SELECTED;
 }
 
-export function checkIfSelected(element: Tower) {
+export function checkIfSelected(element: Tower | Unit) {
     if (element == ELEMENT_SELECTED) {
         return true;
     }
@@ -413,7 +413,7 @@ function clear() {
     }
 
     window.removeEventListener("keyup", keyUpEvents);
-    removeCanvasEventListener("mouseup", mouseEvents);
+    removeCanvasEventListener("mouseup", mouseEvents as (e: Event) => void);
 
     Unit.removeAll();
     Tower.removeAll();
@@ -508,8 +508,8 @@ function onReachDestination() {
     updateLife(-1);
 }
 
-function onUnitRemoved() {
-    if (checkIfSelected(this)) {
+function onUnitRemoved(unit: Unit) {
+    if (checkIfSelected(unit)) {
         clearSelection();
     }
 }
@@ -522,7 +522,7 @@ function onUnitKilled(unit: Unit) {
     updateScore(unit.score);
 }
 
-function tick(event) {
+function tick(event: createjs.TickerEvent) {
     if (IS_PAUSED) {
         updateStage();
         return;

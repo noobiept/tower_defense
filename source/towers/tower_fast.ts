@@ -1,4 +1,6 @@
-import { Tower } from "./tower";
+import { Tower, TowerArgs } from "./tower";
+
+export type TowerFastStats = typeof TowerFast.stats[number];
 
 export class TowerFast extends Tower {
     static stats = [
@@ -22,7 +24,7 @@ export class TowerFast extends Tower {
         { damage: 25, range: 60, attack_speed: 5, sell_time: 2 },
     ];
 
-    constructor(args) {
+    constructor(args: TowerArgs<TowerFastStats>) {
         super({
             ...args,
             name: "fast tower",

@@ -1,7 +1,9 @@
-import { Tower } from "./tower";
+import { Tower, TowerArgs } from "./tower";
 import { Unit } from "../units/unit";
 import { Bullet } from "../bullet";
 import { circleCircleCollision, circlePointCollision } from "@drk4/utilities";
+
+export type TowerAntiAirStats = typeof TowerAntiAir.stats[number];
 
 export class TowerAntiAir extends Tower {
     static stats = [
@@ -28,7 +30,7 @@ export class TowerAntiAir extends Tower {
     private targets_per_attack: number;
     private targets: Unit[];
 
-    constructor(args) {
+    constructor(args: TowerArgs<TowerAntiAirStats>) {
         super({
             ...args,
             name: "anti-air tower",
@@ -42,7 +44,7 @@ export class TowerAntiAir extends Tower {
         this.targets = [];
     }
 
-    tick_attack(deltaTime) {
+    tick_attack(deltaTime: number) {
         this.attack_count -= deltaTime;
 
         // see if we can attack right now

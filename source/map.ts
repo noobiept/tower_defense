@@ -379,20 +379,30 @@ export function mouseMoveEvents(event: createjs.MouseEvent) {
 
     if (isAvailable(column, line)) {
         if (GRID_HIGHLIGHT.shape !== GRID_HIGHLIGHT.available) {
-            GRID_HIGHLIGHT.not_available.visible = false;
-            GRID_HIGHLIGHT.available.visible = true;
+            if (GRID_HIGHLIGHT.not_available) {
+                GRID_HIGHLIGHT.not_available.visible = false;
+            }
+            if (GRID_HIGHLIGHT.available) {
+                GRID_HIGHLIGHT.available.visible = true;
+            }
             GRID_HIGHLIGHT.shape = GRID_HIGHLIGHT.available;
         }
     } else {
         if (GRID_HIGHLIGHT.shape !== GRID_HIGHLIGHT.not_available) {
-            GRID_HIGHLIGHT.not_available.visible = true;
-            GRID_HIGHLIGHT.available.visible = false;
+            if (GRID_HIGHLIGHT.not_available) {
+                GRID_HIGHLIGHT.not_available.visible = true;
+            }
+            if (GRID_HIGHLIGHT.available) {
+                GRID_HIGHLIGHT.available.visible = false;
+            }
             GRID_HIGHLIGHT.shape = GRID_HIGHLIGHT.not_available;
         }
     }
 
-    GRID_HIGHLIGHT.shape.x = STARTING_X + column * SQUARE_SIZE;
-    GRID_HIGHLIGHT.shape.y = STARTING_Y + line * SQUARE_SIZE;
+    if (GRID_HIGHLIGHT.shape) {
+        GRID_HIGHLIGHT.shape.x = STARTING_X + column * SQUARE_SIZE;
+        GRID_HIGHLIGHT.shape.y = STARTING_Y + line * SQUARE_SIZE;
+    }
 }
 
 export function getHighlightSquare() {
@@ -403,7 +413,7 @@ export function getHighlightSquare() {
     Checks if its possible to add a tower in this position (tower occupies 2x2 squares)
  */
 
-function isAvailable(column, line) {
+function isAvailable(column: number, line: number) {
     // check for the limits of the map
     if (
         column < 0 ||
@@ -430,7 +440,11 @@ function isAvailable(column, line) {
 /**
  * Get a list of passable/available positions, around a given position.
  */
-export function getAvailablePositions(centerColumn, centerLine, range) {
+export function getAvailablePositions(
+    centerColumn: number,
+    centerLine: number,
+    range: number
+) {
     let startColumn = centerColumn - range;
     let startLine = centerLine - range;
 
@@ -529,7 +543,7 @@ export function addTower(
     towerKey: TowerKey,
     column: number,
     line: number,
-    onSell: (cost) => void,
+    onSell: (cost: number) => void,
     onRemove: (tower: Tower) => void,
     onUpgrade: (tower: Tower) => void
 ) {
@@ -605,7 +619,11 @@ export function removeTower(tower: Tower) {
 /**
  * Check if its possible to reach the destination from a given column/line position.
  */
-function canReachDestination(path, column, line) {
+function canReachDestination(
+    path: MapPosition[][],
+    column: number,
+    line: number
+) {
     while (true) {
         const next = path[line][column];
 

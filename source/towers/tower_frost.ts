@@ -1,8 +1,7 @@
-import { Tower, TowerStats } from "./tower";
+import { Unit } from "../units/unit";
+import { Tower, TowerArgs } from "./tower";
 
-export type TowerFrostStats = TowerStats & {
-    slow: number;
-};
+export type TowerFrostStats = typeof TowerFrost.stats[number];
 
 export class TowerFrost extends Tower<TowerFrostStats> {
     static stats = [
@@ -37,7 +36,7 @@ export class TowerFrost extends Tower<TowerFrostStats> {
         },
     ];
 
-    constructor(args) {
+    constructor(args: TowerArgs<TowerFrostStats>) {
         super({
             ...args,
             name: "frost tower",
@@ -48,7 +47,7 @@ export class TowerFrost extends Tower<TowerFrostStats> {
         });
     }
 
-    onBulletHit(target) {
+    onBulletHit(target: Unit) {
         const currentLevel = this.stats[this.upgrade_level];
         const slow = currentLevel.slow;
         const attackRadius = currentLevel.attack_radius;
