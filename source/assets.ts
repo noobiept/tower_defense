@@ -1,46 +1,48 @@
-let PRELOAD: createjs.LoadQueue;
+import { Preload } from "@drk4/utilities";
+
+const PRELOAD = new Preload();
 
 const BASE_URL = "";
 const MANIFEST = [
-    { id: "easy", src: BASE_URL + "maps/easy.json" },
-    { id: "medium", src: BASE_URL + "maps/medium.json" },
-    { id: "hard", src: BASE_URL + "maps/hard.json" },
-    { id: "creep", src: BASE_URL + "images/creep.png" },
-    { id: "creep_slow", src: BASE_URL + "images/creep_slow.png" },
-    { id: "creep_group", src: BASE_URL + "images/creep_group.png" },
-    { id: "creep_fast", src: BASE_URL + "images/creep_fast.png" },
-    { id: "creep_fast_slow", src: BASE_URL + "images/creep_fast_slow.png" },
-    { id: "creep_fly", src: BASE_URL + "images/creep_fly.png" },
-    { id: "creep_fly_slow", src: BASE_URL + "images/creep_fly_slow.png" },
-    { id: "creep_spawn", src: BASE_URL + "images/creep_spawn.png" },
+    { id: "easy", path: BASE_URL + "maps/easy.json" },
+    { id: "medium", path: BASE_URL + "maps/medium.json" },
+    { id: "hard", path: BASE_URL + "maps/hard.json" },
+    { id: "creep", path: BASE_URL + "images/creep.png" },
+    { id: "creep_slow", path: BASE_URL + "images/creep_slow.png" },
+    { id: "creep_group", path: BASE_URL + "images/creep_group.png" },
+    { id: "creep_fast", path: BASE_URL + "images/creep_fast.png" },
+    { id: "creep_fast_slow", path: BASE_URL + "images/creep_fast_slow.png" },
+    { id: "creep_fly", path: BASE_URL + "images/creep_fly.png" },
+    { id: "creep_fly_slow", path: BASE_URL + "images/creep_fly_slow.png" },
+    { id: "creep_spawn", path: BASE_URL + "images/creep_spawn.png" },
     {
         id: "creep_spawn_slow",
-        src: BASE_URL + "images/creep_spawn_slow.png",
+        path: BASE_URL + "images/creep_spawn_slow.png",
     },
-    { id: "creep_spawned", src: BASE_URL + "images/creep_spawned.png" },
+    { id: "creep_spawned", path: BASE_URL + "images/creep_spawned.png" },
     {
         id: "creep_spawned_slow",
-        src: BASE_URL + "images/creep_spawned_slow.png",
+        path: BASE_URL + "images/creep_spawned_slow.png",
     },
-    { id: "creep_immune", src: BASE_URL + "images/creep_immune.png" },
-    { id: "tower_base0", src: BASE_URL + "images/tower_base0.png" },
-    { id: "tower_base1", src: BASE_URL + "images/tower_base1.png" },
-    { id: "tower_base2", src: BASE_URL + "images/tower_base2.png" },
-    { id: "tower_basic", src: BASE_URL + "images/tower_basic.png" },
-    { id: "tower_fast", src: BASE_URL + "images/tower_fast.png" },
-    { id: "tower_rocket", src: BASE_URL + "images/tower_rocket.png" },
-    { id: "tower_frost", src: BASE_URL + "images/tower_frost.png" },
-    { id: "tower_anti_air", src: BASE_URL + "images/tower_anti_air.png" },
-    { id: "tower_bash", src: BASE_URL + "images/tower_bash.png" },
+    { id: "creep_immune", path: BASE_URL + "images/creep_immune.png" },
+    { id: "tower_base0", path: BASE_URL + "images/tower_base0.png" },
+    { id: "tower_base1", path: BASE_URL + "images/tower_base1.png" },
+    { id: "tower_base2", path: BASE_URL + "images/tower_base2.png" },
+    { id: "tower_basic", path: BASE_URL + "images/tower_basic.png" },
+    { id: "tower_fast", path: BASE_URL + "images/tower_fast.png" },
+    { id: "tower_rocket", path: BASE_URL + "images/tower_rocket.png" },
+    { id: "tower_frost", path: BASE_URL + "images/tower_frost.png" },
+    { id: "tower_anti_air", path: BASE_URL + "images/tower_anti_air.png" },
+    { id: "tower_bash", path: BASE_URL + "images/tower_bash.png" },
     {
         id: "tower_bash_attack",
-        src: BASE_URL + "images/tower_bash_attack.png",
+        path: BASE_URL + "images/tower_bash_attack.png",
     },
-    { id: "bullet", src: BASE_URL + "images/bullet.png" },
-    { id: "highlight", src: BASE_URL + "images/highlight.png" },
+    { id: "bullet", path: BASE_URL + "images/bullet.png" },
+    { id: "highlight", path: BASE_URL + "images/highlight.png" },
     {
         id: "highlight_not_available",
-        src: BASE_URL + "images/highlight_not_available.png",
+        path: BASE_URL + "images/highlight_not_available.png",
     },
 ];
 
@@ -50,15 +52,11 @@ interface PreloadAssetsArgs {
 }
 
 export function preloadAssets(args: PreloadAssetsArgs) {
-    PRELOAD = new createjs.LoadQueue();
-
-    PRELOAD.addEventListener("progress", (event) => {
-        args.onProgress(((event as createjs.ProgressEvent).progress * 100) | 0);
-    });
+    PRELOAD.addEventListener("progress", args.onProgress);
     PRELOAD.addEventListener("complete", args.onComplete);
-    PRELOAD.loadManifest(MANIFEST, true);
+    PRELOAD.loadManifest(MANIFEST);
 }
 
 export function getAsset(id: string) {
-    return PRELOAD.getResult(id);
+    return PRELOAD.get(id);
 }

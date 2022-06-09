@@ -7,7 +7,6 @@
     "devDependencies": {
         "@types/easeljs": "^1.0.1",
         "@types/jquery": "^3.5.14",
-        "@types/preloadjs": "^0.6.32",
         "@typescript-eslint/eslint-plugin": "^5.27.0",
         "@typescript-eslint/parser": "^5.27.0",
         "circular-dependency-plugin": "^5.2.2",
