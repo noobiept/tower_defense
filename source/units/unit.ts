@@ -165,7 +165,12 @@ export class Unit {
             Unit.ALL_AIR.push(this);
         }
 
+        this.setup(args);
         this.checkNextDestination();
+    }
+
+    setup(_: UnitArgs) {
+        // can be overridden to do some custom setup
     }
 
     setupShape() {

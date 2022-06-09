@@ -1,8 +1,8 @@
 import { Unit, UnitArgs } from "./unit";
 
 export class UnitFly extends Unit {
-    private final_column: number;
-    private final_line: number;
+    private final_column = 0;
+    private final_line = 0;
 
     constructor(args: UnitArgs) {
         super({
@@ -15,7 +15,9 @@ export class UnitFly extends Unit {
             is_ground_unit: false,
             movement_speed: 40,
         });
+    }
 
+    setup(args: UnitArgs): void {
         // air units fly directly to the destination
         this.final_column = args.destination_column;
         this.final_line = args.destination_line;

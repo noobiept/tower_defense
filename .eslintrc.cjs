@@ -10,5 +10,11 @@ module.exports = {
     rules: {
         "no-constant-condition": ["error", { checkLoops: false }],
         "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "warn",
+            {
+                argsIgnorePattern: "^_",
+            },
+        ],
     },
 };
