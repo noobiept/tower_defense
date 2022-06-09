@@ -7,7 +7,7 @@ export function init() {
     CANVAS = document.getElementById("MainCanvas") as HTMLCanvasElement;
     STAGE = new createjs.Stage(CANVAS);
 
-    createjs.Ticker.setFPS(60);
+    createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
     return {
         canvas: CANVAS,
