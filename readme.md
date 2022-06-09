@@ -40,11 +40,3 @@ Try it out here: [http://nbpt.eu/games/tower_defense/](http://nbpt.eu/games/towe
 
 -   `npm start`
 -   `npm run build`
-
-# Libraries
-
--   [http://jquery.com/](http://jquery.com/) -- 2.1
--   [http://createjs.com/](http://createjs.com/)
-    -   easeljs -- 0.7
-    -   preloadjs -- 0.4
--   [https://bitbucket.org/drk4/javascript_utilities](https://bitbucket.org/drk4/javascript_utilities) -- 1.8
