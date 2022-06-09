@@ -11,7 +11,7 @@ import { CanvasPosition, GridPosition } from "../types";
 
 let CONTAINER: createjs.Container; // createjs.Container() which will hold all the tower elements
 
-export interface TowerStats {
+interface TowerStats {
     damage: number;
     range: number;
     attack_speed: number;

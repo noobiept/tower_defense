@@ -1,6 +1,6 @@
 import { Tower, TowerArgs } from "./tower";
 
-export type TowerFastStats = typeof TowerFast.stats[number];
+type TowerFastStats = typeof TowerFast.stats[number];
 
 export class TowerFast extends Tower {
     static stats = [

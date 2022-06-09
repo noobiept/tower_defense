@@ -1,7 +1,7 @@
 import { Unit } from "../units/unit";
 import { Tower, TowerArgs } from "./tower";
 
-export type TowerFrostStats = typeof TowerFrost.stats[number];
+type TowerFrostStats = typeof TowerFrost.stats[number];
 
 export class TowerFrost extends Tower<TowerFrostStats> {
     static stats = [

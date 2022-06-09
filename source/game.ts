@@ -173,7 +173,7 @@ function quit() {
     Only then we'll call Game.end
     The reason is to fix a problem when the game end is triggered during the Unit.tick() loop (the units are cleared in Game.end(), but then the loop will try to continue..)
  */
-export function setEndFlag(victory: boolean) {
+function setEndFlag(victory: boolean) {
     // if the game is paused, we can safely end the game right away (it will most likely be a defeat)
     if (IS_PAUSED) {
         end(victory);
@@ -183,17 +183,13 @@ export function setEndFlag(victory: boolean) {
     GAME_END.victory = victory;
 }
 
-export function isPaused() {
-    return IS_PAUSED;
-}
-
 function updateGold(gold: number) {
     GOLD += gold;
 
     GameMenu.updateGold(GOLD);
 }
 
-export function haveEnoughGold(price: number) {
+function haveEnoughGold(price: number) {
     if (GOLD < price) {
         return false;
     }
@@ -201,7 +197,7 @@ export function haveEnoughGold(price: number) {
     return true;
 }
 
-export function updateLife(life: number) {
+function updateLife(life: number) {
     LIFE += life;
 
     if (LIFE <= 0) {
@@ -215,7 +211,7 @@ export function updateLife(life: number) {
     GameMenu.updateLife(LIFE);
 }
 
-export function updateScore(score: number) {
+function updateScore(score: number) {
     SCORE += score;
 
     GameMenu.updateScore(SCORE);
@@ -265,7 +261,7 @@ function keyUpEvents(event: KeyboardEvent) {
     }
 }
 
-export function upgradeSelection() {
+function upgradeSelection() {
     const selection = getSelection();
 
     if (selection) {
@@ -286,17 +282,13 @@ export function upgradeSelection() {
     }
 }
 
-export function sellSelection() {
+function sellSelection() {
     const selection = getSelection();
 
     if (selection) {
         selection.startSelling(BEFORE_FIRST_WAVE);
         GameMenu.updateMenuControls(selection);
     }
-}
-
-export function beforeFirstWave() {
-    return BEFORE_FIRST_WAVE;
 }
 
 function mouseEvents(event: MouseEvent) {
@@ -385,18 +377,18 @@ function calculateTowerRefund(cost: number) {
     return BEFORE_FIRST_WAVE ? cost : cost / 2;
 }
 
-export function clearSelection() {
+function clearSelection() {
     ELEMENT_SELECTED?.unselected();
     ELEMENT_SELECTED = null;
 
     GameMenu.hideTowerStats();
 }
 
-export function getSelection() {
+function getSelection() {
     return ELEMENT_SELECTED;
 }
 
-export function checkIfSelected(element: Tower | Unit) {
+function checkIfSelected(element: Tower | Unit) {
     if (element == ELEMENT_SELECTED) {
         return true;
     }
@@ -460,7 +452,7 @@ function end(victory: boolean) {
     updateStage();
 }
 
-export function forceNextWave() {
+function forceNextWave() {
     if (BEFORE_FIRST_WAVE) {
         pause();
         return;
@@ -489,7 +481,7 @@ export function forceNextWave() {
     If called without arguments, it starts the game if its the time before the first wave, or does the opposite of the current state if the game is already running
  */
 
-export function pause(paused?: boolean) {
+function pause(paused?: boolean) {
     // if its not provided, just change to the opposite of the current one
     if (typeof paused == "undefined" || !isBoolean(paused)) {
         if (BEFORE_FIRST_WAVE) {

@@ -22,7 +22,7 @@ export function load() {
     }
 }
 
-export function save() {
+function save() {
     saveObject("high_score", HIGH_SCORE);
 }
 
@@ -51,19 +51,10 @@ export function add(mapName: string, score: number) {
     save();
 }
 
-export function getAll() {
-    return HIGH_SCORE;
-}
-
 export function get(mapName: string) {
     if (typeof HIGH_SCORE[mapName] == "undefined") {
         return null;
     }
 
     return HIGH_SCORE[mapName];
-}
-
-export function removeAll() {
-    HIGH_SCORE = {};
-    localStorage.removeItem("high_score");
 }

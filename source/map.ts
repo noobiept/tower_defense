@@ -238,11 +238,7 @@ function updatePath() {
  *
  * Returns { column: number; line: number; }
  */
-export function findNextDestination(
-    column: number,
-    line: number,
-    laneId: number
-) {
+function findNextDestination(column: number, line: number, laneId: number) {
     return PATHS[laneId][line][column];
 }
 
@@ -274,7 +270,7 @@ function setPassableBox(
     Sets a single square
  */
 
-export function setImpassable(column: number, line: number) {
+function setImpassable(column: number, line: number) {
     MAP[line][column] = POSITION_TYPE.blocked;
 }
 
@@ -495,7 +491,7 @@ export function getPosition({ column, line }: GridPosition) {
  * Gets all units in an area (only ground / only air / both, depending on the tower).
  * Can limit the amount of units it looks for.
  */
-export function getUnitsInRange(
+function getUnitsInRange(
     x: number,
     y: number,
     radius: number,
@@ -611,7 +607,7 @@ export function addTower(
 /**
  * Remove a tower from the map, and update the pathing of the units.
  */
-export function removeTower(tower: Tower) {
+function removeTower(tower: Tower) {
     setPassableBox(tower.position.column, tower.position.line, 2);
     updatePath();
 }

@@ -1,9 +1,8 @@
 import { Tower, TowerArgs } from "./tower";
 import { getAsset } from "../assets";
 import { circleCircleCollision, getRandomInt } from "@drk4/utilities";
-import { CanvasPosition } from "../types";
 
-export type TowerBashStats = typeof TowerBash.stats[number];
+type TowerBashStats = typeof TowerBash.stats[number];
 
 export class TowerBash extends Tower<TowerBashStats> {
     static stats = [

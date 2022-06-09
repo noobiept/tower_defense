@@ -6,7 +6,7 @@ import { UnitGroup } from "./unit_group";
 import { UnitImmune } from "./unit_immune";
 import { UnitSpawn } from "./unit_spawn";
 
-export interface CreateUnitArgs {
+interface CreateUnitArgs {
     column: number;
     line: number;
     wave: Wave;

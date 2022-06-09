@@ -2,7 +2,7 @@ import { getCanvasCenterPosition } from "./canvas";
 
 let CONTAINER: createjs.Container; // createjs.Container() which will hold all the text elements
 
-export interface MessageArgs {
+interface MessageArgs {
     text: string;
     fontSize?: number; // size in pixels
     fillColor?: string; // any css valid color

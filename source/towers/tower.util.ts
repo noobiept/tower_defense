@@ -7,7 +7,7 @@ import { TowerFast } from "./tower_fast";
 import { TowerFrost } from "./tower_frost";
 import { TowerRocket } from "./tower_rocket";
 
-export interface CreateTowerArgs {
+interface CreateTowerArgs {
     type: TowerKey;
     gridPosition: GridPosition;
     canvasPosition: CanvasPosition;

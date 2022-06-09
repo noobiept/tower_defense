@@ -44,7 +44,7 @@ const MANIFEST = [
     },
 ];
 
-export interface PreloadAssetsArgs {
+interface PreloadAssetsArgs {
     onProgress: (progress: number) => void;
     onComplete: () => void;
 }

@@ -1,6 +1,6 @@
 let CONTAINER: HTMLElement;
 
-export interface TooltipArgs {
+interface TooltipArgs {
     text: string;
     reference: HTMLElement;
     enableEvents?: boolean;

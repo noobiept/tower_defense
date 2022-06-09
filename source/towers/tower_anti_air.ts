@@ -3,7 +3,7 @@ import { Unit } from "../units/unit";
 import { Bullet } from "../bullet";
 import { circleCircleCollision, circlePointCollision } from "@drk4/utilities";
 
-export type TowerAntiAirStats = typeof TowerAntiAir.stats[number];
+type TowerAntiAirStats = typeof TowerAntiAir.stats[number];
 
 export class TowerAntiAir extends Tower {
     static stats = [

@@ -54,7 +54,7 @@ let TOWER_INFO: {
 };
 let CALCULATE_TOWER_REFUND: (cost: number) => number;
 
-export interface GameMenuInitArgs {
+interface GameMenuInitArgs {
     pause: () => void;
     forceNextWave: () => void;
     quit: () => void;

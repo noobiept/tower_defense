@@ -9,7 +9,7 @@ import {
 
 let CONTAINER: createjs.Container; // createjs.Container() which will hold all the bullet elements
 
-export interface BulletArgs {
+interface BulletArgs {
     shooter: Tower;
     target: Unit;
 }

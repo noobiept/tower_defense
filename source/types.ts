@@ -48,7 +48,7 @@ export interface MapUnitData {
     spawnInterval: number;
 }
 
-export interface MapObstaclesData {
+interface MapObstaclesData {
     startColumn: number;
     startLine: number;
     columnLength: number;

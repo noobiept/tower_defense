@@ -60,11 +60,11 @@ export function open() {
     $(MAIN_MENU).css("left", left + "px");
 }
 
-export function close() {
+function close() {
     $(MAIN_MENU).css("display", "none");
 }
 
-export function openHighScore() {
+function openHighScore() {
     close();
 
     const easy = HighScore.get("easy");

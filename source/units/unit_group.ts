@@ -2,7 +2,7 @@ import { getRandomInt } from "@drk4/utilities";
 import { Lane } from "../types";
 import { Unit, UnitArgs } from "./unit";
 
-export interface UnitGroupArgs extends UnitArgs {
+interface UnitGroupArgs extends UnitArgs {
     lane: Lane;
     howMany: number;
 }

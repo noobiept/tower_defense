@@ -3,7 +3,7 @@ import { getRandomInt } from "@drk4/utilities";
 import { CanvasPosition, GridPosition } from "../types";
 import { Tower } from "../towers/tower";
 
-export interface UnitSpawnArgs extends UnitArgs {
+interface UnitSpawnArgs extends UnitArgs {
     canvasToGrid: (position: CanvasPosition) => GridPosition;
     getAvailablePositions: (
         column: number,
