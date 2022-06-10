@@ -83,7 +83,7 @@ export class Message {
         stroke.textAlign = "center";
         stroke.x = args.x;
         stroke.y = args.y;
-        stroke.outline = fontSize / 5;
+        stroke.outline = Math.floor(fontSize / 5);
 
         const fill = stroke.clone();
 

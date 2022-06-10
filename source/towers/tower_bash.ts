@@ -61,7 +61,7 @@ export class TowerBash extends Tower<TowerBashStats> {
         this.stun = 1;
 
         // have the attack animation depend on the attack speed
-        this.attack_animation_interval = this.attack_interval / 4;
+        this.attack_animation_interval = Math.floor(this.attack_interval / 4);
         this.attack_animation_alpha_step = 1 / this.attack_animation_interval;
 
         this.extraSetupShape();
@@ -99,7 +99,7 @@ export class TowerBash extends Tower<TowerBashStats> {
         super.upgrade();
 
         // the attack speed may have changed in the upgrade, so need to update this as well
-        this.attack_animation_interval = this.attack_interval / 4;
+        this.attack_animation_interval = Math.floor(this.attack_interval / 4);
 
         const scale = (this.width + this.range) / this.attack_animation_length; // scale the image according to the tower's range
 
