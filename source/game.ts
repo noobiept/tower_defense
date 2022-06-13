@@ -7,16 +7,9 @@ import { Unit } from "./units/unit";
 import { Tooltip } from "./tooltip";
 import { Message } from "./message";
 import * as HighScore from "./high_score";
+import * as Canvas from "./canvas";
 import { createUnit, UnitKey } from "./units/unit.util";
 import { getAsset } from "./assets";
-import {
-    addCanvasEventListener,
-    addStageEventListener,
-    getCanvasBoundingClientRect,
-    removeCanvasEventListener,
-    removeStageEventListener,
-    updateStage,
-} from "./canvas";
 import { MapData, Wave, MapUnitData, Lane } from "./types";
 import { getTowerInitialCost } from "./towers/tower.util";
 
@@ -144,7 +137,7 @@ export function start(map: string) {
     // init the game
     Map.build(mapInfo);
 
-    $("#MainCanvas").css("display", "block");
+    Canvas.show();
     GameMenu.show();
 
     updateGold(200);
@@ -155,13 +148,13 @@ export function start(map: string) {
 
     // set the events
     EVENTS.tick = createjs.Ticker.on("tick", tick as () => void) as () => void;
-    EVENTS.mouseMove = addStageEventListener(
+    EVENTS.mouseMove = Canvas.addStageEventListener(
         "stagemousemove",
         Map.mouseMoveEvents as () => void
     ) as () => void;
 
     window.addEventListener("keyup", keyUpEvents);
-    addCanvasEventListener("mouseup", mouseEvents as (e: Event) => void);
+    Canvas.addCanvasEventListener("mouseup", mouseEvents as (e: Event) => void);
 }
 
 function quit() {
@@ -296,7 +289,7 @@ function mouseEvents(event: MouseEvent) {
         return;
     }
 
-    const canvasRect = getCanvasBoundingClientRect();
+    const canvasRect = Canvas.getCanvasBoundingClientRect();
     const button = event.button;
     const x = event.clientX - canvasRect.left;
     const y = event.clientY - canvasRect.top;
@@ -401,11 +394,14 @@ function clear() {
         createjs.Ticker.off("tick", EVENTS.tick);
     }
     if (EVENTS.mouseMove) {
-        removeStageEventListener("stagemousemove", EVENTS.mouseMove);
+        Canvas.removeStageEventListener("stagemousemove", EVENTS.mouseMove);
     }
 
     window.removeEventListener("keyup", keyUpEvents);
-    removeCanvasEventListener("mouseup", mouseEvents as (e: Event) => void);
+    Canvas.removeCanvasEventListener(
+        "mouseup",
+        mouseEvents as (e: Event) => void
+    );
 
     Unit.removeAll();
     Tower.removeAll();
@@ -443,13 +439,14 @@ function end(victory: boolean) {
         text: message,
         fontSize: 30,
         onEnd: function () {
-            updateStage();
+            Canvas.updateStage();
+            Canvas.hide();
             ON_QUIT();
         },
         timeout: 2000,
     });
 
-    updateStage();
+    Canvas.updateStage();
 }
 
 function forceNextWave() {
@@ -516,7 +513,7 @@ function onUnitKilled(unit: Unit) {
 
 function tick(event: createjs.TickerEvent) {
     if (IS_PAUSED) {
-        updateStage();
+        Canvas.updateStage();
         return;
     }
 
@@ -626,5 +623,5 @@ function tick(event: createjs.TickerEvent) {
         end(GAME_END.victory);
     }
 
-    updateStage();
+    Canvas.updateStage();
 }

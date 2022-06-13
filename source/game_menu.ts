@@ -177,11 +177,13 @@ export function init(args: GameMenuInitArgs) {
 }
 
 export function show() {
-    $("#GameMenu").css("display", "flex");
+    const gameMenu = document.getElementById("GameMenu")!;
+    gameMenu.classList.remove("hidden");
 }
 
 export function hide() {
-    $("#GameMenu").css("display", "none");
+    const gameMenu = document.getElementById("GameMenu")!;
+    gameMenu.classList.add("hidden");
 }
 
 export function pause(isPaused: boolean) {

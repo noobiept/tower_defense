@@ -17,19 +17,11 @@ export function init() {
 
 export function adjustCanvasDimensions(width: number, height: number) {
     // set the canvas width/height
-    const windowWidth = $(window).outerWidth()!;
     const windowHeight = $(window).outerHeight()!;
-    let canvasWidth, canvasHeight;
+    let canvasHeight;
     const padding = 10;
-    const mapWidth = width + padding;
+    const canvasWidth = width + padding;
     const mapHeight = height + padding;
-
-    // we try to occupy the whole window's dimension, if the map's width/height fits there, otherwise just set the canvas width/height to the same as the map
-    if (mapWidth < windowWidth) {
-        canvasWidth = windowWidth;
-    } else {
-        canvasWidth = mapWidth;
-    }
 
     if (mapHeight < windowHeight - GAME_MENU_HEIGHT) {
         canvasHeight = windowHeight - GAME_MENU_HEIGHT;
@@ -84,4 +76,12 @@ export function removeCanvasEventListener(
 
 export function getCanvasBoundingClientRect() {
     return CANVAS.getBoundingClientRect();
+}
+
+export function show() {
+    CANVAS.classList.remove("hidden");
+}
+
+export function hide() {
+    CANVAS.classList.add("hidden");
 }

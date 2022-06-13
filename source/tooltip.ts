@@ -13,6 +13,7 @@ export class Tooltip {
         const container = document.createElement("div");
 
         container.id = "TooltipContainer";
+        container.classList.add("hidden");
         document.body.appendChild(container);
 
         CONTAINER = container;
@@ -89,13 +90,12 @@ export class Tooltip {
         $(element).css("top", top + "px");
         $(element).css("left", left + "px");
 
-        $(element).addClass("tooltip-show");
+        element.classList.remove("hidden");
     }
 
     hide() {
         this.is_opened = false;
-
-        $(this.element).removeClass("tooltip-show");
+        this.element.classList.add("hidden");
     }
 
     isOpened() {

@@ -36,7 +36,7 @@ export function init() {
     const back = document.getElementById("HighScore-back")!;
 
     back.onclick = function () {
-        $(HIGH_SCORE).css("display", "none");
+        HIGH_SCORE.classList.add("hidden");
         $(TBODY).empty();
 
         open();
@@ -44,24 +44,11 @@ export function init() {
 }
 
 export function open() {
-    $("#MainCanvas").css("display", "none");
-    $(MAIN_MENU).css("display", "block");
-
-    const menuWidth = $(MAIN_MENU).outerWidth()!;
-    const menuHeight = $(MAIN_MENU).outerHeight()!;
-
-    const windowWidth = $(window).outerWidth()!;
-    const windowHeight = $(window).outerHeight()!;
-
-    const top = windowHeight / 2 - menuHeight / 2;
-    const left = windowWidth / 2 - menuWidth / 2;
-
-    $(MAIN_MENU).css("top", top + "px");
-    $(MAIN_MENU).css("left", left + "px");
+    MAIN_MENU.classList.remove("hidden");
 }
 
 function close() {
-    $(MAIN_MENU).css("display", "none");
+    MAIN_MENU.classList.add("hidden");
 }
 
 function openHighScore() {
@@ -97,17 +84,5 @@ function openHighScore() {
         TBODY.appendChild(tableRow);
     }
 
-    $(HIGH_SCORE).css("display", "block");
-
-    const menuWidth = $(HIGH_SCORE).outerWidth()!;
-    const menuHeight = $(HIGH_SCORE).outerHeight()!;
-
-    const windowWidth = $(window).outerWidth()!;
-    const windowHeight = $(window).outerHeight()!;
-
-    const top = windowHeight / 2 - menuHeight / 2;
-    const left = windowWidth / 2 - menuWidth / 2;
-
-    $(HIGH_SCORE).css("top", top + "px");
-    $(HIGH_SCORE).css("left", left + "px");
+    HIGH_SCORE.classList.remove("hidden");
 }
