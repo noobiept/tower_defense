@@ -388,8 +388,10 @@ export class Unit {
                     text: "+" + this.gold,
                     strokeColor: "419C1C",
                     fillColor: "white",
-                    x: this.getX(),
-                    y: this.getY() - this.height,
+                    position: {
+                        x: this.getX(),
+                        y: this.getY() - this.height,
+                    },
                 });
 
                 this.onUnitKilled(this);

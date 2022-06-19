@@ -35,6 +35,10 @@ export function getCanvasCenterPosition() {
     };
 }
 
+export function getCanvasHeight() {
+    return CANVAS.height;
+}
+
 export function updateStage() {
     STAGE.update();
 }

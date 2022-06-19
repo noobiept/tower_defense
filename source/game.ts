@@ -277,7 +277,10 @@ function upgradeSelection() {
         const upgradeCost = selection.getUpgradeCost();
 
         if (!haveEnoughGold(upgradeCost)) {
-            GameMenu.showMessage("Not enough gold.");
+            new Message({
+                text: "Not enough gold.",
+                position: "bottom",
+            });
             return;
         }
 
@@ -286,7 +289,10 @@ function upgradeSelection() {
             updateGold(-upgradeCost);
             GameMenu.updateMenuControls(selection);
         } else if (upgraded.message) {
-            GameMenu.showMessage(upgraded.message);
+            new Message({
+                text: upgraded.message,
+                position: "bottom",
+            });
         }
     }
 }
@@ -337,7 +343,10 @@ function mouseEvents(event: MouseEvent) {
 
         // see if we can afford a tower
         if (!haveEnoughGold(initialCost)) {
-            GameMenu.showMessage("Not enough gold.");
+            new Message({
+                text: "Not enough gold.",
+                position: "bottom",
+            });
             return;
         }
 

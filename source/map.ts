@@ -1,6 +1,5 @@
 import { breadthFirstSearch } from "./path_finding";
 import { Unit } from "./units/unit";
-import * as GameMenu from "./game_menu";
 import { getAsset } from "./assets";
 import { circlePointCollision, getRandomInt } from "@drk4/utilities";
 import * as Canvas from "./canvas";
@@ -13,6 +12,7 @@ import {
 } from "./types";
 import { Tower } from "./towers/tower";
 import { createTower, TowerKey } from "./towers/tower.util";
+import { Message } from "./message";
 
 interface AddObstacleArgs {
     passable?: boolean;
@@ -566,7 +566,10 @@ export function addTower(
             );
 
             if (canReach === false) {
-                GameMenu.showMessage("Can't block the unit's path.");
+                new Message({
+                    text: "Can't block the unit's path.",
+                    position: "bottom",
+                });
 
                 // reset the position
                 setPassableBox(column, line, 2);

@@ -1,4 +1,3 @@
-import { Timeout } from "@drk4/utilities";
 import { Tower } from "./towers/tower";
 import { Tooltip } from "./tooltip";
 import { getTowerInitialCost, TowerKey } from "./towers/tower.util";
@@ -31,8 +30,6 @@ let CURRENT_GOLD: HTMLElement;
 let CURRENT_LIFE: HTMLElement;
 let CURRENT_SCORE: HTMLElement;
 let WAVE_LIST: HTMLElementWithTooltip[] = [];
-let MESSAGE: HTMLElement;
-let MESSAGE_TIMEOUT: Timeout;
 
 let SELECTED_TOWER: TowerType;
 const TOWERS: TowerType[] = TOWERS_LIST.map((tower, index) => ({
@@ -104,10 +101,6 @@ export function init(args: GameMenuInitArgs) {
             reference: WAVE_LIST[a],
         });
     }
-
-    // game menu's message
-    MESSAGE = document.querySelector("#Message")!;
-    MESSAGE_TIMEOUT = new Timeout();
 
     // tower selector
     const basicTower = menu.querySelector("#basicTower") as HTMLElement;
@@ -213,15 +206,6 @@ export function selectTower(position: number) {
 
     SELECTED_TOWER = TOWERS[position];
     $(SELECTED_TOWER.htmlElement!).addClass("selectedTower");
-}
-
-export function showMessage(message: string) {
-    $(MESSAGE).css("visibility", "visible");
-    $(MESSAGE).text(message);
-
-    MESSAGE_TIMEOUT.start(function () {
-        $(MESSAGE).css("visibility", "hidden");
-    }, 1000);
 }
 
 export function updateGold(gold: number) {

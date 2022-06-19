@@ -54,7 +54,6 @@ body {
 /* Game Menu */
 
 #GameMenu {
-    position: relative;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -92,14 +91,6 @@ body {
 
 .button:hover {
     background-color: #e8e8ca;
-}
-
-#Message {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    visibility: hidden;
-    color: blue;
 }
 
 .selectedTower,

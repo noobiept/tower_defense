@@ -1,6 +1,9 @@
-import { getCanvasCenterPosition } from "./canvas";
+import { getCanvasCenterPosition, getCanvasHeight } from "./canvas";
+import { CanvasPosition } from "./types";
 
 let CONTAINER: createjs.Container; // createjs.Container() which will hold all the text elements
+
+type MessagePosition = "center" | "bottom" | { x: number; y: number };
 
 interface MessageArgs {
     text: string;
@@ -8,8 +11,7 @@ interface MessageArgs {
     fillColor?: string; // any css valid color
     strokeColor?: string; // any css valid color
     timeout?: number; // time until the message is removed
-    x?: number; // x position (if not given, then its centered)
-    y?: number; // y position (like x, centered in middle of canvas if not given)
+    position?: MessagePosition; // if not given then its centered in the middle of the canvas
     onEnd?: () => void;
 }
 
@@ -63,17 +65,11 @@ export class Message {
             args.timeout = 1000;
         }
 
-        // center in the middle of the canvas
-        const center = getCanvasCenterPosition();
-
-        if (typeof args.x == "undefined") {
-            args.x = center.x;
+        if (typeof args.position == "undefined") {
+            args.position = "center";
         }
 
-        if (typeof args.y == "undefined") {
-            args.y = center.y;
-        }
-
+        const { x, y } = this.getCanvasPosition(args.position, fontSize);
         const stroke = new createjs.Text(
             args.text,
             fontSize + "px monospace",
@@ -81,8 +77,8 @@ export class Message {
         );
 
         stroke.textAlign = "center";
-        stroke.x = args.x;
-        stroke.y = args.y;
+        stroke.x = x;
+        stroke.y = y;
         stroke.outline = Math.floor(fontSize / 5);
 
         const fill = stroke.clone();
@@ -90,8 +86,8 @@ export class Message {
         fill.outline = 0;
         fill.color = fillColor;
         fill.textAlign = "center";
-        fill.x = args.x;
-        fill.y = args.y;
+        fill.x = x;
+        fill.y = y;
 
         CONTAINER.addChild(stroke);
         CONTAINER.addChild(fill);
@@ -108,6 +104,27 @@ export class Message {
         }, args.timeout);
 
         Message.ALL.push(this);
+    }
+
+    getCanvasPosition(
+        position: MessagePosition,
+        fontSize: number
+    ): CanvasPosition {
+        if (position === "center") {
+            return getCanvasCenterPosition();
+        }
+
+        if (position === "bottom") {
+            const center = getCanvasCenterPosition();
+            const height = getCanvasHeight();
+
+            return {
+                x: center.x,
+                y: height - fontSize,
+            };
+        }
+
+        return position;
     }
 
     remove() {
