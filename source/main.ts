@@ -33,18 +33,12 @@ window.onload = function () {
 
     const loadMessage = document.getElementById("LoadMessage")!;
 
-    const left = $(window).width()! / 2;
-    const top = $(window).height()! / 2;
-
-    $(loadMessage).css("top", top + "px");
-    $(loadMessage).css("left", left + "px");
-
     preloadAssets({
         onProgress: (progress) => {
             $(loadMessage).text(progress + "%");
         },
         onComplete: () => {
-            $(loadMessage).css("display", "none");
+            loadMessage.classList.add("hidden");
             MainMenu.open();
         },
     });

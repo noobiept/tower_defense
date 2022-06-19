@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="css/style.css" />
     </head>
     <body>
-        <canvas id="MainCanvas" class="hidden"></canvas>
+        <div id="LoadMessage"></div>
 
         <div id="MainMenu" class="hidden">
             <div id="MainMenu-easy" class="button">Easy</div>
@@ -42,55 +42,60 @@
             <div id="HighScore-back" class="button">Back</div>
         </div>
 
-        <div id="Message">&nbsp;</div>
+        <div id="Game" class="hidden">
+            <div id="MainCanvasContainer">
+                <canvas id="MainCanvas"></canvas>
+            </div>
 
-        <div id="GameMenu" class="hidden">
-            <div class="MenuBlock">
-                <div id="startPause" class="button">Resume</div>
-                <div class="timeUntilNextWave button">
-                    Next wave in: <span>0</span>s
+            <div id="GameMenu">
+                <div id="Message">&nbsp;</div>
+                <div class="MenuBlock">
+                    <div id="startPause" class="button">Resume</div>
+                    <div class="timeUntilNextWave button">
+                        Next wave in: <span>0</span>s
+                    </div>
+                    <div id="quit" class="button">Quit</div>
                 </div>
-                <div id="quit" class="button">Quit</div>
-            </div>
 
-            <div id="GameMenu-info" class="MenuBlock">
-                <div class="currentGold">Gold: <span></span></div>
-                <div class="currentLife">Lives: <span></span></div>
-                <div class="currentScore">Score: <span></span></div>
-            </div>
-            <div id="GameMenu-waveList" class="MenuBlock">
-                <div id="current" class="wave"></div>
-                <div class="wave"></div>
-                <div class="wave"></div>
-            </div>
+                <div id="GameMenu-info" class="MenuBlock">
+                    <div class="currentGold">Gold: <span></span></div>
+                    <div class="currentLife">Lives: <span></span></div>
+                    <div class="currentScore">Score: <span></span></div>
+                </div>
+                <div id="GameMenu-waveList" class="MenuBlock">
+                    <div id="current" class="wave"></div>
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                </div>
 
-            <div class="MenuBlock">
-                <div id="basicTower" class="button">Basic</div>
-                <div id="fastTower" class="button">Fast</div>
-                <div id="rocketTower" class="button">Rocket</div>
-            </div>
-            <div class="MenuBlock">
-                <div id="frostTower" class="button">Frost</div>
-                <div id="antiAirTower" class="button">Anti-air</div>
-                <div id="bashTower" class="button">Bash</div>
-            </div>
-
-            <div id="GameMenu-TowerInfo" class="hidden">
-                <div class="MenuBlock" id="GameMenu-TowerStats">
-                    <div class="name">name: <span></span></div>
-                    <div class="damage">damage: <span></span></div>
-                    <div class="range">range: <span></span></div>
-                    <div class="attack_speed">attack speed: <span></span></div>
+                <div class="MenuBlock">
+                    <div id="basicTower" class="button">Basic</div>
+                    <div id="fastTower" class="button">Fast</div>
+                    <div id="rocketTower" class="button">Rocket</div>
                 </div>
                 <div class="MenuBlock">
-                    <div class="button" id="GameMenu-Upgrade">Upgrade</div>
-                    <div class="button" id="GameMenu-Sell">Sell</div>
-                    <div class="upgradeMessage">Upgrading..</div>
-                    <div class="sellMessage">Selling..</div>
+                    <div id="frostTower" class="button">Frost</div>
+                    <div id="antiAirTower" class="button">Anti-air</div>
+                    <div id="bashTower" class="button">Bash</div>
+                </div>
+
+                <div id="GameMenu-TowerInfo" class="hidden">
+                    <div class="MenuBlock" id="GameMenu-TowerStats">
+                        <div class="name">name: <span></span></div>
+                        <div class="damage">damage: <span></span></div>
+                        <div class="range">range: <span></span></div>
+                        <div class="attack_speed">
+                            attack speed: <span></span>
+                        </div>
+                    </div>
+                    <div class="MenuBlock">
+                        <div class="button" id="GameMenu-Upgrade">Upgrade</div>
+                        <div class="button" id="GameMenu-Sell">Sell</div>
+                        <div class="upgradeMessage">Upgrading..</div>
+                        <div class="sellMessage">Selling..</div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div id="LoadMessage"></div>
     </body>
 </html>

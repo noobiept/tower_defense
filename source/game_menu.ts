@@ -286,7 +286,7 @@ export function getSelectedTower() {
 }
 
 export function showTowerStats(tower: Tower) {
-    $(TOWER_INFO.container).css("display", "flex");
+    TOWER_INFO.container.classList.remove("hidden");
 
     updateTowerStats(tower, false);
 
@@ -298,7 +298,7 @@ export function showTowerStats(tower: Tower) {
  * Hide the tower stats html element.
  */
 export function hideTowerStats() {
-    $(TOWER_INFO.container).css("display", "none");
+    TOWER_INFO.container.classList.add("hidden");
 }
 
 /**

@@ -1,5 +1,3 @@
-const GAME_MENU_HEIGHT = 120;
-
 let CANVAS: HTMLCanvasElement;
 let STAGE: createjs.Stage;
 
@@ -17,17 +15,9 @@ export function init() {
 
 export function adjustCanvasDimensions(width: number, height: number) {
     // set the canvas width/height
-    const windowHeight = $(window).outerHeight()!;
-    let canvasHeight;
-    const padding = 10;
+    const padding = 70;
     const canvasWidth = width + padding;
-    const mapHeight = height + padding;
-
-    if (mapHeight < windowHeight - GAME_MENU_HEIGHT) {
-        canvasHeight = windowHeight - GAME_MENU_HEIGHT;
-    } else {
-        canvasHeight = mapHeight;
-    }
+    const canvasHeight = height + padding;
 
     CANVAS.width = canvasWidth;
     CANVAS.height = canvasHeight;
@@ -76,12 +66,4 @@ export function removeCanvasEventListener(
 
 export function getCanvasBoundingClientRect() {
     return CANVAS.getBoundingClientRect();
-}
-
-export function show() {
-    CANVAS.classList.remove("hidden");
-}
-
-export function hide() {
-    CANVAS.classList.add("hidden");
 }

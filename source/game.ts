@@ -136,9 +136,7 @@ export function start(map: string) {
 
     // init the game
     Map.build(mapInfo);
-
-    Canvas.show();
-    GameMenu.show();
+    showElements();
 
     updateGold(200);
     updateLife(20);
@@ -155,6 +153,24 @@ export function start(map: string) {
 
     window.addEventListener("keyup", keyUpEvents);
     Canvas.addCanvasEventListener("mouseup", mouseEvents as (e: Event) => void);
+}
+
+/**
+ * Show the game related html elements.
+ */
+function showElements() {
+    GameMenu.show();
+
+    const container = document.getElementById("Game")!;
+    container.classList.remove("hidden");
+}
+
+/**
+ * Hide the game related html elements.
+ */
+function hideElements() {
+    const container = document.getElementById("Game")!;
+    container.classList.add("hidden");
 }
 
 function quit() {
@@ -440,7 +456,7 @@ function end(victory: boolean) {
         fontSize: 30,
         onEnd: function () {
             Canvas.updateStage();
-            Canvas.hide();
+            hideElements();
             ON_QUIT();
         },
         timeout: 2000,
