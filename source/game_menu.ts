@@ -331,24 +331,24 @@ export function updateTowerStats(tower: Tower, showNextUpgrade: boolean) {
 
 export function updateMenuControls(tower: Tower) {
     if (tower.is_upgrading) {
-        $(TOWER_INFO.upgrade).css("display", "none");
-        $(TOWER_INFO.sell).css("display", "none");
-        $(TOWER_INFO.sell_message).css("display", "none");
-        $(TOWER_INFO.upgrade_message).css("display", "block");
+        TOWER_INFO.upgrade.classList.add("hidden");
+        TOWER_INFO.sell.classList.add("hidden");
+        TOWER_INFO.sell_message.classList.add("hidden");
+        TOWER_INFO.upgrade_message.classList.remove("hidden");
     } else if (tower.is_selling) {
-        $(TOWER_INFO.upgrade).css("display", "none");
-        $(TOWER_INFO.sell).css("display", "none");
-        $(TOWER_INFO.upgrade_message).css("display", "none");
-        $(TOWER_INFO.sell_message).css("display", "block");
+        TOWER_INFO.upgrade.classList.add("hidden");
+        TOWER_INFO.sell.classList.add("hidden");
+        TOWER_INFO.upgrade_message.classList.add("hidden");
+        TOWER_INFO.sell_message.classList.remove("hidden");
     } else {
-        $(TOWER_INFO.upgrade_message).css("display", "none");
-        $(TOWER_INFO.sell_message).css("display", "none");
-        $(TOWER_INFO.sell).css("display", "block");
+        TOWER_INFO.upgrade_message.classList.add("hidden");
+        TOWER_INFO.sell_message.classList.add("hidden");
+        TOWER_INFO.sell.classList.remove("hidden");
 
         if (tower.maxUpgrade()) {
-            $(TOWER_INFO.upgrade).css("display", "none");
+            TOWER_INFO.upgrade.classList.add("hidden");
         } else {
-            $(TOWER_INFO.upgrade).css("display", "block");
+            TOWER_INFO.upgrade.classList.remove("hidden");
         }
     }
 }

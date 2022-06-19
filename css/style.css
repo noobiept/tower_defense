@@ -7,6 +7,11 @@ body {
     display: none !important;
 }
 
+.value {
+    font-style: italic;
+    color: rgb(27, 16, 175);
+}
+
 /* Main Menu */
 
 #LoadMessage {
@@ -49,6 +54,7 @@ body {
 /* Game Menu */
 
 #GameMenu {
+    position: relative;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -58,7 +64,7 @@ body {
     text-align: center;
     font-size: 18px;
     width: 100%;
-    min-height: 85px;
+    min-height: 90px;
     margin: 5px 0;
 }
 
@@ -89,8 +95,10 @@ body {
 }
 
 #Message {
+    position: absolute;
+    top: 0;
+    left: 50%;
     visibility: hidden;
-    text-align: center;
     color: blue;
 }
 
