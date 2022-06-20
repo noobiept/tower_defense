@@ -43,6 +43,16 @@
         </div>
 
         <div id="Game" class="hidden">
+            <div id="GameMenuTop">
+                <div class="currentGold">Gold: <span class="value"></span></div>
+                <div class="currentLife">
+                    Lives: <span class="value"></span>
+                </div>
+                <div class="currentScore">
+                    Score: <span class="value"></span>
+                </div>
+            </div>
+
             <div id="MainCanvasContainer">
                 <canvas id="MainCanvas"></canvas>
             </div>
@@ -56,17 +66,6 @@
                     <div id="quit" class="button">Quit</div>
                 </div>
 
-                <div id="GameMenu-info" class="MenuBlock">
-                    <div class="currentGold">
-                        Gold: <span class="value"></span>
-                    </div>
-                    <div class="currentLife">
-                        Lives: <span class="value"></span>
-                    </div>
-                    <div class="currentScore">
-                        Score: <span class="value"></span>
-                    </div>
-                </div>
                 <div id="GameMenu-waveList" class="MenuBlock">
                     <div id="current" class="wave"></div>
                     <div class="wave"></div>

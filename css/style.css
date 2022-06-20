@@ -46,12 +46,25 @@ body {
 
 #Game {
     display: grid;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: auto 1fr auto;
     justify-items: center;
     height: 100vh;
 }
 
+#Game.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* Game Menu */
+
+#GameMenuTop {
+    display: flex;
+    justify-content: center;
+    column-gap: 30px;
+    font-size: large;
+}
 
 #GameMenu {
     display: flex;

@@ -442,11 +442,10 @@ function clear() {
     ACTIVE_WAVES.length = 0;
 }
 
-/*
-    Call Game.setEndFlag() instead
-    This is only called at the end of Game.tick() or in Game.setEndFlag() (when the game is paused)
+/**
+ * Call Game.setEndFlag() instead
+ * This is only called at the end of Game.tick() or in Game.setEndFlag() (when the game is paused)
  */
-
 function end(victory: boolean) {
     clear();
 
@@ -460,12 +459,19 @@ function end(victory: boolean) {
         message += "Defeat!";
     }
 
+    // since the game menu elements are hidden, we need to re-center the canvas, so it can show the end message
+    const gameElement = document.getElementById("Game")!;
+    gameElement.classList.add("centered");
+
     new Message({
         text: message,
         fontSize: 30,
         onEnd: function () {
             Canvas.updateStage();
+
             hideElements();
+            gameElement.classList.remove("centered");
+
             ON_QUIT();
         },
         timeout: 2000,

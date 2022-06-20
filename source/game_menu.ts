@@ -62,7 +62,8 @@ interface GameMenuInitArgs {
 }
 
 export function init(args: GameMenuInitArgs) {
-    const menu = document.querySelector("#GameMenu")!;
+    const topMenu = document.getElementById("GameMenuTop")!;
+    const menu = document.getElementById("GameMenu")!;
 
     CALCULATE_TOWER_REFUND = args.calculateTowerRefund;
 
@@ -86,9 +87,9 @@ export function init(args: GameMenuInitArgs) {
     quit.onclick = args.quit;
 
     // game info stuff
-    CURRENT_GOLD = menu.querySelector(".currentGold span")!;
-    CURRENT_LIFE = menu.querySelector(".currentLife span")!;
-    CURRENT_SCORE = menu.querySelector(".currentScore span")!;
+    CURRENT_GOLD = topMenu.querySelector(".currentGold span")!;
+    CURRENT_LIFE = topMenu.querySelector(".currentLife span")!;
+    CURRENT_SCORE = topMenu.querySelector(".currentScore span")!;
 
     // wave list
     WAVE_LIST = menu.querySelectorAll(
@@ -171,12 +172,18 @@ export function init(args: GameMenuInitArgs) {
 
 export function show() {
     const gameMenu = document.getElementById("GameMenu")!;
+    const gameMenuTop = document.getElementById("GameMenuTop")!;
+
     gameMenu.classList.remove("hidden");
+    gameMenuTop.classList.remove("hidden");
 }
 
 export function hide() {
     const gameMenu = document.getElementById("GameMenu")!;
+    const gameMenuTop = document.getElementById("GameMenuTop")!;
+
     gameMenu.classList.add("hidden");
+    gameMenuTop.classList.add("hidden");
 }
 
 export function pause(isPaused: boolean) {
