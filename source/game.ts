@@ -26,6 +26,7 @@ let WAVE_INTERVAL = 0;
 let WAVE_COUNT = 0;
 
 let ELEMENT_SELECTED: Tower | null = null;
+let MESSAGE: Message | null = null;
 
 let GOLD = 0;
 let LIFE = 0;
@@ -270,6 +271,23 @@ function keyUpEvents(event: KeyboardEvent) {
     }
 }
 
+/**
+ * Show a message on the bottom of the canvas. Only allow one message to be active at any time.
+ */
+function newMessage(text: string) {
+    if (MESSAGE) {
+        MESSAGE.remove();
+    }
+
+    MESSAGE = new Message({
+        text,
+        position: "bottom",
+        onEnd: () => {
+            MESSAGE = null;
+        },
+    });
+}
+
 function upgradeSelection() {
     const selection = getSelection();
 
@@ -277,10 +295,7 @@ function upgradeSelection() {
         const upgradeCost = selection.getUpgradeCost();
 
         if (!haveEnoughGold(upgradeCost)) {
-            new Message({
-                text: "Not enough gold.",
-                position: "bottom",
-            });
+            newMessage("Not enough gold.");
             return;
         }
 
@@ -289,10 +304,7 @@ function upgradeSelection() {
             updateGold(-upgradeCost);
             GameMenu.updateMenuControls(selection);
         } else if (upgraded.message) {
-            new Message({
-                text: upgraded.message,
-                position: "bottom",
-            });
+            newMessage(upgraded.message);
         }
     }
 }
@@ -343,10 +355,7 @@ function mouseEvents(event: MouseEvent) {
 
         // see if we can afford a tower
         if (!haveEnoughGold(initialCost)) {
-            new Message({
-                text: "Not enough gold.",
-                position: "bottom",
-            });
+            newMessage("Not enough gold.");
             return;
         }
 
