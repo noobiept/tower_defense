@@ -81,7 +81,7 @@ export function init(args: GameMenuInitArgs) {
     ) as HTMLElement;
     timeUntilNext.onclick = args.forceNextWave;
 
-    TIME_UNTIL_NEXT_WAVE = timeUntilNext.querySelector("span")!;
+    TIME_UNTIL_NEXT_WAVE = timeUntilNext.querySelector(".value")!;
 
     const quit = menu.querySelector("#quit") as HTMLElement;
     quit.onclick = args.quit;
@@ -277,7 +277,7 @@ export function getSelectedTower() {
 }
 
 export function showTowerStats(tower: Tower) {
-    TOWER_INFO.container.classList.remove("hidden");
+    TOWER_INFO.container.classList.remove("noVisibility");
 
     updateTowerStats(tower, false);
 
@@ -289,7 +289,7 @@ export function showTowerStats(tower: Tower) {
  * Hide the tower stats html element.
  */
 export function hideTowerStats() {
-    TOWER_INFO.container.classList.add("hidden");
+    TOWER_INFO.container.classList.add("noVisibility");
 }
 
 /**
