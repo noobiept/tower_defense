@@ -1,42 +1,10 @@
 import { Tower, TowerArgs } from "./tower";
 import { getAsset } from "../assets";
 import { circleCircleCollision, getRandomInt } from "@drk4/utilities";
+import TowersData from "../../data/towers.json";
+import { TowerRadiusSlowStatsData } from "../types";
 
-type TowerBashStats = typeof TowerBash.stats[number];
-
-export class TowerBash extends Tower<TowerBashStats> {
-    static stats = [
-        {
-            damage: 30,
-            range: 20,
-            attack_speed: 1.5,
-            attack_radius: 20,
-            slow: 20,
-            upgrade_cost: 65,
-            upgrade_time: 1,
-            sell_time: 1,
-            initial_cost: 70,
-        },
-        {
-            damage: 35,
-            range: 22,
-            attack_speed: 2,
-            attack_radius: 22,
-            slow: 30,
-            upgrade_cost: 65,
-            upgrade_time: 2,
-            sell_time: 1.5,
-        },
-        {
-            damage: 40,
-            range: 25,
-            attack_speed: 2.5,
-            attack_radius: 25,
-            slow: 40,
-            sell_time: 2,
-        },
-    ];
-
+export class TowerBash extends Tower<TowerRadiusSlowStatsData> {
     private attack_animation_length: number;
     private stun_chance: number;
     private slow_chance: number;
@@ -45,14 +13,14 @@ export class TowerBash extends Tower<TowerBashStats> {
     private attack_animation_interval: number;
     private attack_animation_alpha_step: number;
 
-    constructor(args: TowerArgs<TowerBashStats>) {
+    constructor(args: TowerArgs<TowerRadiusSlowStatsData>) {
         super({
             ...args,
             name: "bash tower",
             image: "tower_bash",
             can_target_ground: true,
             can_target_air: false,
-            stats: TowerBash.stats,
+            stats: TowersData.TowerBash,
         });
 
         this.attack_animation_length = 40; // the image is 40x40 px

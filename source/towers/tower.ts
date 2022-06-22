@@ -8,6 +8,7 @@ import {
     toDegrees,
 } from "@drk4/utilities";
 import { CanvasPosition, GridPosition } from "../types";
+import TowersData from "../../data/towers.json";
 
 let CONTAINER: createjs.Container; // createjs.Container() which will hold all the tower elements
 
@@ -46,28 +47,6 @@ export interface TowerArgs<Stats extends TowerStats> {
 export class Tower<Stats extends TowerStats = TowerStats> {
     static ALL: Tower[] = []; // has all the 'Tower' objects
 
-    // each array position corresponds to the upgrade level of the tower
-    static stats = [
-        {
-            damage: 10,
-            range: 50,
-            attack_speed: 2,
-            upgrade_cost: 10,
-            upgrade_time: 1,
-            sell_time: 1,
-            initial_cost: 10,
-        },
-        {
-            damage: 15,
-            range: 55,
-            attack_speed: 2.5,
-            upgrade_cost: 10,
-            upgrade_time: 2,
-            sell_time: 1.5,
-        },
-        { damage: 20, range: 60, attack_speed: 3, sell_time: 2 },
-    ];
-
     /**
      * Create the container which will hold all the tower elements.
      */
@@ -88,7 +67,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
     tick: (delta: number) => void;
     name: string;
     image: string;
-    stats: Stats[];
+    stats: Stats[]; // each array position corresponds to the upgrade level of the tower
     can_target_ground: boolean;
     can_target_air: boolean;
     width: number;
@@ -128,7 +107,7 @@ export class Tower<Stats extends TowerStats = TowerStats> {
     constructor(args: TowerArgs<Stats>) {
         this.name = args.name ?? "tower";
         this.image = args.image ?? "tower_basic";
-        this.stats = args.stats ?? (Tower.stats as Stats[]);
+        this.stats = args.stats ?? (TowersData.Tower as Stats[]);
         this.can_target_ground = args.can_target_ground ?? true;
         this.can_target_air = args.can_target_air ?? true;
 

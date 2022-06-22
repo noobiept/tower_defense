@@ -2,42 +2,21 @@ import { Tower, TowerArgs } from "./tower";
 import { Unit } from "../units/unit";
 import { Bullet } from "../bullet";
 import { circleCircleCollision, circlePointCollision } from "@drk4/utilities";
-
-type TowerAntiAirStats = typeof TowerAntiAir.stats[number];
+import TowersData from "../../data/towers.json";
+import { TowerStatsData } from "../types";
 
 export class TowerAntiAir extends Tower {
-    static stats = [
-        {
-            damage: 30,
-            range: 50,
-            attack_speed: 2,
-            upgrade_cost: 55,
-            upgrade_time: 1,
-            sell_time: 1,
-            initial_cost: 60,
-        },
-        {
-            damage: 50,
-            range: 55,
-            attack_speed: 3,
-            upgrade_cost: 55,
-            upgrade_time: 2,
-            sell_time: 1.5,
-        },
-        { damage: 70, range: 60, attack_speed: 4, sell_time: 2 },
-    ];
-
     private targets_per_attack: number;
     private targets: Unit[];
 
-    constructor(args: TowerArgs<TowerAntiAirStats>) {
+    constructor(args: TowerArgs<TowerStatsData>) {
         super({
             ...args,
             name: "anti-air tower",
             image: "tower_anti_air",
             can_target_ground: false,
             can_target_air: true,
-            stats: TowerAntiAir.stats,
+            stats: TowersData.TowerAntiAir,
         });
 
         this.targets_per_attack = 4;

@@ -6,6 +6,7 @@ import { TowerBash } from "./tower_bash";
 import { TowerFast } from "./tower_fast";
 import { TowerFrost } from "./tower_frost";
 import { TowerRocket } from "./tower_rocket";
+import TowersData from "../../data/towers.json";
 
 interface CreateTowerArgs {
     type: TowerKey;
@@ -49,5 +50,5 @@ export function createTower({ type, ...args }: CreateTowerArgs) {
 export function getTowerInitialCost(key: TowerKey) {
     const info = mapTowerType(key);
 
-    return info.class.stats[0].initial_cost ?? 0;
+    return TowersData[info.type][0].initial_cost ?? 0;
 }

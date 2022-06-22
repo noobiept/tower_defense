@@ -1,48 +1,19 @@
 import { Unit } from "../units/unit";
 import { Tower, TowerArgs } from "./tower";
+import TowersData from "../../data/towers.json";
+import { TowerRadiusStatsData } from "../types";
 
-type RocketStats = typeof TowerRocket.stats[number];
-
-export class TowerRocket extends Tower<RocketStats> {
-    constructor(args: TowerArgs<RocketStats>) {
+export class TowerRocket extends Tower<TowerRadiusStatsData> {
+    constructor(args: TowerArgs<TowerRadiusStatsData>) {
         super({
             ...args,
             name: "rocket tower",
             image: "tower_rocket",
             can_target_ground: true,
             can_target_air: false,
-            stats: TowerRocket.stats,
+            stats: TowersData.TowerRocket,
         });
     }
-
-    static stats = [
-        {
-            damage: 20,
-            range: 60,
-            attack_speed: 1,
-            attack_radius: 20,
-            upgrade_cost: 35,
-            upgrade_time: 1,
-            sell_time: 1,
-            initial_cost: 40,
-        },
-        {
-            damage: 40,
-            range: 70,
-            attack_speed: 1.5,
-            attack_radius: 22,
-            upgrade_cost: 35,
-            upgrade_time: 2,
-            sell_time: 1.5,
-        },
-        {
-            damage: 60,
-            range: 80,
-            attack_speed: 2,
-            attack_radius: 25,
-            sell_time: 2,
-        },
-    ];
 
     onBulletHit(target: Unit) {
         const x = target.getX();

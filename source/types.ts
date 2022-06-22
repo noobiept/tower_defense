@@ -78,3 +78,23 @@ export interface MapPositionType {
 }
 
 export type MapPosition = GridPosition | null;
+
+export interface TowerStatsData {
+    damage: number;
+    range: number;
+    sell_time: number;
+    attack_speed: number;
+    upgrade_cost?: number;
+    upgrade_time?: number;
+    initial_cost?: number;
+}
+
+// has an effect radius area
+export interface TowerRadiusStatsData extends TowerStatsData {
+    attack_radius: number;
+}
+
+// has an effect radius area with slow
+export interface TowerRadiusSlowStatsData extends TowerRadiusStatsData {
+    slow: number;
+}

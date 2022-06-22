@@ -33,7 +33,7 @@ module.exports = {
             patterns: [
                 { from: "libraries", to: "libraries" },
                 { from: "css", to: "css" },
-                { from: "maps", to: "maps" },
+                { from: "data", to: "data" },
                 { from: "images/*.png", to: "./" },
             ],
         }),

@@ -1,0 +1,152 @@
+{
+    "Tower": [
+        {
+            "damage": 10,
+            "range": 50,
+            "attack_speed": 2,
+            "upgrade_cost": 10,
+            "upgrade_time": 1,
+            "sell_time": 1,
+            "initial_cost": 10
+        },
+        {
+            "damage": 15,
+            "range": 55,
+            "attack_speed": 2.5,
+            "upgrade_cost": 10,
+            "upgrade_time": 2,
+            "sell_time": 1.5
+        },
+        { "damage": 20, "range": 60, "attack_speed": 3, "sell_time": 2 }
+    ],
+    "TowerAntiAir": [
+        {
+            "damage": 30,
+            "range": 50,
+            "attack_speed": 2,
+            "upgrade_cost": 55,
+            "upgrade_time": 1,
+            "sell_time": 1,
+            "initial_cost": 60
+        },
+        {
+            "damage": 50,
+            "range": 55,
+            "attack_speed": 3,
+            "upgrade_cost": 55,
+            "upgrade_time": 2,
+            "sell_time": 1.5
+        },
+        { "damage": 70, "range": 60, "attack_speed": 4, "sell_time": 2 }
+    ],
+    "TowerBash": [
+        {
+            "damage": 30,
+            "range": 20,
+            "attack_speed": 1.5,
+            "attack_radius": 20,
+            "slow": 20,
+            "upgrade_cost": 65,
+            "upgrade_time": 1,
+            "sell_time": 1,
+            "initial_cost": 70
+        },
+        {
+            "damage": 35,
+            "range": 22,
+            "attack_speed": 2,
+            "attack_radius": 22,
+            "slow": 30,
+            "upgrade_cost": 65,
+            "upgrade_time": 2,
+            "sell_time": 1.5
+        },
+        {
+            "damage": 40,
+            "range": 25,
+            "attack_speed": 2.5,
+            "attack_radius": 25,
+            "slow": 40,
+            "sell_time": 2
+        }
+    ],
+    "TowerFast": [
+        {
+            "damage": 15,
+            "range": 50,
+            "attack_speed": 3,
+            "upgrade_cost": 25,
+            "upgrade_time": 1,
+            "sell_time": 1,
+            "initial_cost": 30
+        },
+        {
+            "damage": 20,
+            "range": 55,
+            "attack_speed": 4,
+            "upgrade_cost": 25,
+            "upgrade_time": 2,
+            "sell_time": 1.5
+        },
+        { "damage": 25, "range": 60, "attack_speed": 5, "sell_time": 2 }
+    ],
+    "TowerFrost": [
+        {
+            "damage": 10,
+            "range": 50,
+            "attack_speed": 2,
+            "attack_radius": 20,
+            "slow": 20,
+            "upgrade_cost": 45,
+            "upgrade_time": 1,
+            "sell_time": 1,
+            "initial_cost": 50
+        },
+        {
+            "damage": 15,
+            "range": 55,
+            "attack_speed": 3,
+            "attack_radius": 22,
+            "slow": 25,
+            "upgrade_cost": 45,
+            "upgrade_time": 2,
+            "sell_time": 1.5
+        },
+        {
+            "damage": 20,
+            "range": 60,
+            "attack_speed": 4,
+            "attack_radius": 25,
+            "slow": 30,
+            "sell_time": 2
+        }
+    ],
+    "TowerRocket": [
+        {
+            "damage": 20,
+            "range": 60,
+            "attack_speed": 1,
+            "attack_radius": 20,
+            "upgrade_cost": 35,
+            "upgrade_time": 1,
+            "sell_time": 1,
+            "initial_cost": 40
+        },
+        {
+            "damage": 40,
+            "range": 70,
+            "attack_speed": 1.5,
+            "attack_radius": 22,
+            "upgrade_cost": 35,
+            "upgrade_time": 2,
+            "sell_time": 1.5
+        },
+        {
+            "damage": 60,
+            "range": 80,
+            "attack_speed": 2,
+            "attack_radius": 25,
+            "sell_time": 2
+        }
+    ]
+}

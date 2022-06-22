@@ -4,9 +4,9 @@ const PRELOAD = new Preload();
 
 const BASE_URL = "";
 const MANIFEST = [
-    { id: "easy", path: BASE_URL + "maps/easy.json" },
-    { id: "medium", path: BASE_URL + "maps/medium.json" },
-    { id: "hard", path: BASE_URL + "maps/hard.json" },
+    { id: "easy", path: BASE_URL + "data/maps/easy.json" },
+    { id: "medium", path: BASE_URL + "data/maps/medium.json" },
+    { id: "hard", path: BASE_URL + "data/maps/hard.json" },
     { id: "creep", path: BASE_URL + "images/creep.png" },
     { id: "creep_slow", path: BASE_URL + "images/creep_slow.png" },
     { id: "creep_group", path: BASE_URL + "images/creep_group.png" },
