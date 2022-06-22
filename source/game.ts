@@ -579,10 +579,11 @@ function tick(event: createjs.TickerEvent) {
         }
 
         const timeUntilNextWave = WAVE_INTERVAL - WAVE_COUNT;
+        const nextWaveString = NO_MORE_WAVES
+            ? "---"
+            : round(timeUntilNextWave, 2).toFixed(1) + "s";
 
-        GameMenu.updateTimeUntilNextWave(
-            round(timeUntilNextWave, 2).toFixed(1)
-        );
+        GameMenu.updateTimeUntilNextWave(nextWaveString);
     }
 
     for (a = ACTIVE_WAVES.length - 1; a >= 0; a--) {
