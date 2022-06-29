@@ -68,12 +68,13 @@ export function init(args: GameMenuInitArgs) {
     CALCULATE_TOWER_REFUND = args.calculateTowerRefund;
 
     // game controls
-    START_PAUSED = menu.querySelector("#startPause")!;
+    const startPausedContainer = document.getElementById("startPause")!;
+    START_PAUSED = startPausedContainer.querySelector(".content")!;
     START_PAUSED.onclick = args.pause;
     START_PAUSED.tooltip = new Tooltip({
         text: "Click to start",
-        reference: START_PAUSED,
-        enableEvents: false,
+        reference: startPausedContainer,
+        show: "always",
     });
 
     const timeUntilNext = menu.querySelector(
@@ -97,10 +98,13 @@ export function init(args: GameMenuInitArgs) {
     ) as unknown as HTMLElementWithTooltip[];
 
     for (let a = 0; a < WAVE_LIST.length; a++) {
-        WAVE_LIST[a].tooltip = new Tooltip({
+        const reference = WAVE_LIST[a];
+
+        reference.tooltip = new Tooltip({
             text: "",
-            reference: WAVE_LIST[a],
+            reference,
         });
+        reference.tooltip.hide();
     }
 
     // tower selector
@@ -189,12 +193,10 @@ export function hide() {
 export function pause(isPaused: boolean) {
     if (isPaused) {
         START_PAUSED.tooltip.show();
-
-        $(START_PAUSED).text("Resume");
+        START_PAUSED.textContent = "Resume";
     } else {
         START_PAUSED.tooltip.hide();
-
-        $(START_PAUSED).text("Pause");
+        START_PAUSED.textContent = "Pause";
     }
 }
 
@@ -235,6 +237,7 @@ export function updateWave(currentWave: number, allWaves: Wave[]) {
     for (let a = 0; a < WAVE_LIST.length; a++) {
         const waveNumber = currentWave + a;
         const waveElement = WAVE_LIST[a];
+        const waveContent = waveElement.querySelector(".content")!;
 
         if (waveNumber < allWaves.length) {
             const wave = allWaves[waveNumber];
@@ -257,10 +260,10 @@ export function updateWave(currentWave: number, allWaves: Wave[]) {
 
             waveElement.tooltip.updateText(tooltip);
             waveElement.setAttribute("data-cssClass", type);
-            $(waveElement).addClass(type);
-            $(waveElement).html(text);
+            waveElement.classList.add(type);
+            waveContent.innerHTML = text;
         } else {
-            $(waveElement).text("");
+            waveContent.textContent = "";
             waveElement.tooltip.updateText("");
 
             if (waveElement.hasAttribute("data-cssClass")) {

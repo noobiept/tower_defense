@@ -3,7 +3,7 @@ let CONTAINER: HTMLElement;
 interface TooltipArgs {
     text: string;
     reference: HTMLElement;
-    enableEvents?: boolean;
+    show?: "always" | "hover"; // default is 'hover'
 }
 
 export class Tooltip {
@@ -13,7 +13,6 @@ export class Tooltip {
         const container = document.createElement("div");
 
         container.id = "TooltipContainer";
-        container.classList.add("hidden");
         document.body.appendChild(container);
 
         CONTAINER = container;
@@ -50,7 +49,8 @@ export class Tooltip {
         element.className = "tooltip";
         $(element).html(args.text);
 
-        CONTAINER.appendChild(element);
+        reference.style.position = "relative";
+        reference.appendChild(element);
 
         Tooltip.ALL.push(this);
 
@@ -59,10 +59,7 @@ export class Tooltip {
         this.reference = reference;
         this.is_opened = false;
 
-        if (
-            typeof args.enableEvents == "undefined" ||
-            args.enableEvents === true
-        ) {
+        if (typeof args.show == "undefined" || args.show === "hover") {
             reference.onmouseover = () => {
                 this.show();
             };
@@ -78,19 +75,7 @@ export class Tooltip {
         }
 
         this.is_opened = true;
-
-        const reference = this.reference;
-        const element = this.element;
-
-        const position = $(reference).offset()!;
-
-        const left = position.left;
-        const top = position.top - $(element).outerHeight()! - 5;
-
-        $(element).css("top", top + "px");
-        $(element).css("left", left + "px");
-
-        element.classList.remove("hidden");
+        this.element.classList.remove("hidden");
     }
 
     hide() {
