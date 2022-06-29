@@ -51,6 +51,11 @@ let TOWER_INFO: {
 };
 let CALCULATE_TOWER_REFUND: (cost: number) => number;
 
+const START_PAUSED_DISPLAY = {
+    initial: "Click to start",
+    paused: "Click to resume",
+};
+
 interface GameMenuInitArgs {
     pause: () => void;
     forceNextWave: () => void;
@@ -72,7 +77,7 @@ export function init(args: GameMenuInitArgs) {
     START_PAUSED = startPausedContainer.querySelector(".content")!;
     START_PAUSED.onclick = args.pause;
     START_PAUSED.tooltip = new Tooltip({
-        text: "Click to start",
+        text: START_PAUSED_DISPLAY.initial,
         reference: startPausedContainer,
         show: "always",
     });
@@ -190,7 +195,13 @@ export function hide() {
     gameMenuTop.classList.add("hidden");
 }
 
-export function pause(isPaused: boolean) {
+export function pause(isPaused: boolean, beforeFirstWave: boolean) {
+    START_PAUSED.tooltip.updateText(
+        beforeFirstWave
+            ? START_PAUSED_DISPLAY.initial
+            : START_PAUSED_DISPLAY.paused
+    );
+
     if (isPaused) {
         START_PAUSED.tooltip.show();
         START_PAUSED.textContent = "Resume";

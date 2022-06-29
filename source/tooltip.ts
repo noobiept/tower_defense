@@ -37,7 +37,6 @@ export class Tooltip {
         }
     }
 
-    private text: string;
     private element: HTMLElement;
     private reference: HTMLElement;
     private is_opened: boolean;
@@ -54,7 +53,6 @@ export class Tooltip {
 
         Tooltip.ALL.push(this);
 
-        this.text = args.text;
         this.element = element;
         this.reference = reference;
         this.is_opened = false;
@@ -70,10 +68,6 @@ export class Tooltip {
     }
 
     show() {
-        if (this.text === "") {
-            return;
-        }
-
         this.is_opened = true;
         this.element.classList.remove("hidden");
     }
@@ -88,8 +82,6 @@ export class Tooltip {
     }
 
     updateText(text: string) {
-        this.text = text;
-
-        $(this.element).html(text);
+        this.element.innerHTML = text;
     }
 }

@@ -530,7 +530,7 @@ function pause(paused?: boolean) {
     }
 
     IS_PAUSED = paused;
-    GameMenu.pause(paused);
+    GameMenu.pause(paused, BEFORE_FIRST_WAVE);
 }
 
 function onReachDestination() {
