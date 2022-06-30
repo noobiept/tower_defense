@@ -91,6 +91,10 @@ body {
     align-items: center;
 }
 
+#GameMenu-TowerStats {
+    min-width: 150px;
+}
+
 .MenuBlock {
     min-width: 120px;
     margin: 0 10px;
