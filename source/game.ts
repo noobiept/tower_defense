@@ -12,6 +12,7 @@ import { createUnit, UnitKey } from "./units/unit.util";
 import { getAsset } from "./assets";
 import { MapData, Wave, MapUnitData, Lane } from "./types";
 import { getTowerInitialCost } from "./towers/tower.util";
+import { showStatusMessage } from "./status_message";
 
 let MAP_NAME: string;
 let UNITS_STATS: {
@@ -26,7 +27,6 @@ let WAVE_INTERVAL = 0;
 let WAVE_COUNT = 0;
 
 let ELEMENT_SELECTED: Tower | null = null;
-let MESSAGE: Message | null = null;
 
 let GOLD = 0;
 let LIFE = 0;
@@ -271,23 +271,6 @@ function keyUpEvents(event: KeyboardEvent) {
     }
 }
 
-/**
- * Show a message on the bottom of the canvas. Only allow one message to be active at any time.
- */
-function newMessage(text: string) {
-    if (MESSAGE) {
-        MESSAGE.remove();
-    }
-
-    MESSAGE = new Message({
-        text,
-        position: "bottom",
-        onEnd: () => {
-            MESSAGE = null;
-        },
-    });
-}
-
 function upgradeSelection() {
     const selection = getSelection();
 
@@ -295,7 +278,7 @@ function upgradeSelection() {
         const upgradeCost = selection.getUpgradeCost();
 
         if (!haveEnoughGold(upgradeCost)) {
-            newMessage("Not enough gold.");
+            showStatusMessage("Not enough gold.");
             return;
         }
 
@@ -304,7 +287,7 @@ function upgradeSelection() {
             updateGold(-upgradeCost);
             GameMenu.updateMenuControls(selection);
         } else if (upgraded.message) {
-            newMessage(upgraded.message);
+            showStatusMessage(upgraded.message);
         }
     }
 }
@@ -355,7 +338,7 @@ function mouseEvents(event: MouseEvent) {
 
         // see if we can afford a tower
         if (!haveEnoughGold(initialCost)) {
-            newMessage("Not enough gold.");
+            showStatusMessage("Not enough gold.");
             return;
         }
 

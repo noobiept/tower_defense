@@ -12,7 +12,7 @@ import {
 } from "./types";
 import { Tower } from "./towers/tower";
 import { createTower, TowerKey } from "./towers/tower.util";
-import { Message } from "./message";
+import { showStatusMessage } from "./status_message";
 
 interface AddObstacleArgs {
     passable?: boolean;
@@ -566,10 +566,7 @@ export function addTower(
             );
 
             if (canReach === false) {
-                new Message({
-                    text: "Can't block the unit's path.",
-                    position: "bottom",
-                });
+                showStatusMessage("Can't block the unit's path.");
 
                 // reset the position
                 setPassableBox(column, line, 2);
