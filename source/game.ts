@@ -1,5 +1,5 @@
 import { getRandomInt, isBoolean, round } from "@drk4/utilities";
-import * as Map from "./map";
+import * as GameMap from "./map";
 import * as GameMenu from "./game_menu";
 import { Tower } from "./towers/tower";
 import { Bullet } from "./bullet";
@@ -136,7 +136,7 @@ export function start(map: string) {
     NEXT_WAVE = 0;
 
     // init the game
-    Map.build(mapInfo);
+    GameMap.build(mapInfo);
     showElements();
 
     updateGold(200);
@@ -149,7 +149,7 @@ export function start(map: string) {
     EVENTS.tick = createjs.Ticker.on("tick", tick as () => void) as () => void;
     EVENTS.mouseMove = Canvas.addStageEventListener(
         "stagemousemove",
-        Map.mouseMoveEvents as () => void
+        GameMap.mouseMoveEvents as () => void
     ) as () => void;
 
     window.addEventListener("keyup", keyUpEvents);
@@ -342,9 +342,9 @@ function mouseEvents(event: MouseEvent) {
             return;
         }
 
-        const highlight = Map.getHighlightSquare();
+        const highlight = GameMap.getHighlightSquare();
 
-        const tower = Map.addTower(
+        const tower = GameMap.addTower(
             towerKey,
             highlight.column,
             highlight.line,
@@ -422,7 +422,7 @@ function clear() {
 
     Unit.removeAll();
     Tower.removeAll();
-    Map.clear();
+    GameMap.clear();
     GameMenu.hide();
     Tooltip.hideAll();
     Message.removeAll();
@@ -605,14 +605,14 @@ function tick(event: createjs.TickerEvent) {
                     wave,
                     lane,
                     lane_id: b,
-                    size: Map.getSquareSize(),
+                    size: GameMap.getSquareSize(),
                     onReachDestination,
                     onUnitRemoved,
                     onUnitKilled,
-                    getNextDestination: Map.getUnitNextDestination,
-                    toCanvasPosition: Map.getPosition,
-                    canvasToGrid: Map.calculatePosition,
-                    getAvailablePositions: Map.getAvailablePositions,
+                    getNextDestination: GameMap.getUnitNextDestination,
+                    toCanvasPosition: GameMap.getPosition,
+                    canvasToGrid: GameMap.calculatePosition,
+                    getAvailablePositions: GameMap.getAvailablePositions,
                 });
             }
 

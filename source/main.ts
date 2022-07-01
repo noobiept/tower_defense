@@ -1,4 +1,4 @@
-import * as Map from "./map";
+import * as GameMap from "./map";
 import { Tower } from "./towers/tower";
 import { Unit } from "./units/unit";
 import { Bullet } from "./bullet";
@@ -14,12 +14,12 @@ window.onload = function () {
     const { stage } = Canvas.init();
 
     // the order of these calls sets the display order (what elements are drawn first, etc)
-    Map.init(stage);
+    GameMap.init(stage);
     Tower.init(stage);
     Unit.init(stage);
     Bullet.init(stage);
     Message.init(stage);
-    Map.initHighlight(stage);
+    GameMap.initHighlight(stage);
 
     Tooltip.init();
     Game.init(MainMenu.open);
