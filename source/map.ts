@@ -558,7 +558,7 @@ export function addTower(
                 POSITION_TYPE
             );
 
-            //HERE need to check each unit as well? or they might get trapped
+            //TODO need to check each unit as well? or they might get trapped
             const canReach = canReachDestination(
                 path,
                 lane.start.column,
