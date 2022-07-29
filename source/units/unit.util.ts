@@ -40,6 +40,9 @@ function mapUnitType(type: UnitKey) {
     return UNITS_MAP[type];
 }
 
+/**
+ * @returns Number of units created.
+ */
 export function createUnit({
     lane,
     wave,
@@ -60,22 +63,19 @@ export function createUnit({
         score: wave.score,
         ...args,
     };
-    let removeWave = false;
     const type = wave.type;
     const unitInfo = mapUnitType(type);
 
     switch (unitInfo.type) {
-        // the group units work a bit differently //TODO
+        // the group units work a bit differently
         // they are added all at the same time (instead of one at a time)
         case "UnitGroup":
-            removeWave = true;
-
             new unitInfo.class({
                 ...unitArgs,
                 lane,
                 howMany: wave.howMany,
             });
-            break;
+            return wave.howMany;
 
         case "UnitSpawn":
             new unitInfo.class({
@@ -90,5 +90,5 @@ export function createUnit({
             break;
     }
 
-    return removeWave;
+    return 1;
 }

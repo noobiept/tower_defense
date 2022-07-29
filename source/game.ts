@@ -142,7 +142,7 @@ export function start(map: string) {
     updateGold(200);
     updateLife(20);
     updateScore(0);
-    tick({ delta: 1 } as createjs.TickerEvent); // run the tick once to initialize the timer and the wave list (passing dummy 'event' argument) //TODO improve
+    tick({ delta: 0 } as createjs.TickerEvent); // run the tick once to initialize the timer and the wave list (passing dummy 'event' argument)
     pause(true);
 
     // set the events
@@ -534,17 +534,9 @@ function onUnitKilled(unit: Unit) {
     updateScore(unit.score);
 }
 
-function tick(event: createjs.TickerEvent) {
-    if (IS_PAUSED) {
-        Canvas.updateStage();
-        return;
-    }
-
-    let a;
-    const deltaSeconds = event.delta / 1000;
-
+function startNewWave(delta: number) {
     if (!NO_MORE_WAVES) {
-        WAVE_COUNT += deltaSeconds;
+        WAVE_COUNT += delta;
 
         // time to start a new wave
         if (WAVE_COUNT >= WAVE_INTERVAL) {
@@ -568,16 +560,18 @@ function tick(event: createjs.TickerEvent) {
 
         GameMenu.updateTimeUntilNextWave(nextWaveString);
     }
+}
 
-    for (a = ACTIVE_WAVES.length - 1; a >= 0; a--) {
+function spawnUnits(delta: number) {
+    for (let a = ACTIVE_WAVES.length - 1; a >= 0; a--) {
         const wave = ACTIVE_WAVES[a];
 
-        wave.count += deltaSeconds;
+        wave.count += delta;
 
         if (wave.count >= wave.spawnInterval) {
             wave.count = 0;
 
-            let removeWave = false;
+            let unitsCreated = 0;
 
             for (let b = 0; b < CREEP_LANES.length; b++) {
                 const lane = CREEP_LANES[b];
@@ -599,7 +593,7 @@ function tick(event: createjs.TickerEvent) {
                     startLine = lane.start.line;
                 }
 
-                removeWave = createUnit({
+                unitsCreated = createUnit({
                     column: startColumn,
                     line: startLine,
                     wave,
@@ -616,28 +610,18 @@ function tick(event: createjs.TickerEvent) {
                 });
             }
 
-            wave.howMany--;
+            wave.howMany -= unitsCreated;
 
-            if (wave.howMany <= 0 || removeWave === true) {
+            if (wave.howMany <= 0) {
                 const index = ACTIVE_WAVES.indexOf(wave);
 
                 ACTIVE_WAVES.splice(index, 1);
             }
         }
     }
+}
 
-    for (a = Unit.ALL.length - 1; a >= 0; a--) {
-        Unit.ALL[a].tick(deltaSeconds);
-    }
-
-    for (a = Tower.ALL.length - 1; a >= 0; a--) {
-        Tower.ALL[a].tick(deltaSeconds);
-    }
-
-    for (a = Bullet.ALL.length - 1; a >= 0; a--) {
-        Bullet.ALL[a].tick(deltaSeconds);
-    }
-
+function checkGameEndCondition() {
     // no more waves or units alive, victory!
     if (NO_MORE_WAVES && ACTIVE_WAVES.length == 0 && Unit.ALL.length == 0) {
         setEndFlag(true);
@@ -646,6 +630,31 @@ function tick(event: createjs.TickerEvent) {
     if (GAME_END.is_over) {
         end(GAME_END.victory);
     }
+}
 
+function tick(event: createjs.TickerEvent) {
+    if (IS_PAUSED) {
+        Canvas.updateStage();
+        return;
+    }
+
+    const deltaSeconds = event.delta / 1000;
+
+    startNewWave(deltaSeconds);
+    spawnUnits(deltaSeconds);
+
+    for (let a = Unit.ALL.length - 1; a >= 0; a--) {
+        Unit.ALL[a].tick(deltaSeconds);
+    }
+
+    for (let a = Tower.ALL.length - 1; a >= 0; a--) {
+        Tower.ALL[a].tick(deltaSeconds);
+    }
+
+    for (let a = Bullet.ALL.length - 1; a >= 0; a--) {
+        Bullet.ALL[a].tick(deltaSeconds);
+    }
+
+    checkGameEndCondition();
     Canvas.updateStage();
 }
