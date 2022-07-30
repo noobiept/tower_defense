@@ -637,7 +637,7 @@ function canReachDestination(
     }
 }
 
-export function getUnitNextDestination(unit: Unit) {
+export function getUnitNextDestination(unit: Unit): GridPosition | undefined {
     const nextDest = findNextDestination(unit.column, unit.line, unit.lane_id);
 
     if (nextDest) {
@@ -652,8 +652,9 @@ export function getUnitNextDestination(unit: Unit) {
         const index = getRandomInt(0, positions.length - 1);
         const nextDest = positions[index];
 
-        unit.column = nextDest.column; //TODO
+        unit.column = nextDest.column;
         unit.line = nextDest.line;
-        return nextDest;
+
+        return getUnitNextDestination(unit);
     }
 }
