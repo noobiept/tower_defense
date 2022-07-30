@@ -1,0 +1,22 @@
+{
+    "Unit": {
+        "movement_speed": 60
+    },
+    "UnitFast": {
+        "movement_speed": 80
+    },
+    "UnitFly": {
+        "movement_speed": 40,
+        "is_ground_unit": false
+    },
+    "UnitGroup": {
+        "movement_speed": 50
+    },
+    "UnitImmune": {
+        "movement_speed": 50,
+        "is_immune": true
+    },
+    "UnitSpawn": {
+        "movement_speed": 60
+    }
+}

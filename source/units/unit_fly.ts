@@ -1,4 +1,5 @@
 import { Unit, UnitArgs } from "./unit";
+import UnitsData from "../../data/units.json";
 
 export class UnitFly extends Unit {
     constructor(args: UnitArgs) {
@@ -9,8 +10,7 @@ export class UnitFly extends Unit {
             slowImage: "creep_fly_slow",
             width: 20,
             height: 10,
-            is_ground_unit: false,
-            movement_speed: 40,
+            ...UnitsData.UnitFly,
         });
     }
 

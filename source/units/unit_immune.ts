@@ -1,4 +1,5 @@
 import { Unit, UnitArgs } from "./unit";
+import UnitsData from "../../data/units.json";
 
 export class UnitImmune extends Unit {
     constructor(args: UnitArgs) {
@@ -6,8 +7,7 @@ export class UnitImmune extends Unit {
             ...args,
             name: "immune unit",
             image: "creep_immune",
-            is_immune: true,
-            movement_speed: 50,
+            ...UnitsData.UnitImmune,
         });
     }
 }

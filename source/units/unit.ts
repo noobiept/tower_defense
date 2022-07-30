@@ -3,6 +3,7 @@ import { getAsset } from "../assets";
 import { calculateAngle, pointBoxCollision, toDegrees } from "@drk4/utilities";
 import { CanvasPosition, GridPosition, Lane } from "../types";
 import { Tower } from "../towers/tower";
+import UnitsData from "../../data/units.json";
 
 let CONTAINER: createjs.Container; // createjs.Container() which will hold all the unit elements
 
@@ -112,7 +113,8 @@ export class Unit {
         this.height = args.height;
         this.is_ground_unit = args.is_ground_unit ?? true;
         this.is_immune = args.is_immune ?? false;
-        this.movement_speed = args.movement_speed ?? 60; // pixels per second
+        this.movement_speed =
+            args.movement_speed ?? UnitsData.Unit.movement_speed; // pixels per second
         this.column = args.column;
         this.line = args.line;
         this.lane_id = args.lane_id;

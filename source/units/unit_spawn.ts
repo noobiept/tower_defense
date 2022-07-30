@@ -2,6 +2,7 @@ import { Unit, UnitArgs } from "./unit";
 import { getRandomInt } from "@drk4/utilities";
 import { CanvasPosition, GridPosition } from "../types";
 import { Tower } from "../towers/tower";
+import UnitsData from "../../data/units.json";
 
 interface UnitSpawnArgs extends UnitArgs {
     canvasToGrid: (position: CanvasPosition) => GridPosition;
@@ -120,7 +121,7 @@ class UnitSpawned extends Unit {
             name: "spawned creep",
             image: "creep_spawned",
             slowImage: "creep_spawned_slow",
-            movement_speed: 60,
+            ...UnitsData.UnitSpawn,
         });
     }
 }

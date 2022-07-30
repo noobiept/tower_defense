@@ -1,6 +1,7 @@
 import { getRandomInt } from "@drk4/utilities";
 import { Lane } from "../types";
 import { Unit, UnitArgs } from "./unit";
+import UnitsData from "../../data/units.json";
 
 interface UnitGroupArgs extends UnitArgs {
     lane: Lane;
@@ -42,7 +43,7 @@ class UnitGroup1 extends Unit {
             ...args,
             name: "group unit",
             image: "creep_group",
-            movement_speed: 50,
+            ...UnitsData.UnitGroup,
         });
     }
 }
