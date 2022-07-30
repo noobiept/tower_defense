@@ -4,27 +4,27 @@
             "damage": 10,
             "range": 50,
             "attack_speed": 2,
-            "upgrade_cost": 10,
+            "upgrade_cost": 20,
             "upgrade_time": 1,
             "sell_time": 1,
             "initial_cost": 10
         },
         {
             "damage": 15,
-            "range": 55,
+            "range": 70,
             "attack_speed": 2.5,
-            "upgrade_cost": 10,
+            "upgrade_cost": 20,
             "upgrade_time": 2,
             "sell_time": 1.5
         },
-        { "damage": 20, "range": 60, "attack_speed": 3, "sell_time": 2 }
+        { "damage": 20, "range": 90, "attack_speed": 3, "sell_time": 2 }
     ],
     "TowerAntiAir": [
         {
             "damage": 30,
             "range": 50,
             "attack_speed": 2,
-            "upgrade_cost": 55,
+            "upgrade_cost": 120,
             "upgrade_time": 1,
             "sell_time": 1,
             "initial_cost": 60
@@ -33,7 +33,7 @@
             "damage": 50,
             "range": 55,
             "attack_speed": 3,
-            "upgrade_cost": 55,
+            "upgrade_cost": 120,
             "upgrade_time": 2,
             "sell_time": 1.5
         },
@@ -46,7 +46,7 @@
             "attack_speed": 1.5,
             "attack_radius": 20,
             "slow": 20,
-            "upgrade_cost": 65,
+            "upgrade_cost": 140,
             "upgrade_time": 1,
             "sell_time": 1,
             "initial_cost": 70
@@ -57,7 +57,7 @@
             "attack_speed": 2,
             "attack_radius": 22,
             "slow": 30,
-            "upgrade_cost": 65,
+            "upgrade_cost": 140,
             "upgrade_time": 2,
             "sell_time": 1.5
         },
@@ -75,7 +75,7 @@
             "damage": 15,
             "range": 50,
             "attack_speed": 3,
-            "upgrade_cost": 25,
+            "upgrade_cost": 60,
             "upgrade_time": 1,
             "sell_time": 1,
             "initial_cost": 30
@@ -84,7 +84,7 @@
             "damage": 20,
             "range": 55,
             "attack_speed": 4,
-            "upgrade_cost": 25,
+            "upgrade_cost": 60,
             "upgrade_time": 2,
             "sell_time": 1.5
         },
@@ -97,7 +97,7 @@
             "attack_speed": 2,
             "attack_radius": 20,
             "slow": 20,
-            "upgrade_cost": 45,
+            "upgrade_cost": 100,
             "upgrade_time": 1,
             "sell_time": 1,
             "initial_cost": 50
@@ -108,7 +108,7 @@
             "attack_speed": 3,
             "attack_radius": 22,
             "slow": 25,
-            "upgrade_cost": 45,
+            "upgrade_cost": 100,
             "upgrade_time": 2,
             "sell_time": 1.5
         },
@@ -127,7 +127,7 @@
             "range": 60,
             "attack_speed": 1,
             "attack_radius": 20,
-            "upgrade_cost": 35,
+            "upgrade_cost": 80,
             "upgrade_time": 1,
             "sell_time": 1,
             "initial_cost": 40
@@ -137,7 +137,7 @@
             "range": 70,
             "attack_speed": 1.5,
             "attack_radius": 22,
-            "upgrade_cost": 35,
+            "upgrade_cost": 80,
             "upgrade_time": 2,
             "sell_time": 1.5
         },

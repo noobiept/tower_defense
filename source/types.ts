@@ -98,3 +98,5 @@ export interface TowerRadiusStatsData extends TowerStatsData {
 export interface TowerRadiusSlowStatsData extends TowerRadiusStatsData {
     slow: number;
 }
+
+export type MapName = "easy" | "medium" | "hard";

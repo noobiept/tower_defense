@@ -10,9 +10,10 @@ import * as HighScore from "./high_score";
 import * as Canvas from "./canvas";
 import { createUnit, UnitKey } from "./units/unit.util";
 import { getAsset } from "./assets";
-import { MapData, Wave, MapUnitData, Lane } from "./types";
+import { MapData, Wave, MapUnitData, Lane, MapName } from "./types";
 import { getTowerInitialCost } from "./towers/tower.util";
 import { showStatusMessage } from "./status_message";
+import GameData from "../data/game.json";
 
 let MAP_NAME: string;
 let UNITS_STATS: {
@@ -63,7 +64,7 @@ export function init(onQuit: () => void) {
     ON_QUIT = onQuit;
 }
 
-export function start(map: string) {
+export function start(map: MapName) {
     MAP_NAME = map;
 
     const mapInfo = getAsset(map) as MapData;
@@ -139,8 +140,8 @@ export function start(map: string) {
     GameMap.build(mapInfo);
     showElements();
 
-    updateGold(200);
-    updateLife(20);
+    updateGold(GameData.initial_gold);
+    updateLife(GameData.initial_lives);
     updateScore(0);
     tick({ delta: 0 } as createjs.TickerEvent); // run the tick once to initialize the timer and the wave list (passing dummy 'event' argument)
     pause(true);
