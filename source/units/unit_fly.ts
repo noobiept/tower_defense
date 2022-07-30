@@ -1,9 +1,6 @@
 import { Unit, UnitArgs } from "./unit";
 
 export class UnitFly extends Unit {
-    private final_column = 0;
-    private final_line = 0;
-
     constructor(args: UnitArgs) {
         super({
             ...args,
@@ -17,10 +14,10 @@ export class UnitFly extends Unit {
         });
     }
 
-    setup(args: UnitArgs): void {
+    setup(args: UnitArgs) {
         // air units fly directly to the destination
-        this.final_column = args.destination_column;
-        this.final_line = args.destination_line;
+        this.destination_column = args.destination_column;
+        this.destination_line = args.destination_line;
     }
 
     /**
@@ -29,13 +26,16 @@ export class UnitFly extends Unit {
     checkNextDestination() {
         // we reached the destination
         if (
-            this.final_column === this.column &&
-            this.final_line === this.line
+            this.destination_column === this.column &&
+            this.destination_line === this.line
         ) {
             this.remove();
             this.onReachDestination();
         } else {
-            this.move({ column: this.final_column, line: this.final_line });
+            this.move({
+                column: this.destination_column,
+                line: this.destination_line,
+            });
         }
     }
 }
