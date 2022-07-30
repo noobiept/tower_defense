@@ -9,13 +9,14 @@ let HIGH_SCORE: HighScoreData = {};
 
 // max. number of scores saved per map (the top scores)
 const MAX_SCORES_SAVED = 5;
+const STORAGE_KEY = "tower_defense_high_score";
 
 export function getMaxScoresSaved() {
     return MAX_SCORES_SAVED;
 }
 
 export function load() {
-    const score = getObject("high_score");
+    const score = getObject(STORAGE_KEY);
 
     if (score !== null) {
         HIGH_SCORE = score;
@@ -23,7 +24,7 @@ export function load() {
 }
 
 function save() {
-    saveObject("high_score", HIGH_SCORE);
+    saveObject(STORAGE_KEY, HIGH_SCORE);
 }
 
 /**
