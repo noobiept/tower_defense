@@ -388,8 +388,10 @@ export class Unit {
             if (!this.removed) {
                 new Message({
                     text: "+" + this.gold,
-                    strokeColor: "419C1C",
+                    strokeColor: "black",
                     fillColor: "white",
+                    fontSize: 14,
+                    timeout: 500,
                     position: {
                         x: this.getX(),
                         y: this.getY() - this.height,
