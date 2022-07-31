@@ -10,8 +10,6 @@ export class TowerBash extends Tower<TowerRadiusSlowStatsData> {
     private slow_chance: number;
     private stun: number;
     private attack_animation!: createjs.Bitmap;
-    private attack_animation_interval: number;
-    private attack_animation_alpha_step: number;
 
     constructor(args: TowerArgs<TowerRadiusSlowStatsData>) {
         super({
@@ -27,10 +25,6 @@ export class TowerBash extends Tower<TowerRadiusSlowStatsData> {
         this.stun_chance = 30;
         this.slow_chance = 30;
         this.stun = 1;
-
-        // have the attack animation depend on the attack speed
-        this.attack_animation_interval = Math.floor(this.attack_interval / 4);
-        this.attack_animation_alpha_step = 1 / this.attack_animation_interval;
 
         this.extraSetupShape();
     }
@@ -49,8 +43,7 @@ export class TowerBash extends Tower<TowerRadiusSlowStatsData> {
         attackAnimation.regY = halfLength;
         attackAnimation.scaleX = scale;
         attackAnimation.scaleY = scale;
-
-        attackAnimation.visible = false;
+        attackAnimation.alpha = 0; // start hidden
 
         this.container.addChild(attackAnimation);
         this.attack_animation = attackAnimation;
@@ -58,16 +51,11 @@ export class TowerBash extends Tower<TowerRadiusSlowStatsData> {
 
     startUpgrading(immediately: boolean) {
         const upgraded = super.startUpgrading(immediately);
-        this.attack_animation.visible = false;
-
         return upgraded;
     }
 
     upgrade() {
         super.upgrade();
-
-        // the attack speed may have changed in the upgrade, so need to update this as well
-        this.attack_animation_interval = Math.floor(this.attack_interval / 4);
 
         const scale = (this.width + this.range) / this.attack_animation_length; // scale the image according to the tower's range
 
@@ -77,12 +65,10 @@ export class TowerBash extends Tower<TowerRadiusSlowStatsData> {
 
     tick_attack(deltaTime: number) {
         this.attack_count -= deltaTime;
-
-        if (this.attack_count <= this.attack_animation_interval) {
-            this.attack_animation.visible = false;
-        } else {
-            this.attack_animation.alpha -= this.attack_animation_alpha_step;
-        }
+        this.attack_animation.alpha = Math.max(
+            0,
+            (this.attack_count / this.attack_interval) * 0.7
+        );
 
         // see if we can attack right now
         if (this.attack_count <= 0) {
@@ -104,9 +90,7 @@ export class TowerBash extends Tower<TowerRadiusSlowStatsData> {
                     )
                 ) {
                     this.attack_count = this.attack_interval;
-                    this.attack_animation.visible = true;
                     this.attack_animation.alpha = 1;
-
                     this.attack();
                 }
 
